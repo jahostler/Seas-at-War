@@ -26,8 +26,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.5"
-     inkscape:cx="959.39531"
-     inkscape:cy="495.84754"
+     inkscape:cx="1116.286"
+     inkscape:cy="447.22675"
      inkscape:document-units="px"
      inkscape:current-layer="layer2"
      showgrid="false"
@@ -58,7 +58,7 @@
      id="layer1"
      inkscape:label="Base"
      inkscape:groupmode="layer"
-     style="opacity:1"
+     style="display:inline;opacity:1"
      sodipodi:insensitive="true">
     <rect
        style="fill:#000000"
@@ -2493,29 +2493,31 @@
   <g
      inkscape:groupmode="layer"
      id="layer2"
-     inkscape:label="Index Numbers/Letters">
+     inkscape:label="Index Numbers/Letters"
+     sodipodi:insensitive="true"
+     style="display:inline">
     <flowRoot
        xml:space="preserve"
        id="flowRoot7158"
-       style="fill:black;stroke:none;stroke-opacity:1;stroke-width:1px;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:1;font-family:Stencil;font-style:normal;font-weight:normal;font-size:17.5px;line-height:125%;letter-spacing:0px;word-spacing:0px;-inkscape-font-specification:Stencil;font-stretch:normal;font-variant:normal;text-anchor:middle;text-align:center;"><flowRegion
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:17.5px;line-height:125%;font-family:Stencil;-inkscape-font-specification:Stencil;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"><flowRegion
          id="flowRegion7160"><rect
            id="rect7162"
            width="70.710678"
            height="65.996635"
            x="44.783428"
            y="35.838985"
-           style="font-size:17.5px;-inkscape-font-specification:Stencil;font-family:Stencil;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal;text-anchor:middle;text-align:center;" /></flowRegion><flowPara
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:17.5px;font-family:Stencil;-inkscape-font-specification:Stencil;text-align:center;text-anchor:middle" /></flowRegion><flowPara
          id="flowPara7164"></flowPara></flowRoot>    <flowRoot
        xml:space="preserve"
        id="flowRoot7166"
-       style="font-style:normal;font-weight:normal;font-size:90px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;"><flowRegion
+       style="font-style:normal;font-weight:normal;font-size:90px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"><flowRegion
          id="flowRegion7168"><rect
            id="rect7170"
            width="238.05928"
            height="146.13541"
            x="150.84944"
            y="-98.511299"
-           style="font-size:90px;" /></flowRegion><flowPara
+           style="font-size:90px" /></flowRegion><flowPara
          id="flowPara7172" /></flowRoot>    <flowRoot
        xml:space="preserve"
        id="flowRoot7174"
@@ -3160,7 +3162,7 @@
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:69.34564209px;font-family:Stencil;-inkscape-font-specification:Stencil;fill:#ffffff;fill-opacity:1">12</flowPara></flowRoot>    <flowRoot
        xml:space="preserve"
        id="flowRoot7834"
-       style="fill:black;stroke:none;stroke-opacity:1;stroke-width:1px;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:1;font-family:sans-serif;font-style:normal;font-weight:normal;font-size:7.5px;line-height:125%;letter-spacing:0px;word-spacing:0px"><flowRegion
+       style="font-style:normal;font-weight:normal;font-size:7.5px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"><flowRegion
          id="flowRegion7836"><rect
            id="rect7838"
            width="104"
