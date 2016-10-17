@@ -15,7 +15,10 @@
    version="1.1"
    inkscape:version="0.91 r13725"
    viewBox="0 0 1920 1080"
-   sodipodi:docname="game board.svg">
+   sodipodi:docname="game board.svg"
+   inkscape:export-filename="C:\Users\edens_000\Documents\School\CSCE 315\game board.png"
+   inkscape:export-xdpi="90"
+   inkscape:export-ydpi="90">
   <defs
      id="defs3338" />
   <sodipodi:namedview
@@ -27,7 +30,7 @@
      inkscape:pageshadow="2"
      inkscape:zoom="0.5"
      inkscape:cx="974.07681"
-     inkscape:cy="515.99422"
+     inkscape:cy="835.99422"
      inkscape:document-units="px"
      inkscape:current-layer="layer5"
      showgrid="false"
