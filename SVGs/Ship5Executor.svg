@@ -38,9 +38,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="22.4"
-     inkscape:cx="39.212005"
-     inkscape:cy="16.029779"
+     inkscape:zoom="1.979899"
+     inkscape:cx="-41.765017"
+     inkscape:cy="157.12701"
      inkscape:document-units="px"
      inkscape:current-layer="layer4"
      showgrid="false"
@@ -348,7 +348,8 @@
   <g
      inkscape:groupmode="layer"
      id="layer4"
-     inkscape:label="Guns">
+     inkscape:label="Guns"
+     sodipodi:insensitive="true">
     <circle
        style="opacity:1;fill:#333333;fill-opacity:1;stroke:#000000;stroke-width:0.46049541;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0"
        id="path4574"
