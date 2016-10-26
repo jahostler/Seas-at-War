@@ -1,0 +1,724 @@
+//http://compute.cse.tamu.edu:13372/
+
+
+// player.js
+var PLAYER_SPEED = 1.2;
+var PLAYER_ACCEL = 0.5;
+var PLAYER_SPEED_FRICTION = 0.3;
+
+var PLAYER_TURN_SPEED = 10;
+
+var DEFAULT_GUY_OFFSET_TOP	 	= 36;
+var DEFAULT_GUY_OFFSET_BOTTOM	= 42;
+var DEFAULT_GUY_OFFSET_LEFT		= 3;
+var DEFAULT_GUY_OFFSET_RIGHT	= 14;
+
+function Player() 
+{
+	this.id = "";
+	
+	this.position = {
+		x: 100,
+		y: 500
+	};	
+	
+	this.vector = Math.PI/2;
+	
+	this.velocity = 0;
+	
+	this.frameIndex = 0;
+	this.facing = 3;
+	
+	this.loadImages();
+};
+
+Player.prototype.loadImages = function()
+{
+	this.dude_sheet = document.createElement('img');
+	this.dude_sheet.src = "http://projects.cs.tamu.edu/nlupfer/art/dentler_sheet.png";
+	
+	
+	/* Facing
+	 * 
+	 * 	0	Down
+	 * 	1	Up
+	 * 	2	Left
+	 *	3	Right
+	 * 
+	 * Movement
+	 * 
+	 *	0	Standing
+	 *	1	Walking
+	 * 	2	Running
+	 *  3	Sprinting
+	 * 	4	Back Jump
+	 * 	5	Rolling
+	 * 	6	Side Stepping
+	 *  7	Sneaking
+	 *	8	Right Slap Prep
+	 *	9	Right Slap Attack
+	 * 	10	Left Slap Pre
+	 *  11	Left Slap Attack
+	 * 	12	Overhead Whack Prep
+	 * 	13	Overhead Whack Attack
+	 * 	14	Get Hit Hands
+	 *  15	Drink Mouth Wash
+	 *  16	Rest At Lamp
+	 */
+	
+	// standing
+	this.dude_sprites = [];
+
+	//emty handed sprites
+	for( var m = 0; m < 16; m++)
+	{
+		this.dude_sprites[m] = [];
+		for( var f = 0; f < 9; f++)
+		{
+			var spriteX = m * 90;
+			var spriteY = (f * 90) + 0;
+			
+			var sprite = {
+					x: spriteX,
+					y: spriteY,
+					w: 90,
+					h: 90
+			};
+			this.dude_sprites[m][f] = sprite;
+		}
+	}	
+	
+		
+	this.dudeShadow = document.createElement('img');
+	this.dudeShadow.src = "http://projects.cs.tamu.edu/nlupfer/art/dude_shadow.png";
+};
+
+Player.prototype.update = function()
+{	
+	var moving = false;
+	var speed = PLAYER_SPEED;
+	
+	var vX = 0;
+	var vY = 0;
+	
+	// set the default frame to standing
+	this.frameIndex = 0;
+
+	if(KeyHandler.up)
+	{
+		vY -= 1;
+		moving = true;
+	}
+	if(KeyHandler.down)
+	{
+		vY += 1;
+		moving = true;
+	}
+	if(KeyHandler.left)
+	{
+		vX -= 1;
+		moving = true;
+	}
+	if(KeyHandler.right)
+	{
+		vX += 1;
+		moving = true;
+	}
+	
+	var newPos;
+
+	// do basic movement
+	if(moving)
+	{
+		// set the frame to walking
+		this.frameIndex = 1; 
+		
+		newPos = {
+			x: this.position.x + Math.sin(this.vector ) * speed * Math.abs(vX),
+			y: this.position.y + Math.cos(this.vector ) * speed * Math.abs(vY)
+		};		
+		
+		this.vector = Math.atan2(vX, vY);
+		
+		// set the new position	
+		this.position.x = newPos.x;	
+		this.position.y = newPos.y;
+	}	
+		
+	// update facing
+	var angle = this.vector * (180 / Math.PI) + 180;
+	
+	if(angle >= 45 && angle < 135)
+		this.facing = 2;
+	else if(angle >= 135 && angle < 225)
+		this.facing = 0;		
+	else if(angle >= 225 && angle < 315)
+		this.facing = 3;
+	else if(angle >= 315 && angle < 45)
+		this.facing = 1;				
+	else
+		this.facing = 1;	
+		
+	// send info to the server
+	var playerData = {
+		id: this.id,
+		pos: this.position,
+		frame: this.frameIndex,
+		facing: this.facing
+	};
+	 socket.emit("updatePlayer", playerData);
+	
+};
+
+Player.prototype.draw = function()
+{
+	// draw colored circle around the player so you know who is who haha
+	drawCircle(this.id, this.position.x - 3, this.position.y + 33, 16, 16);
+
+	// dude shadow
+	//drawImage(this.dudeShadow, this.position.x - 3, this.position.y + 33, 21, 12);
+	
+	var f = this.facing + 4;
+	var m = this.frameIndex;
+				
+	drawImageRect(this.dude_sheet, this.dude_sprites[m][f].x, this.dude_sprites[m][f].y, this.dude_sprites[m][f].w, this.dude_sprites[m][f].h, this.position.x - 36, this.position.y-25, this.dude_sprites[m][f].w, this.dude_sprites[m][f].h);
+	
+};
+
+Player.prototype.getVisualBottom = function()
+{
+	return this.position.y + DEFAULT_GUY_OFFSET_BOTTOM - 2;
+};
+
+
+
+
+//otherPlayer.js
+
+
+function OtherPlayer(id) 
+{
+	this.id = id;
+	
+	this.position = {
+		x: 100,
+		y: 500
+	};	
+	
+	this.vector = Math.PI/2;
+	
+	this.velocity = 0;
+	
+	this.frameIndex = 0;
+	this.facing = 3;
+	
+	this.loadImages();
+};
+
+OtherPlayer.prototype.loadImages = function()
+{
+	this.dude_sheet = document.createElement('img');
+	this.dude_sheet.src = "http://projects.cs.tamu.edu/nlupfer/art/dentler_sheet.png";
+	
+	/* Facing
+	 * 
+	 * 	0	Down
+	 * 	1	Up
+	 * 	2	Left
+	 *	3	Right
+	 * 
+	 * Movement
+	 * 
+	 *	0	Standing
+	 *	1	Walking
+	 * 	2	Running
+	 *  3	Sprinting
+	 * 	4	Back Jump
+	 * 	5	Rolling
+	 * 	6	Side Stepping
+	 *  7	Sneaking
+	 *	8	Right Slap Prep
+	 *	9	Right Slap Attack
+	 * 	10	Left Slap Pre
+	 *  11	Left Slap Attack
+	 * 	12	Overhead Whack Prep
+	 * 	13	Overhead Whack Attack
+	 * 	14	Get Hit Hands
+	 *  15	Drink Mouth Wash
+	 *  16	Rest At Lamp
+	 */
+	
+	// standing
+	this.dude_sprites = [];
+
+	//emty handed sprites
+	for( var m = 0; m < 16; m++)
+	{
+		this.dude_sprites[m] = [];
+		for( var f = 0; f < 9; f++)
+		{
+			var spriteX = m * 90;
+			var spriteY = (f * 90) + 0;
+			
+			var sprite = {
+					x: spriteX,
+					y: spriteY,
+					w: 90,
+					h: 90
+			};
+			this.dude_sprites[m][f] = sprite;
+		}
+	}	
+		
+	this.dudeShadow = document.createElement('img');
+	this.dudeShadow.src = "http://projects.cs.tamu.edu/nlupfer/art/dude_shadow.png";
+};
+
+OtherPlayer.prototype.update = function()
+{	
+	// updates happen async from incoming socket io messages	
+};
+
+OtherPlayer.prototype.draw = function()
+{
+	// draw colored circle around the player so you know who is who haha
+	drawCircle(this.id, this.position.x - 3, this.position.y + 33, 16, 16);
+
+	// dude shadow
+	//drawImage(this.dudeShadow, this.position.x - 3, this.position.y + 33, 21, 12);
+	
+	var f = this.facing + 4;
+	var m = this.frameIndex;
+				
+	drawImageRect(this.dude_sheet, this.dude_sprites[m][f].x, this.dude_sprites[m][f].y, this.dude_sprites[m][f].w, this.dude_sprites[m][f].h, this.position.x - 36, this.position.y-25, this.dude_sprites[m][f].w, this.dude_sprites[m][f].h);
+};
+
+OtherPlayer.prototype.getVisualBottom = function()
+{
+	return this.position.y + DEFAULT_GUY_OFFSET_BOTTOM - 2;
+};
+
+
+
+//Main.js
+
+/** Globals - Engine **/
+var LOOP_DELAY = 16;
+var DEBUG = true;
+var WIDTH = 800;
+var HEIGHT = 600;
+
+// Game Globals
+var player;
+var others;
+var canvas, context;
+
+// socket.io
+var socket = io.connect();
+           
+socket.on('welcome', function(data) {
+    player.id = data.id;
+    console.log("got player id: "+player.id);
+    
+    // send the player info to the server
+    var playerData = {
+		id: player.id,
+		pos: player.position,
+		frame: player.frameIndex,
+		facing: player.facing
+	};
+    socket.emit("addPlayer", playerData);
+});
+
+socket.on('allPlayers', function(data) {
+
+	console.log(data);
+
+	for(var i in data.players)
+	{
+		// create new OtherPlayer
+		var other = new OtherPlayer(data.players[i].id);
+			other.position = data.players[i].pos;
+			other.frameIndex = data.players[i].frame;
+			other.facing = data.players[i].facing;
+			
+		others.set(other.id, other);
+	}
+/*
+	// create new OtherPlayer
+	var other = new OtherPlayer(data.id);
+		other.position = data.pos;
+		other.frameIndex = data.frame;
+		other.facing = data.facing;
+		
+	others.set(other.id, other);
+*/
+    console.log("adding existing players");
+});
+
+socket.on('addPlayer', function(data) {
+	
+	// create new OtherPlayer
+	var other = new OtherPlayer(data.id);
+		other.position = data.pos;
+		other.frameIndex = data.frame;
+		other.facing = data.facing;
+		
+	others.set(other.id, other);
+
+    console.log("adding new other player id: "+other.id);
+});
+
+socket.on('removePlayer', function(data) {
+   
+   	// remove the player from the others map
+   	others.remove(data.id);
+   	
+    console.log("removing player id: "+data.id);
+});
+
+socket.on('updatePlayer', function(data) {
+	
+	// update the otherPlayer's fields
+	try {
+		var other = others.get(data.id);
+		other.position = data.pos;
+		other.frameIndex = data.frame;
+		other.facing = data.facing;
+	} catch(e) {
+	}
+	
+    //console.log("updating player id: "+data.id);
+});
+
+window.onbeforeunload = function (e) {
+	socket.emit("removePlayer", {id: player.id});
+};
+
+ 
+// Game Setup
+function loadGame()
+{
+	// initialize stuff	
+	canvas = document.getElementById('gameCanvas');
+	context = canvas.getContext('2d');
+	
+	player = new Player();
+	
+	others = new Map();
+	
+	// after things have been initialized
+	// might want to delay the setup function until you are sure everything has loaded
+	setupGame();	
+}
+
+function setupGame()
+{
+	
+	// add key event handlers to the window
+	window.onkeydown = KeyHandler.onKeyDown;
+	window.onkeyup = KeyHandler.onKeyUp;
+		
+	// start game loop
+	setInterval(gameLoop, LOOP_DELAY);
+}
+
+function gameLoop()
+{
+	// this function runs every 'frame'
+	
+	// call the players update function
+	player.update();
+	
+	// update the other players on the gameboard
+	
+	// redraw the canvas
+	redraw();
+}
+
+function redraw()
+{
+	clearCanvas();
+	
+	player.draw();
+	
+
+	// put all the drawables together
+	var drawables = getAllDrawables();
+
+	// sort all drawables by their bottom
+	// so that they are drawn in the right order
+	// which will properly layer them in the y axis
+	
+	drawables.sort(function(a, b) {
+	  return a.getVisualBottom() - b.getVisualBottom();
+	});
+	
+	for(var i = 0; i < drawables.length; i++)
+	{
+		drawables[i].draw();
+	}
+	
+}
+
+function getAllDrawables()
+{
+	var drawables = [];
+	
+	for(var i of others.values())
+	{
+		drawables.push(i);
+	}
+	
+	drawables.push(player);
+	
+	return drawables;
+}
+
+ function clearCanvas()
+{
+	canvas.width = WIDTH;
+	canvas.height = HEIGHT;
+};
+
+function drawImage(img, x, y, width, height)
+{	
+	//x = Math.round(x);
+	//y = Math.round(y);
+	
+	//draw canvas without smoothing, for pixel art
+	context.imageSmoothingEnabled = false;
+	context.mozImageSmoothingEnabled = false;
+	context.oImageSmoothingEnabled = false;
+	context.webkitImageSmoothingEnabled = false;
+	
+	// draw the image to the canvas
+	context.drawImage(img, x, y, width, height);
+};
+
+function drawCircle(color, x, y, width, height)
+{
+	var centerX = x + width / 2;
+	var centerY = y + height / 2;
+
+	context.beginPath();
+	context.arc(centerX, centerY, width / 2, 0, 2 * Math.PI, false);
+	context.fillStyle = color;
+	context.fill();
+};
+
+function drawImageRect(img, sx, sy, swidth, sheight, x, y, width, height)
+{	
+	//x = Math.round(x);
+	//y = Math.round(y);	
+	
+	//draw canvas without smoothing, for pixel art
+	context.imageSmoothingEnabled = false;
+	context.mozImageSmoothingEnabled = false;
+	context.oImageSmoothingEnabled = false;
+	context.webkitImageSmoothingEnabled = false;
+	
+	// draw a subsection of the image
+	context.drawImage(img, sx, sy, swidth, sheight, x, y, width, height);
+};
+
+//KeyHandler.js
+
+var KeyHandler = {};
+
+KeyHandler.up = false;
+KeyHandler.left = false;
+KeyHandler.down = false;
+KeyHandler.right = false;
+KeyHandler.space = false;
+
+KeyHandler.onKeyDown = function(event)
+{
+	//console.log(event.keyCode);
+	switch(event.keyCode)
+	{
+		// W, Up Arrow
+		case 87:
+		case 38: 	KeyHandler.up = true;
+					break;
+		
+		// A, Left Arrow
+		case 65:
+		case 37: 	KeyHandler.left = true;
+					break;
+		
+		// S, Down Arrow
+		case 83:
+		case 40: 	KeyHandler.down = true;
+					break;
+		
+		// D, Right Arrow
+		case 68:
+		case 39: 	KeyHandler.right = true;
+					break;
+
+		// Space
+		case 32: 	KeyHandler.space = true;
+					break;
+	}
+	
+	//event.stopPropogation();
+	//event.preventDefault();
+	//return false;
+};
+
+KeyHandler.onKeyUp = function(event)
+{
+	switch(event.keyCode)
+	{
+		// W, Up Arrow
+		case 87:
+		case 38: 	KeyHandler.up = false;
+					break;
+		
+		// A, Left Arrow
+		case 65:
+		case 37: 	KeyHandler.left = false;
+					break;
+		
+		// S, Down Arrow
+		case 83:
+		case 40: 	KeyHandler.down = false;
+					break;
+		
+		// D, Right Arrow
+		case 68:
+		case 39: 	KeyHandler.right = false;
+					break;
+
+		// Space
+		case 32: 	KeyHandler.space = false;
+					break;
+	}
+};
+
+
+
+//server.js
+var app = require('express')();
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
+
+var fs = require('fs');
+var path = require('path');
+
+app.get('/', function(request, response){
+    console.log('request starting...');
+
+    var filePath = '.' + request.url;
+    if (filePath == './')
+        filePath = './index.html';
+
+    var extname = path.extname(filePath);
+    var contentType = 'text/html';
+    switch (extname) {
+        case '.js':
+            contentType = 'text/javascript';
+            break;
+        case '.css':
+            contentType = 'text/css';
+            break;
+        case '.json':
+            contentType = 'application/json';
+            break;
+        case '.png':
+            contentType = 'image/png';
+            break;      
+        case '.jpg':
+            contentType = 'image/jpg';
+            break;
+        case '.wav':
+            contentType = 'audio/wav';
+            break;
+    }
+
+    fs.readFile(filePath, function(error, content) {
+        if (error) {
+            if(error.code == 'ENOENT'){
+                fs.readFile('./404.html', function(error, content) {
+                    response.writeHead(200, { 'Content-Type': contentType });
+                    response.end(content, 'utf-8');
+                });
+            }
+            else {
+                response.writeHead(500);
+                response.end('Sorry, check with the site admin for error: '+error.code+' ..\n');
+                response.end(); 
+            }
+        }
+        else {
+            response.writeHead(200, { 'Content-Type': contentType });
+            response.end(content, 'utf-8');
+        }
+    });
+
+});
+
+
+var players = new Map();
+
+io.on('connection', function(socket){
+ 	 console.log('a user connected');
+  
+  	// set unique user id back to the client
+  	var newID = createNewID();
+  	socket.emit("welcome", {id: newID});
+
+    // create array of players
+    var playersArray = [];
+    for(var i of players.values())
+    {
+        playersArray.push(i);
+    }
+
+  	socket.emit("allPlayers", {players: playersArray});
+
+    socket.on('addPlayer', function(msg)
+	{
+		console.log("adding a player");
+        players.set(msg.id, msg);
+		socket.broadcast.emit("addPlayer", msg);
+	});
+	
+	socket.on('removePlayer', function(msg)
+	{
+        console.log("removing player");
+        players.delete(msg.id);
+		socket.broadcast.emit("removePlayer", msg);
+	});
+	
+	socket.on('updatePlayer', function(msg)
+	{
+		socket.broadcast.emit("updatePlayer", msg);
+	});
+  
+});
+
+
+http.listen(13372, function(){
+  console.log('listening on *:13372');
+});
+
+
+// very bad unique id function, plz fixerino
+// just creates a random color to use as the ID
+function createNewID()
+{
+	return getRandomColor();
+}
+
+function getRandomColor()
+{
+    var r = Math.floor(Math.random() * 255);
+    var g = Math.floor(Math.random() * 255);
+    var b = Math.floor(Math.random() * 255);
+    
+    return "rgb("+r+", "+g+", "+b+")";
+};
+
+
