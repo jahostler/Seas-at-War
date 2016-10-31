@@ -1,12 +1,35 @@
-var app = require("http");
-var http = require('http').Server(app);
-var io = require('socket.io')(http);
-var fs = require('fs');
-var path = require('path');
+"use strict";
+// var app = require("http");
+// var http = require('http').Server(app);
+// var io = require('socket.io')(http);
+// var fs = require('fs');
+// var path = require('path');
 
-http.createServer(function (request, response) {
-	response.writeHead(200, {'Content-Type': 'text/plain'});
-	response.end("I hate you\n");
-}).listen(35000);
+// const requestHandler = (request, response) => {  
+  // console.log(request.url)
+  // response.end('Hello Node.js Server!')
+// }
 
-console.log("Server is running");
+// const server = http.createServer(requestHandler)
+
+var portNumber = 35000;
+if (process.argv.length >= 2) {
+	portNumber = process.argv[2];
+}
+
+class Grid {
+	constructor() {
+		this.area = new Array(9);
+		for (var i = 0; i < 9; i++) {
+			this.area[i] = new Array(9);
+		}
+	}
+};
+
+class Tile {
+	
+}
+
+// http.listen(35008, function(){
+  // console.log('listening on *: ' + portNumber);
+// });
