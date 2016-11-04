@@ -14,7 +14,7 @@ app.get('/', function(request, response){
 
     var filePath = '.' + request.url;
     if (filePath == './')
-        filePath = './mainMenu.html';
+        filePath = './playGame.html';
 
     var extname = path.extname(filePath);
     var contentType = 'text/html';
@@ -61,9 +61,9 @@ app.get('/', function(request, response){
         }
     });
 });
-app.use('/clientCode', express.static(__dirname + '/clientCode'))
-app.use('/html', express.static(__dirname + '/html'))
-app.use('/SVGs', express.static(__dirname + '/SVGs'))
+app.use('/test', express.static(__dirname + '/test'));
+app.use('/clientCode', express.static(__dirname + '/clientCode'));
+app.use('/style.css', express.static(__dirname + '/style.css'));
 
 io.on('connection', function(socket){
 	console.log('a user connected');

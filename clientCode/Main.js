@@ -53,3 +53,8 @@ function resizeWindow() {
 	win.width = window.innerWidth;
 	win.height = window.innerHeight;
 }
+
+function hostGame() {
+	document.getElementById('mainMenu').style.display = 'none';
+	document.getElementById('hostGame').style.display = 'block';
+}
