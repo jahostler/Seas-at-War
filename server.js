@@ -14,7 +14,7 @@ app.get('/', function(request, response){
 
     var filePath = '.' + request.url;
     if (filePath == './')
-        filePath = './index.html';
+        filePath = './mainMenu.html';
 
     var extname = path.extname(filePath);
     var contentType = 'text/html';
@@ -37,6 +37,9 @@ app.get('/', function(request, response){
         case '.wav':
             contentType = 'audio/wav';
             break;
+		case '.svg':
+			contentType = 'image/svg+xml';
+			break;
     }
     fs.readFile(filePath, function(error, content) {
         if (error) {
@@ -59,6 +62,8 @@ app.get('/', function(request, response){
     });
 });
 app.use('/clientCode', express.static(__dirname + '/clientCode'))
+app.use('/html', express.static(__dirname + '/html'))
+app.use('/SVGs', express.static(__dirname + '/SVGs'))
 
 io.on('connection', function(socket){
 	console.log('a user connected');
@@ -98,3 +103,7 @@ if (process.argv.length >= 3) {
 http.listen(portNumber, function(){
    console.log('listening on *: ' + portNumber);
  });
+ 
+ class Game {
+    
+}

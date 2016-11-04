@@ -8,10 +8,6 @@ socket.on('welcome', function(data) {
 	socket.emit('new player created', client.id);
 });
 
-class Game {
-    
-}
-
 class Player {
     constructor() {
         this.homeGrid = new Grid();
@@ -37,9 +33,23 @@ class BattleShip {
     
 }
 
-function loadGame() {
+function initialize() {
     client = new Player();
 	enemy = new Player();
-	console.log("Hello");
-    
+}
+
+function loadGame() {
+	
+}
+
+function resizeGame() {
+	canvas = document.getElementById("gameCanvas");
+	canvas.width = window.innerWidth;
+	canvas.height = window.innerHeight;
+}
+
+function resizeWindow() {
+	win = document.getElementById("gameWindow");
+	win.width = window.innerWidth;
+	win.height = window.innerHeight;
 }
