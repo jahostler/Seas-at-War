@@ -3,7 +3,7 @@
     <head>
 		<meta charset="UTF-8">
         <title>Seas At War</title>
-            <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+            <script src="/socket.io/socket.io.js"></script>
             <script type="text/javascript" src="clientCode/Main.js"></script>		
 
             <script type="text/javascript">
@@ -45,9 +45,9 @@
     </head>
     <body onresize="resizeGame()">
         <canvas id="gameCanvas">Canvas is not supported by your browser.</canvas>
-        <script> resizeGame() </script>
         <script>
-            loadGame()
-        </script>
+			resizeGame();
+			loadGame();
+		</script>
     </body>
 </html>

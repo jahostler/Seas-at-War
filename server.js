@@ -6,8 +6,8 @@ var io = require('socket.io')(http);
 var fs = require('fs');
 var path = require('path');
 
-var gameMap = new Map();
-var playerMap = new Map();
+var games = new Array();
+var players = new Array();
 
 app.get('/', function(request, response){
     console.log('request starting...');
@@ -38,7 +38,6 @@ app.get('/', function(request, response){
             contentType = 'audio/wav';
             break;
     }
-            console.log(filePath);
     fs.readFile(filePath, function(error, content) {
         if (error) {
             if(error.code == 'ENOENT'){
@@ -64,29 +63,29 @@ app.use('/clientCode', express.static(__dirname + '/clientCode'))
 io.on('connection', function(socket){
 	console.log('a user connected');
     var newID = newClientID();
-    playerMap.set(newID, new Player(newID));
-    socket.emit('new player', {'player' : playerMap.get(newID)});
+    players.push(newID);
+    socket.emit('welcome', newID);
     socket.on('new player created', function(data) {
-        if (data.id != newID) {
-			console.log(data.id);
-            playerMap.delete(newID);
+        if (data != newID) {
+			console.log(data);
+            players.delete(newID);
             console.log("Player failed to be created for client.");
         }
         else {
             console.log("Player " + newID + " creation successful!");
         }
     });
-    
     socket.on('disconnect', function () {
-        playerMap.delete(newID);
+        var index = players.indexOf(newID);
+		players.splice(index, 1);
         console.log("Player " + newID + " deleted from records.");
     });
     
 });
 
 var newClientID = function() {
-    var clientID = 10000 + gameMap.size;
-    while (gameMap.has(clientID))
+    var clientID = 10000 + players.length;
+    while (players.indexOf(clientID) != -1)
         clientID += 1;
     return clientID;
 };
@@ -99,34 +98,3 @@ if (process.argv.length >= 3) {
 http.listen(portNumber, function(){
    console.log('listening on *: ' + portNumber);
  });
-
-
-
-class Game {
-    
-}
-
-class Player {
-    constructor(ID) {
-        this.homeGrid = new Grid();
-        this.id = ID;
-        this.fleet = new Array(4);
-    }
-}
-
-class Grid {
-	constructor() {
-		this.area = new Array(9);
-		for (var i = 0; i < 9; i++) {
-			this.area[i] = new Array(9);
-		}
-	}
-}
-
-class Tile {
-	
-}
-
-class BattleShip {
-    
-}
