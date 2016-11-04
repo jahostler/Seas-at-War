@@ -6,7 +6,7 @@ var io = require('socket.io')(http);
 var fs = require('fs');
 var path = require('path');
 
-var games = new Array();
+var games = new Map();
 var players = new Array();
 
 app.get('/', function(request, response){
@@ -67,7 +67,7 @@ app.use('/style.css', express.static(__dirname + '/style.css'));
 
 io.on('connection', function(socket){
 	console.log('a user connected');
-    var newID = newClientID();
+    var newID = getPlayerID();
     players.push(newID);
     socket.emit('welcome', newID);
     socket.on('new player created', function(data) {
@@ -80,6 +80,15 @@ io.on('connection', function(socket){
             console.log("Player " + newID + " creation successful!");
         }
     });
+	socket.on('new game', function(data) {
+		console.log("New Game");
+		var gameID = getGameID();
+		var hostID = data;
+		games.set(gameID, hostID);
+		socket.emit(hostID + ' gameID created', gameID);
+		console.log("Game " + gameID + " was created with host " + hostID);
+	});
+	
     socket.on('disconnect', function () {
         var index = players.indexOf(newID);
 		players.splice(index, 1);
@@ -88,11 +97,18 @@ io.on('connection', function(socket){
     
 });
 
-var newClientID = function() {
+function getPlayerID() {
     var clientID = 10000 + players.length;
     while (players.indexOf(clientID) != -1)
         clientID += 1;
     return clientID;
+};
+
+function getGameID() {
+    var gameID = 1 + games.size;
+    while (games.has(gameID))
+        gameID += 1;
+    return gameID;
 };
 
 var portNumber = 35000;
@@ -103,7 +119,3 @@ if (process.argv.length >= 3) {
 http.listen(portNumber, function(){
    console.log('listening on *: ' + portNumber);
  });
- 
- class Game {
-    
-}

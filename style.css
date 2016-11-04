@@ -20,6 +20,10 @@ div {
 	background-image: linear-gradient(to bottom, #BA032D, #87001F);filter:progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr=#BA032D, endColorstr=#87001F);
 }
 
+.button > span {
+	color: white;
+}
+
 .button hover {
 	 border:4px solid #7D7D7D;
 	 background-color: #870221; background-image: -webkit-gradient(linear, left top, left bottom, from(#870221), to(#630000));
@@ -36,13 +40,17 @@ div {
 }
 
 #hostGame {
-	
+	background-image: url("images/hostMenu.png")
 }
 #hostGame h1 {
 	color: red;
 }
 #hostGame p {
 	color: red;
+}
+#sessionID {
+	color: red;
+	font-size: 70px;
 }
 
 #joinGame { 
