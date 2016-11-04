@@ -33,10 +33,6 @@ class BattleShip {
     
 }
 
-class Game {
-	
-}
-
 function initialize() {
     client = new Player();
 	enemy = new Player();
@@ -50,7 +46,7 @@ function newGame() {
 	socket.emit('new game', client.id);
 	socket.on(client.id + ' gameID created', function(data) {
 		console.log(data);
-		document.getElementById("sessionID").innerHTML = "Your session ID:  " + data;
+		document.getElementById("sessionID").innerHTML = "Your session ID: " + data;
 	});
 }
 
@@ -75,6 +71,10 @@ function hostGame() {
 function joinGame() {
 	document.getElementById('mainMenu').style.display = 'none';
 	document.getElementById('joinGame').style.display = 'block';
+}
+
+function joinID(ID) {
+	enemy.id = ID;
 }
 
 function instructions() {

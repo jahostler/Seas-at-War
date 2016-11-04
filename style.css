@@ -40,50 +40,27 @@ div {
 }
 
 #hostGame {
-	background-image: url("images/hostMenu.png")
-}
-#hostGame h1 {
 	color: red;
-}
-#hostGame p {
-	color: red;
+	background-image: url("images/hostMenu.png");
 }
 #sessionID {
-	color: red;
 	font-size: 70px;
 }
 
-#joinGame { 
+#joinGame {
+	background-image: url("images/joinMenu.png");
+	color: red;
+}
 
+#sessionInput label {
+	font-size: 30px;
 }
-#joinGame h1 {
-	color: red;
-}
-#joinGame p {
-	color: red;
-}
+
 #instructions { 
-
-}
-#instructions h1 {
-	color: red;
-}
-#instructions p {
 	color: red;
 }
 
 #credits { 
-
-}
-#credits h1{
-	color: red;
-	text-align: center;
-}
-#credits h2{
-	color: red;
-	text-align: center;
-}
-#credits p{
 	color: red;
 	text-align: center;
 }

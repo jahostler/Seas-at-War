@@ -119,3 +119,11 @@ if (process.argv.length >= 3) {
 http.listen(portNumber, function(){
    console.log('listening on *: ' + portNumber);
  });
+
+class Game {
+	constructor(hostID, visitorID) {
+		this.host = hostID;
+		this.visitor = visitorID;
+	}
+		
+}
