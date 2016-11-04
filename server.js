@@ -14,7 +14,7 @@ app.get('/', function(request, response){
 
     var filePath = '.' + request.url;
     if (filePath == './')
-        filePath = './playGame.html';
+        filePath = './index.html';
 
     var extname = path.extname(filePath);
     var contentType = 'text/html';
@@ -61,8 +61,8 @@ app.get('/', function(request, response){
         }
     });
 });
-app.use('/test', express.static(__dirname + '/test'));
 app.use('/clientCode', express.static(__dirname + '/clientCode'));
+app.use('/images', express.static(__dirname + '/images'));
 app.use('/style.css', express.static(__dirname + '/style.css'));
 
 io.on('connection', function(socket){

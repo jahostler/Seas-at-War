@@ -58,3 +58,23 @@ function hostGame() {
 	document.getElementById('mainMenu').style.display = 'none';
 	document.getElementById('hostGame').style.display = 'block';
 }
+
+function joinGame() {
+	document.getElementById('mainMenu').style.display = 'none';
+	document.getElementById('joinGame').style.display = 'block';
+}
+
+function instructions() {
+	document.getElementById('mainMenu').style.display = 'none';
+	document.getElementById('instructions').style.display = 'block';
+}
+
+function credits() {
+	document.getElementById('mainMenu').style.display = 'none';
+	document.getElementById('credits').style.display = 'block';
+}
+
+function backToMain(displayedScreen) {
+	document.getElementById(displayedScreen).style.display = 'none';
+	document.getElementById('mainMenu').style.display = 'block';
+}

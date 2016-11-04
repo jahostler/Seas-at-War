@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title> Seas at War </title>
+		<script src="/socket.io/socket.io.js"></script>
+		<link rel="stylesheet" type="text/css" href="style.css" media="screen" /> 
+        <script type="text/javascript" src="clientCode/Main.js"></script>	
+	</head>
+
+   
+	<body id="gameWindow" onresize="resizeWindow()">
+		
+		<div id="mainMenu"> 
+			<p>
+				<button class = "button" onClick="hostGame()">
+					<span>Host Game</span> 
+				</button>
+			</p>
+
+			<p>
+				<button class = "button" onClick="joinGame()">
+					<span>Join Game</span>
+				</button>
+			</p>
+
+			<p>	
+				<button class = "button" onClick="instructions()">
+					<span>Instructions</span>
+				</button>
+			</p>
+
+			<p>
+				<button class = "button" onClick="credits()">
+					<span>Credits</span>
+				</button>
+			</p>
+		</div>
+		
+		<div id="hostGame"> 
+			<h1>Host Game Menu</h1>
+			<p>todo</p>
+			<p>
+				<button class = "button" onClick="backToMain('hostGame')">
+					<span> Back </span> 
+				</button>
+			</p>
+		</div>
+		
+		<div id="joinGame">
+			<h1>Join Game Menu</h1>
+			<p>todo</p>
+			<p>
+				<button class = "button" onClick="backToMain('joinGame')">
+					<span> Back </span> 
+				</button>
+			</p>
+		</div>
+		
+		<div id="instructions">
+			<h1>Instructions Menu</h1>
+	   		<p>todo</p>
+			<p>
+				<button class = "button" onClick="backToMain('instructions')">
+					<span> Back </span> 
+				</button>
+			</p>
+		</div>
+		
+		<div id="credits">
+			<h1>Credits Menu</h1>
+			<h2>Team gitRekt</h2>
+				<p>	Kameron Goodman </p>
+				<p>	Neil Marklund </p>
+				<p>	Jacob Hostler </p>
+				<p>	Caleb Edens </p>
+			<p>
+				<button class = "button" onClick="backToMain('credits')">
+					<span> Back </span> 
+				</button>
+			</p>
+		</div>
+		
+		
+		<script> initialize(); </script>
+
+	</body>
+</html>
