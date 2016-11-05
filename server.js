@@ -68,6 +68,7 @@ app.use('/style.css', express.static(__dirname + '/style.css'));
 io.on('connection', function(socket){
 	console.log('a user connected');
     var newID = getPlayerID();
+	var gameID = -1;
     players.push(newID);
     socket.emit('welcome', newID);
     socket.on('new player created', function(data) {
@@ -81,23 +82,38 @@ io.on('connection', function(socket){
         }
     });
 	socket.on('new game', function(data) {
-		var gameID = getGameID();
+		gameID = getGameID();
 		var hostID = data;
 		games.set(gameID, hostID);
 		socket.emit(hostID + ' gameID created', gameID);
 		console.log("Game " + gameID + " was created with host " + hostID);
 	});
 	socket.on('join game', function(data) {
-		if (!games.has(data)) {
+		if (!games.has(data.gameID)) {
 			socket.emit(data.clientID + ' join error', {});
 		}
-		
+		else {
+			gameID = data.gameID;
+			games.set(gameID, new Game(games.get(gameID), data.clientID));
+			socket.emit(games.get(gameID).visitor + ' join success', {});
+			io.sockets.emit(games.get(gameID).host + ' join success', {});
+		}
+	});
+	socket.on('delete game', function(data) {
+		games.delete(data);
+		console.log("Game " + data + " deleted from records");
+		gameID = -1;
 	});
 	
     socket.on('disconnect', function () {
         var index = players.indexOf(newID);
+		if (games.delete(gameID)) {
+			console.log("Game " + gameID + " deleted from records");
+		}
 		players.splice(index, 1);
         console.log("Player " + newID + " deleted from records.");
+		console.log(players);
+		console.log(games);
     });
     
 });

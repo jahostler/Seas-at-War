@@ -135,6 +135,10 @@ div {
 	padding: 0px 20px 0px 20px;
 }
 
+#joinGameError {
+	font-size: 15px;
+}
+
 #sessionInput label {
 	font-size: 30px;
 }
