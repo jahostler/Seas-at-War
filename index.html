@@ -11,39 +11,30 @@
    
 	<body id="gameWindow" onresize="resizeWindow()">
 		
-		<div id="mainMenu"> 
-			<p>
+		<div id="mainMenu" style="position: absolute; top: 0px; left: 0px; right: 0px; bottom: 0px;"> 
 				<button class = "button" onClick="hostGame()">
-					<span>Host Game</span> 
+					<span>Host Game</span>
 				</button>
-			</p>
 
-			<p>
-				<button class = "button" onClick="joinGame()">
+				<button class = "button button2" onClick="joinGame()">
 					<span>Join Game</span>
 				</button>
-			</p>
 
-			<p>	
-				<button class = "button" onClick="instructions()">
+				<button class = "button button3" onClick="instructions()">
 					<span>Instructions</span>
 				</button>
-			</p>
 
-			<p>
-				<button class = "button" onClick="credits()">
+				<button class = "button button4" onClick="credits()">
 					<span>Credits</span>
 				</button>
-			</p>
 		</div>
 		
 		<div id="hostGame"> 
 			<h1>Host Game Menu</h1>
 			<p></p>
 			<span id="sessionID"></span>
-			<p>todo:  Back = deconstructor, disconnect = deconstructor</p>
 			<p>
-				<button class = "button" onClick="backToMain('hostGame')">
+				<button class = "button button3" onClick="backToMain('hostGame')">
 					<span> Back </span> 
 				</button>
 			</p>
@@ -73,7 +64,6 @@
 					<td></td>
 				</tr>
 			</table>
-			<p>todo</p>
 			<p>
 				<button class = "button" onClick="backToMain('joinGame')">
 					<span> Back </span> 
@@ -83,9 +73,8 @@
 		
 		<div id="instructions">
 			<h1>Instructions Menu</h1>
-	   		<p>todo</p>
 			<p>
-				<button class = "button" onClick="backToMain('instructions')">
+				<button class = "button button4" onClick="backToMain('instructions')">
 					<span> Back </span> 
 				</button>
 			</p>
@@ -99,7 +88,7 @@
 				<p>	Jacob Hostler </p>
 				<p>	Caleb Edens </p>
 			<p>
-				<button class = "button" onClick="backToMain('credits')">
+				<button class = "button button4" onClick="backToMain('credits')">
 					<span> Back </span> 
 				</button>
 			</p>
