@@ -81,12 +81,17 @@ io.on('connection', function(socket){
         }
     });
 	socket.on('new game', function(data) {
-		console.log("New Game");
 		var gameID = getGameID();
 		var hostID = data;
 		games.set(gameID, hostID);
 		socket.emit(hostID + ' gameID created', gameID);
 		console.log("Game " + gameID + " was created with host " + hostID);
+	});
+	socket.on('join game', function(data) {
+		if (!games.has(data)) {
+			socket.emit(data.clientID + ' join error', {});
+		}
+		
 	});
 	
     socket.on('disconnect', function () {

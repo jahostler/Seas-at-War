@@ -47,6 +47,7 @@ function newGame() {
 	socket.on(client.id + ' gameID created', function(data) {
 		console.log(data);
 		document.getElementById("sessionID").innerHTML = "Your session ID: " + data;
+		document.getElementById("sessionID").innerHTML += "<p> Waiting for player to join... </p>";
 	});
 }
 
@@ -73,8 +74,9 @@ function joinGame() {
 	document.getElementById('joinGame').style.display = 'block';
 }
 
-function joinID(ID) {
-	enemy.id = ID;
+function joinID() {
+	var id = document.getElementById('sessionID').value;
+	socket.emit('join game', {gameID : id, clientID : client.id});
 }
 
 function instructions() {

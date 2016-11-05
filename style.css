@@ -1,3 +1,12 @@
+*{
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;	
+}
+
 div {
 	position: absolute;
 	background-color: black;
@@ -20,18 +29,19 @@ div {
 	background-image: linear-gradient(to bottom, #BA032D, #87001F);filter:progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr=#BA032D, endColorstr=#87001F);
 }
 
-.button > span {
+.button span {
 	color: white;
 }
 
 .button hover {
-	 border:4px solid #7D7D7D;
-	 background-color: #870221; background-image: -webkit-gradient(linear, left top, left bottom, from(#870221), to(#630000));
-	 background-image: -webkit-linear-gradient(top, #870221, #630000);
-	 background-image: -moz-linear-gradient(top, #870221, #630000);
-	 background-image: -ms-linear-gradient(top, #870221, #630000);
-	 background-image: -o-linear-gradient(top, #870221, #630000);
-	 background-image: linear-gradient(to bottom, #870221, #630000);filter:progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr=#870221, endColorstr=#630000);
+	border:4px solid #7D7D7D;
+	background-color: #870221;
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#870221), to(#630000));
+	background-image: -webkit-linear-gradient(top, #870221, #630000);
+	background-image: -moz-linear-gradient(top, #870221, #630000);
+	background-image: -ms-linear-gradient(top, #870221, #630000);
+	background-image: -o-linear-gradient(top, #870221,7#630000)7
+	background-image: linear-gradient(to bottom, #870221, #630000);filter:progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr=#870221, endColorstr=#630000);
 }
 
 #mainMenu { 
@@ -50,6 +60,21 @@ div {
 #joinGame {
 	background-image: url("images/joinMenu.png");
 	color: red;
+}
+
+#joinGame table {
+	font-size: 30px;
+}
+
+#joinGame table input {
+	font-size: 30px;
+	height: 30px;
+	width: 100px;
+}
+
+#joinGame table .button {
+	font-size: 18px;
+	padding: 0px 20px 0px 20px;
 }
 
 #sessionInput label {
