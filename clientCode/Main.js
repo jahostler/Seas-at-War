@@ -26,6 +26,31 @@ class Grid {
 }
 
 class Tile {
+	constructor() {
+		this.hasShip = false; //whether or not a ship occupies this tile
+		this.hasBeenShot = false; //whether or not enemy has fired on this tile
+		this.shipHit = undefined; //true = "hit", false = "miss"
+	}
+	
+	shipPresent() {
+		return this.hasShip;
+	}
+	
+	shot() {
+		return this.hasBeenShot;
+	}
+	
+	updateTile() {} //TODO
+	
+	fire() {
+		this.hasBeenShot = true;
+		if(shipPresent()) {
+			this.shipHit = true;
+		}
+		else {
+			this.shipHit = false;
+		}
+	}
 	
 }
 
