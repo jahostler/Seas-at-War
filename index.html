@@ -41,7 +41,6 @@
 			<h1>Host Game Menu</h1>
 			<p></p>
 			<span id="sessionID"></span>
-			<p>todo:  Back = deconstructor, disconnect = deconstructor</p>
 			<p>
 				<button class = "button" onClick="backToMain('hostGame')">
 					<span> Back </span> 
@@ -57,7 +56,7 @@
 						<label for="sessionID">Enter session ID:</label>
 					 </td>
 					 <td valign="top">
-						<input id="sessionID" type="text" name="sessionID" maxlength="50" size="30">
+						<input id="joinIDVar" type="text" maxlength="50" size="30">
 					 </td>
 					<td>
 						<button class="button" onClick="joinID()">
@@ -73,7 +72,6 @@
 					<td></td>
 				</tr>
 			</table>
-			<p>todo</p>
 			<p>
 				<button class = "button" onClick="backToMain('joinGame')">
 					<span> Back </span> 
@@ -83,7 +81,7 @@
 		
 		<div id="instructions">
 			<h1>Instructions Menu</h1>
-	   		<p>todo</p>
+	   		<p>todo:  add instructions with buttons</p>
 			<p>
 				<button class = "button" onClick="backToMain('instructions')">
 					<span> Back </span> 
@@ -98,6 +96,7 @@
 				<p>	Neil Marklund </p>
 				<p>	Jacob Hostler </p>
 				<p>	Caleb Edens </p>
+				<p> todo:  add pictures and bios? </p>
 			<p>
 				<button class = "button" onClick="backToMain('credits')">
 					<span> Back </span> 
@@ -105,6 +104,9 @@
 			</p>
 		</div>
 		
+		<div id="makeAFleet">
+		
+		</div>
 		
 		<script> initialize(); </script>
 
