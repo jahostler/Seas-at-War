@@ -11,30 +11,22 @@
    
 	<body id="gameWindow" onresize="resizeWindow()">
 		
-		<div id="mainMenu"> 
-			<p>
+		<div id="mainMenu" style="position: absolute; top: 0px; left: 0px; right: 0px; bottom: 0px;"> 
 				<button class = "button" onClick="hostGame()">
-					<span>Host Game</span> 
+					<span>Host Game</span>
 				</button>
-			</p>
 
-			<p>
-				<button class = "button" onClick="joinGame()">
+				<button class = "button button2" onClick="joinGame()">
 					<span>Join Game</span>
 				</button>
-			</p>
 
-			<p>	
-				<button class = "button" onClick="instructions()">
+				<button class = "button button3" onClick="instructions()">
 					<span>Instructions</span>
 				</button>
-			</p>
 
-			<p>
-				<button class = "button" onClick="credits()">
+				<button class = "button button4" onClick="credits()">
 					<span>Credits</span>
 				</button>
-			</p>
 		</div>
 		
 		<div id="hostGame"> 
@@ -42,7 +34,7 @@
 			<p></p>
 			<span id="sessionID"></span>
 			<p>
-				<button class = "button" onClick="backToMain('hostGame')">
+				<button class = "button button3" onClick="backToMain('hostGame')">
 					<span> Back </span> 
 				</button>
 			</p>
@@ -83,7 +75,7 @@
 			<h1>Instructions Menu</h1>
 	   		<p>todo:  add instructions with buttons</p>
 			<p>
-				<button class = "button" onClick="backToMain('instructions')">
+				<button class = "button button4" onClick="backToMain('instructions')">
 					<span> Back </span> 
 				</button>
 			</p>
@@ -98,7 +90,7 @@
 				<p>	Caleb Edens </p>
 				<p> todo:  add pictures and bios? </p>
 			<p>
-				<button class = "button" onClick="backToMain('credits')">
+				<button class = "button button4" onClick="backToMain('credits')">
 					<span> Back </span> 
 				</button>
 			</p>
