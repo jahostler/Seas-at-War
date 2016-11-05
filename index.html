@@ -12,19 +12,19 @@
 	<body id="gameWindow" onresize="resizeWindow()">
 		
 		<div id="mainMenu" style="position: absolute; top: 0px; left: 0px; right: 0px; bottom: 0px;"> 
-				<button class = "button" onClick="hostGame()">
+				<button class="button1" onClick="hostGame()">
 					<span>Host Game</span>
 				</button>
 
-				<button class = "button button2" onClick="joinGame()">
+				<button class="button2" onClick="joinGame()">
 					<span>Join Game</span>
 				</button>
 
-				<button class = "button button3" onClick="instructions()">
+				<button class="button3" onClick="instructions()">
 					<span>Instructions</span>
 				</button>
 
-				<button class = "button button4" onClick="credits()">
+				<button class="button4" onClick="credits()">
 					<span>Credits</span>
 				</button>
 		</div>
@@ -34,7 +34,7 @@
 			<p></p>
 			<span id="sessionID"></span>
 			<p>
-				<button class = "button button3" onClick="backToMain('hostGame')">
+				<button class="button3" onClick="backToMain('hostGame')">
 					<span> Back </span> 
 				</button>
 			</p>
@@ -51,7 +51,7 @@
 						<input id="joinIDVar" type="text" maxlength="50" size="30">
 					 </td>
 					<td>
-						<button class="button" onClick="joinID()">
+						<button onClick="joinID()">
 							<span> Join Game </span>
 						</button>
 					</td>
@@ -75,7 +75,7 @@
 			<h1>Instructions Menu</h1>
 	   		<p>todo:  add instructions with buttons</p>
 			<p>
-				<button class = "button button4" onClick="backToMain('instructions')">
+				<button class="button4" onClick="backToMain('instructions')">
 					<span> Back </span> 
 				</button>
 			</p>
@@ -90,7 +90,7 @@
 				<p>	Caleb Edens </p>
 				<p> todo:  add pictures and bios? </p>
 			<p>
-				<button class = "button button4" onClick="backToMain('credits')">
+				<button class="button4" onClick="backToMain('credits')">
 					<span> Back </span> 
 				</button>
 			</p>
