@@ -5,4 +5,5 @@ Team Project 2
 * Caleb Edens
 * Kameron Goodman
 
-Survey link for editing: https://docs.google.com/a/tamu.edu/forms/d/133rPtZ2lw_m9Rh-CUcPIT4MrdmTeTP4zWKRytUfzSQo/edit?usp=sharing
+How to run the server: 
+node server.js 36006
