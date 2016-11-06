@@ -8,6 +8,7 @@ function newGame() {
 	socket.on(client.id + ' join success' , function(data) {
 		document.getElementById('hostGame').style.display = 'none';
 		document.getElementById('buildAFleet').style.display = 'block';
+		loadGame();
 	});
 }
 function removeGame() {
@@ -35,12 +36,73 @@ function joinID() {
 	socket.on(client.id + ' join success' , function(data) {
 		document.getElementById('joinGame').style.display = 'none';
 		document.getElementById('buildAFleet').style.display = 'block';
+		loadGame();
 	});
 }
 
 function instructions() {
 	document.getElementById('mainMenu').style.display = 'none';
 	document.getElementById('instructions').style.display = 'block';
+}
+
+function nextInstruction(){
+	if(document.getElementById('i1').style.display == 'block') { //1 -> 2
+		document.getElementById('i1').style.display = 'none';
+		document.getElementById('i2').style.display = 'block';
+	}
+	else if(document.getElementById('i2').style.display == 'block') { //2 -> 3
+		document.getElementById('i2').style.display = 'none';
+		document.getElementById('i3').style.display = 'block';
+	}
+	else if(document.getElementById('i3').style.display == 'block') {
+		document.getElementById('i3').style.display = 'none';
+		document.getElementById('i4').style.display = 'block';
+	}
+	else if(document.getElementById('i4').style.display == 'block') {
+		document.getElementById('i4').style.display = 'none';
+		document.getElementById('i5').style.display = 'block';
+	}
+	else if(document.getElementById('i5').style.display == 'block') {
+		document.getElementById('i5').style.display = 'none';
+		document.getElementById('i6').style.display = 'block';
+	}
+	else if(document.getElementById('i6').style.display == 'block') {
+		document.getElementById('i6').style.display = 'none';
+		document.getElementById('i7').style.display = 'block';
+	}
+	else if(document.getElementById('i7').style.display == 'block') {
+		//do nothing
+	}
+}
+
+function prevInstruction() {
+	if(document.getElementById('i7').style.display == 'block') { //1 -> 2
+		document.getElementById('i7').style.display = 'none';
+		document.getElementById('i6').style.display = 'block';
+	}
+	else if(document.getElementById('i6').style.display == 'block') { //2 -> 3
+		document.getElementById('i6').style.display = 'none';
+		document.getElementById('i5').style.display = 'block';
+	}
+	else if(document.getElementById('i5').style.display == 'block') {
+		document.getElementById('i5').style.display = 'none';
+		document.getElementById('i4').style.display = 'block';
+	}
+	else if(document.getElementById('i4').style.display == 'block') {
+		document.getElementById('i4').style.display = 'none';
+		document.getElementById('i3').style.display = 'block';
+	}
+	else if(document.getElementById('i3').style.display == 'block') {
+		document.getElementById('i3').style.display = 'none';
+		document.getElementById('i2').style.display = 'block';
+	}
+	else if(document.getElementById('i2').style.display == 'block') {
+		document.getElementById('i2').style.display = 'none';
+		document.getElementById('i1').style.display = 'block';
+	}
+	else if(document.getElementById('i1').style.display == 'block') {
+		//do nothing
+	}
 }
 
 function credits() {
@@ -57,7 +119,10 @@ function backToMain(displayedScreen) {
 }
 
 function resizeGame() {
-	canvas = document.getElementById('gameCanvas');
-	canvas.width = window.innerWidth;
-	canvas.height = window.innerHeight;
+//	canvas1 = document.getElementById('buildCanvas');
+//	canvas2 = document.getElementById('gameCanvas');
+//	canvas1.width = window.innerWidth;
+//	canvas1.height = window.innerHeight;
+//	canvas2.width = window.innerWidth;
+//	canvas2.height = window.innerHeight;
 }

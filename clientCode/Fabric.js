@@ -2043,7 +2043,7 @@ if (typeof(eventjs.proxy) === "undefined") eventjs.proxy = {};
 
 eventjs.proxy = (function(root) { "use strict";
 
-root.shake = function(conf) {
+/*root.shake = function(conf) {
 	// Externally accessible data.
 	var self = {
 		gesture: "devicemotion",
@@ -2121,7 +2121,7 @@ root.shake = function(conf) {
 	window.addEventListener('devicemotion', onDeviceMotion, false);
 	// Return this object.
 	return self;
-};
+};*/
 
 eventjs.Gesture = eventjs.Gesture || {};
 eventjs.Gesture._gestureHandlers = eventjs.Gesture._gestureHandlers || {};
@@ -8130,7 +8130,7 @@ fabric.Pattern = fabric.util.createClass(/** @lends fabric.Pattern.prototype */ 
 
       this._createLowerCanvas(el);
       this._initOptions(options);
-      this._setImageSmoothing();
+//      this._setImageSmoothing();
 
       if (options.overlayImage) {
         this.setOverlayImage(options.overlayImage, this.renderAll.bind(this));
@@ -8314,7 +8314,7 @@ fabric.Pattern = fabric.util.createClass(/** @lends fabric.Pattern.prototype */ 
      * @private
      * @see {@link http://www.whatwg.org/specs/web-apps/current-work/multipage/the-canvas-element.html#dom-context-2d-imagesmoothingenabled|WhatWG Canvas Standard}
      */
-    _setImageSmoothing: function() {
+/*    _setImageSmoothing: function() {
       var ctx = this.getContext();
 
       ctx.imageSmoothingEnabled       = this.imageSmoothingEnabled;
@@ -8324,14 +8324,14 @@ fabric.Pattern = fabric.util.createClass(/** @lends fabric.Pattern.prototype */ 
       ctx.oImageSmoothingEnabled      = this.imageSmoothingEnabled;
     },
 
-    /**
+    *
      * @private
      * @param {String} property Property to set ({@link fabric.StaticCanvas#backgroundImage|backgroundImage}
      * or {@link fabric.StaticCanvas#overlayImage|overlayImage})
      * @param {(fabric.Image|String|null)} image fabric.Image instance, URL of an image or null to set background or overlay to
      * @param {Function} callback Callback to invoke when image is loaded and set as background or overlay
      * @param {Object} [options] Optional options to set for the {@link fabric.Image|image}.
-     */
+     
     __setBgOverlayImage: function(property, image, callback, options) {
       if (typeof image === 'string') {
         fabric.util.loadImage(image, function(img) {
@@ -8346,7 +8346,7 @@ fabric.Pattern = fabric.util.createClass(/** @lends fabric.Pattern.prototype */ 
       }
 
       return this;
-    },
+    },*/
 
     /**
      * @private
