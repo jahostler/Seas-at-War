@@ -63,36 +63,36 @@ button {
 
 
 #scramblerDes {
-	top: 18%;
-	left: 40%;
+	top: 190px;
+	left: 750px;
 }
 #scannerDes {
-	top: 24%;
-	left: 40%;
+	top: 280px;
+	left: 750px;
 }
 #submarineDes {
-	top: 36%;
-	left: 40%;
+	top: 400px;
+	left: 750px;
 }
 #destroyerDes {
-	top: 42%;
-	left: 40%;
+	top: 490px;
+	left: 750px;
 }
 #cruiserDes {
-	top: 55%;
-	left: 40%;
+	top: 610px;
+	left: 750px;
 }
 #carrierDes {
-	top: 61%;
-	left: 40%;
+	top: 700px;
+	left: 750px;
 }
 #executionerDes {
-	top: 74%;
-	left: 40%;
+	top: 820px;
+	left: 750px;
 }
 #artilleryDes {
-	top: 80%;
-	left: 40%;
+	top: 910px;
+	left: 750px;
 }
 
 button span {
@@ -178,7 +178,7 @@ button span {
 	word-wrap: break-word;
 	display: none;
 	background-color: rgba(0,0,0,0);
-	margin-top: 590px;
+	margin-top: 570px;
 	margin-left: 69px;
 	font-size: 22px;
 	color: white;
@@ -187,4 +187,15 @@ button span {
 #buildAFleet button {
 	font-size: 24px;
 	padding:0px 20px 0px 20px;
+}
+
+#finishFleet {
+	top: 90px;
+	left: 1000px;
+	font-size: 30px;
+	padding: 10px 30px 10px 30px;
+}
+
+#positionFleet {
+	
 }
