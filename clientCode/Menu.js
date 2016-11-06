@@ -72,7 +72,7 @@ function prevInstruction() {
 			instructions[i].style.display = 'none';
 			instructions[i-1].style.display = 'block';
 			if (i == 1) {
-				document.getElementById('previousInstruction').style.display = 'none';
+				document.geElementById('previousInstruction').style.display = 'none';
 			}
 			if (i == 6) {
 				document.getElementById('nextInstruction').style.display = 'block';
@@ -102,10 +102,5 @@ function backToMain(displayedScreen) {
 }
 
 function resizeGame() {
-//	canvas1 = document.getElementById('buildCanvas');
-//	canvas2 = document.getElementById('gameCanvas');
-//	canvas1.width = window.innerWidth;
-//	canvas1.height = window.innerHeight;
-//	canvas2.width = window.innerWidth;
-//	canvas2.height = window.innerHeight;
+	
 }

@@ -5,6 +5,7 @@ var prepWindow;
 var positionWindow;
 var socket = io.connect();
 var currentGame;
+var scaling = .75;
 
 socket.on('welcome', function(data) {
 	console.log("Your player ID is " + data);
@@ -16,7 +17,8 @@ function initialize() {
     client = new Player();
 	enemy = new Player();
 	gameID = -1;
-	prepWindow = new buildAFleetWindow(document.getElementById('buildCanvas'), .75);
+	prepWindow = new buildAFleetWindow(document.getElementById('buildCanvas'), scaling);
+	positionWindow = new fleetPositionWindow(document.getElementById('positionCanvas'), scaling)
 }
 
 function loadGame() {
@@ -103,7 +105,8 @@ function shipDetails(shipname) {
 }
 
 function loadPositionSelect() {
-	
+	positionWindow.drawButtons();
+	positionWindow.draw();
 }
 
 function toPositionSelect() {

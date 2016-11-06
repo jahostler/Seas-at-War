@@ -14,6 +14,8 @@ class buildAFleetWindow {
 	constructor(canvas, scale) {
 		this.scale = scale;
 		this.canvas = canvas;
+		this.canvas.width = this.adjust(1920);
+		this.canvas.height = this.adjust(1080);
 		this.context = canvas.getContext('2d');
 		this.background = new Image();
 		this.background.src = 'images/Ships/shipSelect.png';
@@ -31,9 +33,10 @@ class buildAFleetWindow {
 		return dimension * this.scale;
 	}
 	drawButtons() {
+		document.getElementById('finishShipSelect').style.left = this.adjust(document.getElementById('finishShipSelect').offsetLeft)+'px';
+		document.getElementById('finishShipSelect').style.top = this.adjust(document.getElementById('finishShipSelect').offsetTop)+'px';
 		var window = this;
 		[].forEach.call(this.buildButtons, function(element) {
-			console.log(element.offsetLeft);
 			element.style.left = window.adjust(element.offsetLeft)+'px';
 			element.style.top = window.adjust(element.offsetTop)+'px';
 		});
@@ -73,6 +76,8 @@ class fleetPositionWindow {
 	constructor(canvas, scale) {
 		this.scale = scale;
 		this.canvas = canvas;
+		this.canvas.width = this.adjust(1920);
+		this.canvas.height = this.adjust(1080);
 		this.context = canvas.getContext('2d');
 		this.background = new Image();
 		this.background.src = 'images/Ships/shipSelect.png';
@@ -88,6 +93,9 @@ class fleetPositionWindow {
 		this.moveableShips[1] = new moveableShip(3, 3, 3);
 		this.moveableShips[2] = new moveableShip(4, 4, 3);
 		this.moveableShips[3] = new moveableShip(5, 5, 3);
+		this.selectButtons = document.getElementsByClassName('shipSelectButton');
+		this.moveButtons = document.getElementsByClassName('shipMoveButton');
+
 	}
 	adjust(dimension) {
 		return dimension * this.scale;
@@ -175,6 +183,37 @@ class fleetPositionWindow {
 			return false;
 		}
 		return false;
+	}
+	drawButtons() {
+		document.getElementById('finishFleet').style.left = this.adjust(document.getElementById('finishFleet').offsetLeft)+'px';
+		document.getElementById('finishFleet').style.top = this.adjust(document.getElementById('finishFleet').offsetTop)+'px';
+		var window = this;
+		[].forEach.call(this.selectButtons, function(element) {
+			element.style.left = window.adjust(element.offsetLeft)+'px';
+			element.style.top = window.adjust(element.offsetTop)+'px';
+		});
+		[].forEach.call(this.moveButtons, function(element) {
+			element.style.left = window.adjust(element.offsetLeft)+'px';
+			element.style.top = window.adjust(element.offsetTop)+'px';
+		});
+	}
+	draw() {
+		this.context.drawImage(this.background, 0, 0, this.adjust(this.background.width), this.adjust(this.background.height));
+		this.context.drawImage(this.class2, this.adjust(180), this.adjust(240), this.adjust(this.class2.width), this.adjust(this.class2.height));
+		this.context.drawImage(this.class3, this.adjust(250), this.adjust(240), this.adjust(this.class3.width), this.adjust(this.class3.height));
+		this.context.drawImage(this.class4, this.adjust(320), this.adjust(240), this.adjust(this.class4.width), this.adjust(this.class4.height));
+		this.context.drawImage(this.class5, this.adjust(390), this.adjust(240), this.adjust(this.class5.width), this.adjust(this.class5.height));
+		this.context.font = 'bold 32px Arial';
+		this.context.fillStyle = 'white';
+		this.context.shadowColor = 'black';
+		this.context.shadowOffsetX = 3;
+		this.context.shadowOffsetY = 3;
+		this.context.fillText('Move Fleet Menu', this.adjust(850), this.adjust(100));
+		this.context.font = '28px Arial';
+		this.context.fillText(client.fleet[0], this.adjust(950), this.adjust(225));
+		this.context.fillText(client.fleet[1], this.adjust(950), this.adjust(355));
+		this.context.fillText(client.fleet[2], this.adjust(950), this.adjust(485));
+		this.context.fillText(client.fleet[3], this.adjust(950), this.adjust(615));
 	}
 }
 
