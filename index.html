@@ -5,13 +5,13 @@
 		<title> Seas at War </title>
 		<script src="/socket.io/socket.io.js"></script>
 		<link rel="stylesheet" type="text/css" href="style.css" media="screen" /> 
+		<script type="text/javascript" src="clientCode/Fabric.js"></script>
 		<script type="text/javascript" src="clientCode/Classes.js"></script>	
         <script type="text/javascript" src="clientCode/Main.js"></script>
 		<script type="text/javascript" src="clientCode/Menu.js"></script>	
 	</head>
-
    
-	<body id="gameWindow" onresize="resizeWindow()">
+	<body id="gameWindow" onresize="resizeGame()">
 		
 		<div id="mainMenu" style="position: absolute; top: 0px; left: 0px; right: 0px; bottom: 0px;"> 
 				<button class="button1" onClick="hostGame()">
@@ -99,7 +99,7 @@
 		</div>
 		
 		<div id="buildAFleet">
-		
+			<canvas id="gameCanvas"> Canvas is not supported by your browser.  </canvas>
 		</div>
 		
 		<script> initialize(); </script>

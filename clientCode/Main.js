@@ -2,6 +2,7 @@ var client;
 var enemy;
 var gameID;
 var socket = io.connect();
+var currentGame;
 
 socket.on('welcome', function(data) {
 	console.log("Your player ID is " + data);

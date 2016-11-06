@@ -61,9 +61,3 @@ function resizeGame() {
 	canvas.width = window.innerWidth;
 	canvas.height = window.innerHeight;
 }
-
-function resizeWindow() {
-	win = document.getElementById('gameWindow');
-	win.width = window.innerWidth;
-	win.height = window.innerHeight;
-}
