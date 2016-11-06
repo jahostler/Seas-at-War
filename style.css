@@ -59,6 +59,8 @@ button {
 .buildButton {
 	border:3px solid #000000;
 	background-image: -webkit-linear-gradient(top, #57606d, #000000);
+	font-size: 24px;
+	padding:0px 20px 0px 20px;
 }
 
 
@@ -184,18 +186,77 @@ button span {
 	color: white;
 }
 
-#buildAFleet button {
-	font-size: 24px;
-	padding:0px 20px 0px 20px;
-}
-
-#finishFleet {
-	top: 90px;
-	left: 1000px;
+#finishShipSelect {
+	top: 40px;
+	left: 1325px;
 	font-size: 30px;
 	padding: 10px 30px 10px 30px;
 }
 
-#positionFleet {
-	
+.shipSelectButton {
+	border:3px solid #000000;
+	font-size: 24px;
+	background-image: -webkit-linear-gradient(top, #57606d, #000000);
+}
+
+.shipMoveButton {
+	border:3px solid #000000;
+	font-size: 30px;
+	background-image: -webkit-linear-gradient(top, #57606d, #000000);
+}
+
+#finishFleet {
+	top: 795px;
+	left: 165px;
+	font-size: 30px;
+	padding: 20px 40px 20px 40px;
+}
+
+#up {
+	top: 675px;
+	left: 950px;
+	padding: 10px 25px 10px 25px;
+}
+
+#down {
+	top: 775px;
+	left: 950px;
+	padding: 10px 25px 10px 25px;
+}
+
+#left {
+	top: 775px;
+	left: 850px;
+}
+
+#right {
+	top: 775px;
+	left: 1050px;
+}
+
+#rotate {
+	padding: 20px 70px 20px 70px;
+	font-size: 21px;
+	top: 875px;
+	left: 850px;
+}
+
+#move2 {
+	top: 170px;
+	left: 750px; 
+}
+
+#move3 {
+	top: 300px;
+	left: 750px;
+}
+
+#move4 {
+	top: 430px;
+	left: 750px;
+}
+
+#move5 {
+	top: 560px;
+	left: 750px;
 }

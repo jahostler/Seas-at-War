@@ -119,7 +119,7 @@
 		</div>
 		
 		<div id="buildAFleet">
-			<canvas id="buildCanvas" width="1440" height="810"> Canvas is not supported by your browser.  </canvas>
+			<canvas id="buildCanvas"> Canvas is not supported by your browser.  </canvas>
 		
 				<button id="scramblerDes" class="buildButton" onClick="shipDetails('Scrambler')">
 					<span> 1 </span> 
@@ -146,8 +146,8 @@
 					<span> 8 </span> 
 				</button>
 				
-				<button id="finishFleet" onclick="toPositionSelect()"> 
-					<span> Finish Fleet! </span>
+				<button id="finishShipSelect" onclick="toPositionSelect()"> 
+					<span> Finish Ship Select! </span>
 				</button>
 				
 				<div class='shipDes'> Misleading Intelligence - When activated, for the next 4 turns all hits that the enemy makes on your ships show up as misses (single time use, no additional shots on turn user activates it)</div>
@@ -168,6 +168,40 @@
 		</div>
 		
 		<div id="positionFleet">
+			<canvas id="positionCanvas"></canvas>
+			
+			<button id="finishFleet" onclick=""> 
+					<span> Finish Fleet! </span>
+			</button>
+			
+			<button id="up" class="shipMoveButton">
+				<span> &#8679; </span>
+			</button>
+			<button id="down" class="shipMoveButton">
+				<span> &#8681; </span>
+			</button>
+			<button id="left" class="shipMoveButton">
+				<span> &#8678; </span>
+			</button>
+			<button id="right" class="shipMoveButton">
+				<span> &#8680; </span>
+			</button>
+			<button id="rotate" class="shipMoveButton">
+				<span> Rotate </span>
+			</button>
+			
+			<button id="move2" class="shipSelectButton">
+				<span> Class 2 </span>
+			</button>
+			<button id="move3" class="shipSelectButton">
+				<span> Class 3 </span>
+			</button>
+			<button id="move4" class="shipSelectButton">
+				<span> Class 4 </span>
+			</button>
+			<button id="move5" class="shipSelectButton">
+				<span> Class 5 </span>
+			</button>
 			
 		</div>
 			
