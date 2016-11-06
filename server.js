@@ -63,7 +63,6 @@ app.get('/', function(request, response){
 });
 app.use('/clientCode', express.static(__dirname + '/clientCode'));
 app.use('/images', express.static(__dirname + '/images'));
-app.use('/images/Instructions',express.static(__dirname + '/images/Instructions'));
 app.use('/style.css', express.static(__dirname + '/style.css'));
 
 io.on('connection', function(socket){

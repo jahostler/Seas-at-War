@@ -24,7 +24,8 @@ button {
 	box-shadow: #878787 0px 2px 2px ; -webkit-border-radius: 14px; -moz-border-radius: 14px;
 	border-radius: 14px;font-size:53px;font-family:arial black, sans-serif; padding: 10px 20px 10px 20px; 
 	text-decoration:none; display:inline-block;text-shadow: 2px 2px 0 rgba(0,0,0,0.3);font-weight:bold; color: #FFFFFF;
-	background-color: #BA032D; background-image: -webkit-gradient(linear, left top, left bottom, from(#BA032D), to(#87001F));
+	background-color: #BA032D;
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#BA032D), to(#87001F));
 	background-image: -webkit-linear-gradient(top, #BA032D, #87001F);
 	background-image: -moz-linear-gradient(top, #BA032D, #87001F);
 	background-image: -ms-linear-gradient(top, #BA032D, #87001F);
@@ -110,5 +111,5 @@ button span {
 }
 
 #buildAFleet {
-	background-image: url("images/shipSelect.png");
+
 }
