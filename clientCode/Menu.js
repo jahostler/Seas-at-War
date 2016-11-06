@@ -44,6 +44,7 @@ function instructions() {
 	document.getElementById('mainMenu').style.display = 'none';
 	document.getElementById('instructions').style.display = 'block';
 	document.getElementsByClassName('instructImg')[0].style.display = 'block';
+	document.getElementById('nextInstruction').style.display = 'block';
 	document.getElementById('previousInstruction').style.display = 'none';
 }
 
