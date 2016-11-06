@@ -6,5 +6,5 @@ Team Project 2
 * Kameron Goodman
 
 How to run the server: 
-node server.js <port-number>
+node server.js [port-number]
 default is 35000
