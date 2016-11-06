@@ -84,11 +84,101 @@ class fleetPositionWindow {
 		this.class4.src = 'images/Ships/ship4' + client.fleet[2] + '.png';
 		this.class5 = new Image();
 		this.class5.src = 'images/Ships/ship5' + client.fleet[3] + '.png';
+		this.moveableShips[0] = new moveableShip(2, 2, 3);
+		this.moveableShips[1] = new moveableShip(3, 3, 3);
+		this.moveableShips[2] = new moveableShip(4, 4, 3);
+		this.moveableShips[3] = new moveableShip(5, 5, 3);
 	}
 	adjust(dimension) {
 		return dimension * this.scale;
 	}
+	checkPosition(shipID, desiredMove){
+		for(i = 0; i < desiredMove.length){
+			var current = desiredMove[i];
+			//out of bounds X check
+			if(current.getX() < 0){
+				return false;
+			}
+			else if(current.getX() > 8){
+				return false;
+			}
+			//out of bounds Y check
+			if(current.getY() < 0){
+				return false;
+			}
+			else if(current.getY() > 8){
+				return false;
+			}
+			//ship collision check
+			for(j = 0; j < moveableShips.length; j++){
+				if(j != shipID){
+					var compareShip = moveableShips[j];
+					for(k = 0; k < compareShip.length; k++){
+						var comparePos = compareShip[k];
+						if(current.equals(comparePos) == true){
+							return false;
+						}
+					}//end comparePos
+				}
+				
+			}//end ship loop
+		}//desiredMove loop end; 
+		return true;
+	}
+	moveAction(shipID, actionString){
+		if(actionString == "Rotate"){
+			if(checkPosition(shipID, moveableShips[shipID].checkRotate()) == true){
+				moveableShips[shipID].rotate();
+				return true;
+			}
+			else{
+				return false;
+			}
+		}
+		else if(actionString == "Up"){
+			if(checkPosition(shipID, moveableShips[shipID].checkMove("Up")) == true){
+				moveableShips[shipID].move("Up");
+				return true;
+			}
+			else{
+				return false;
+			}
+		}
+		else if(actionString == "Down"){
+			if(checkPosition(shipID, moveableShips[shipID].checkMove("Down")) == true){
+				moveableShips[shipID].move("Down");
+				return true;
+			}
+			else{
+				return false;
+			}
+		}
+		else if(actionString == "Right"){
+			if(checkPosition(shipID, moveableShips[shipID].checkMove("Right")) == true){
+				moveableShips[shipID].move("Right");
+				return true;
+			}
+			else{
+				return false;
+			}
+		}
+		else if(actionString == "Left"){
+			if(checkPosition(shipID, moveableShips[shipID].checkMove("Left")) == true){
+				moveableShips[shipID].move("Left");
+				return true;
+			}
+			else{
+				return false;
+			}
+		}
+		else{
+			return false;
+		}
+		return false;
+	}
 }
+
+
 
 class Grid {
 	constructor() {
@@ -146,6 +236,128 @@ class generalShip {
 	} */
 
 	
+}
+
+class orderedPair{
+	constructor(x,y) {
+		this.posX = x;
+		this.posY = y;
+	}
+	getX(){
+		return this.posX;
+	}
+	getY(){
+		return this.posY;
+	}
+	move(x,y){
+		this.posX = x;
+		this.posY = y;
+	}
+	equals(inputPair){
+		if(inputPair.getX() != this.posX){
+			return false;
+		}
+		if(inputPair.getY() != this.posY){
+			return false;
+		}
+		return true;
+	}
+}
+
+class moveableShip {
+	constructor(shipSize,mainX,mainY) {
+		this.mainX = mainX;
+		this.mainY = mainY;
+		this.mainPoint = new orderedPair(mainX,mainY);
+		this.vert = true;
+		this.length = shipSize;
+	}
+	currentPosArray(){
+		var pos = [mainPoint];
+		for (i = 0; i < this.shipsize-1; i++){
+			if(this.vert == true){
+				pos.push(new orderedPair(this.mainX,this.mainY + 1 + i));
+			}
+			else{
+				pos.push(new orderedPair(this.mainX + 1 + i,this.mainY));
+			}
+		}
+		return pos;
+	}
+	checkRotate(){
+		var pos = [mainPoint];
+		for (i = 0; i < this.shipsize-1; i++){
+			if(this.vert == true){
+				pos.push(new orderedPair(this.mainX + 1 + i,this.mainY));
+			}
+			else{
+				pos.push(new orderedPair(this.mainX,this.mainY + 1 + i));
+			}
+		}
+		return pos;
+	}
+	rotate(){
+		if(this.vert == true){
+			this.vert = false;
+		}
+		else{
+			this.vert = true;
+		}
+	}
+	checkMove(direction){
+		var xChange = 0;
+		var yChange = 0;
+		if(direction == "Up"){
+			xChange = 0;
+			yChange = -1;
+		}
+		else if(direction == "Down"){
+			xChange = 0;
+			yChange = 1;
+		}
+		else if(direction == "Right"){
+			xChange = 1;
+			yChange = 0;
+		}
+		else if(direction == "Left"){
+			xChange = -1;
+			yChange = 0;
+		}
+		
+		var pos = [new orderedPair(this.mainX + xChange,this.mainY + yChange)];
+		for (i = 0; i < this.shipsize-1; i++){
+			if(this.vert == true){
+				pos.push(new orderedPair(this.mainX + xChange,this.mainY + 1 + i + yChange));
+			}
+			else{
+				pos.push(new orderedPair(this.mainX + 1 + i + xChange,this.mainY + yChange));
+			}
+		}
+		return pos;
+	}
+	move(direction){
+		var xChange = 0;
+		var yChange = 0;
+		if(direction == "Up"){
+			xChange = 0;
+			yChange = -1;
+		}
+		else if(direction == "Down"){
+			xChange = 0;
+			yChange = 1;
+		}
+		else if(direction == "Right"){
+			xChange = 1;
+			yChange = 0;
+		}
+		else if(direction == "Left"){
+			xChange = -1;
+			yChange = 0;
+		}
+		this.mainX = this.mainX + xChange;
+		this.mainY = this.mainY + yChange;
+		this.mainPoint.move(this.mainX,this.mainY);
+	}
 }
 
 /* //class 2
