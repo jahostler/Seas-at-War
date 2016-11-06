@@ -90,7 +90,6 @@ button span {
 	position: static;
 	font-size:18px;
 	padding: 0px 20px 0px 20px;
-	cursor: pointer;
 }
 
 #joinGameError {
