@@ -43,65 +43,41 @@ function joinID() {
 function instructions() {
 	document.getElementById('mainMenu').style.display = 'none';
 	document.getElementById('instructions').style.display = 'block';
+	document.getElementsByClassName('instructImg')[0].style.display = 'block';
+	document.getElementById('previousInstruction').style.display = 'none';
 }
 
 function nextInstruction(){
-	if(document.getElementById('i1').style.display == 'block') { //1 -> 2
-		document.getElementById('i1').style.display = 'none';
-		document.getElementById('i2').style.display = 'block';
-	}
-	else if(document.getElementById('i2').style.display == 'block') { //2 -> 3
-		document.getElementById('i2').style.display = 'none';
-		document.getElementById('i3').style.display = 'block';
-	}
-	else if(document.getElementById('i3').style.display == 'block') {
-		document.getElementById('i3').style.display = 'none';
-		document.getElementById('i4').style.display = 'block';
-	}
-	else if(document.getElementById('i4').style.display == 'block') {
-		document.getElementById('i4').style.display = 'none';
-		document.getElementById('i5').style.display = 'block';
-	}
-	else if(document.getElementById('i5').style.display == 'block') {
-		document.getElementById('i5').style.display = 'none';
-		document.getElementById('i6').style.display = 'block';
-	}
-	else if(document.getElementById('i6').style.display == 'block') {
-		document.getElementById('i6').style.display = 'none';
-		document.getElementById('i7').style.display = 'block';
-	}
-	else if(document.getElementById('i7').style.display == 'block') {
-		//do nothing
+	var instructions = document.getElementsByClassName('instructImg');
+	for (var i = 0; i < instructions.length - 1; ++i) {
+		if (instructions[i].style.display == 'block') {
+			instructions[i].style.display = 'none';
+			instructions[i+1].style.display = 'block';
+			if (i == 0) {
+				document.getElementById('previousInstruction').style.display = 'block';
+			}
+			if (i == 5) {
+				document.getElementById('nextInstruction').style.display = 'none';
+			}
+			break;
+		}
 	}
 }
 
 function prevInstruction() {
-	if(document.getElementById('i7').style.display == 'block') { //1 -> 2
-		document.getElementById('i7').style.display = 'none';
-		document.getElementById('i6').style.display = 'block';
-	}
-	else if(document.getElementById('i6').style.display == 'block') { //2 -> 3
-		document.getElementById('i6').style.display = 'none';
-		document.getElementById('i5').style.display = 'block';
-	}
-	else if(document.getElementById('i5').style.display == 'block') {
-		document.getElementById('i5').style.display = 'none';
-		document.getElementById('i4').style.display = 'block';
-	}
-	else if(document.getElementById('i4').style.display == 'block') {
-		document.getElementById('i4').style.display = 'none';
-		document.getElementById('i3').style.display = 'block';
-	}
-	else if(document.getElementById('i3').style.display == 'block') {
-		document.getElementById('i3').style.display = 'none';
-		document.getElementById('i2').style.display = 'block';
-	}
-	else if(document.getElementById('i2').style.display == 'block') {
-		document.getElementById('i2').style.display = 'none';
-		document.getElementById('i1').style.display = 'block';
-	}
-	else if(document.getElementById('i1').style.display == 'block') {
-		//do nothing
+	var instructions = document.getElementsByClassName('instructImg');
+	for (var i = 1; i < instructions.length; ++i) {
+		if (instructions[i].style.display == 'block') {
+			instructions[i].style.display = 'none';
+			instructions[i-1].style.display = 'block';
+			if (i == 1) {
+				document.getElementById('previousInstruction').style.display = 'none';
+			}
+			if (i == 6) {
+				document.getElementById('nextInstruction').style.display = 'block';
+			}
+			break;
+		}
 	}
 }
 
@@ -113,6 +89,12 @@ function credits() {
 function backToMain(displayedScreen) {
 	if (displayedScreen == 'hostGame') {
 		removeGame();
+	}
+	if (displayedScreen == 'instructions') {
+		var instructions = document.getElementsByClassName('instructImg');
+		[].forEach.call(instructions, function(element){
+			element.style.display = 'none';
+		});
 	}
 	document.getElementById(displayedScreen).style.display = 'none';
 	document.getElementById('mainMenu').style.display = 'block';
@@ -128,95 +110,39 @@ function resizeGame() {
 }
 
 function shipDetails(shipname) {
+	var index = -1;
+	var descriptions = document.getElementsByClassName('shipDes')
 	switch(shipname){
 		case "Scrambler":
-			document.getElementById('2a').style.display='block';
-			document.getElementById('2b').style.display='none';
-			document.getElementById('3a').style.display='none';
-			document.getElementById('3b').style.display='none';
-			document.getElementById('4a').style.display='none';
-			document.getElementById('4b').style.display='none';
-			document.getElementById('5a').style.display='none';
-			document.getElementById('5b').style.display='none';
-		break;
-		
+			index = 0;
+			break;
 		case "Scanner":
-			document.getElementById('2a').style.display='none';
-			document.getElementById('2b').style.display='block';
-			document.getElementById('3a').style.display='none';
-			document.getElementById('3b').style.display='none';
-			document.getElementById('4a').style.display='none';
-			document.getElementById('4b').style.display='none';
-			document.getElementById('5a').style.display='none';
-			document.getElementById('5b').style.display='none';	
+			index = 1;
+			break;	
 		break;
-		
 		case "Submarine":
-			document.getElementById('2a').style.display='none';
-			document.getElementById('2b').style.display='none';
-			document.getElementById('3a').style.display='block';
-			document.getElementById('3b').style.display='none';
-			document.getElementById('4a').style.display='none';
-			document.getElementById('4b').style.display='none';
-			document.getElementById('5a').style.display='none';
-			document.getElementById('5b').style.display='none';
-		break;
-		
+			index = 2;
+			break;
 		case "Destroyer":
-			document.getElementById('2a').style.display='none';
-			document.getElementById('2b').style.display='none';
-			document.getElementById('3a').style.display='none';
-			document.getElementById('3b').style.display='block';
-			document.getElementById('4a').style.display='none';
-			document.getElementById('4b').style.display='none';
-			document.getElementById('5a').style.display='none';
-			document.getElementById('5b').style.display='none';
-		break;
-		
+			index = 3;
+			break;
 		case "Cruiser":
-			document.getElementById('2a').style.display='none';
-			document.getElementById('2b').style.display='none';
-			document.getElementById('3a').style.display='none';
-			document.getElementById('3b').style.display='none';
-			document.getElementById('4a').style.display='block';
-			document.getElementById('4b').style.display='none';
-			document.getElementById('5a').style.display='none';
-			document.getElementById('5b').style.display='none';
-		break;
-		
+			index = 4;
+			break;
 		case "Carrier":
-			document.getElementById('2a').style.display='none';
-			document.getElementById('2b').style.display='none';
-			document.getElementById('3a').style.display='none';
-			document.getElementById('3b').style.display='none';
-			document.getElementById('4a').style.display='none';
-			document.getElementById('4b').style.display='block';
-			document.getElementById('5a').style.display='none';
-			document.getElementById('5b').style.display='none';
-		break;
-		
+			index = 5;
+			break;
 		case "Executioner":
-			document.getElementById('2a').style.display='none';
-			document.getElementById('2b').style.display='none';
-			document.getElementById('3a').style.display='none';
-			document.getElementById('3b').style.display='none';
-			document.getElementById('4a').style.display='none';
-			document.getElementById('4b').style.display='none';
-			document.getElementById('5a').style.display='block';
-			document.getElementById('5b').style.display='none';
-		break;
-		
+			index = 6;
+			break;
 		case "Artillery":
-			document.getElementById('2a').style.display='none';
-			document.getElementById('2b').style.display='none';
-			document.getElementById('3a').style.display='none';
-			document.getElementById('3b').style.display='none';
-			document.getElementById('4a').style.display='none';
-			document.getElementById('4b').style.display='none';
-			document.getElementById('5a').style.display='none';
-			document.getElementById('5b').style.display='block';
-		break;
+			index = 7;
+			break;
 		default: 
 			console.log("Ship Detail Button Error");
 	}
+	[].forEach.call(descriptions, function(element){
+			element.style.display = 'none';
+	});
+	descriptions[index].style.display = 'block';
 }

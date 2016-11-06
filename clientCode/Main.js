@@ -14,6 +14,7 @@ function initialize() {
     client = new Player();
 	enemy = new Player();
 	gameID = -1;
+	
 }
 
 function loadGame() {
@@ -24,7 +25,7 @@ function loadGame() {
 	var class2 = new Image();
 	class2.src = 'images/Ships/ship2temp.png';
 	backgroundImg.onload = function() {
-		buildCanvasCtx.drawImage(backgroundImg, 0, 0, 1680, 945);
-		buildCanvasCtx.drawImage(class2, 50, 50, 67, 120);
+		buildCanvasCtx.drawImage(backgroundImg, 0, 0, 1440, 810);
+		buildCanvasCtx.drawImage(class2, 50, 50, 52.5, 104.25);
 	};
 }
