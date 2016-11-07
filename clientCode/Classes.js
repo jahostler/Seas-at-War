@@ -31,8 +31,6 @@ class gameWindow {
 			this.class2.src = 'images/Ships/ship2Temp.png';
 			console.log("invalid class 2 ship name");
 		}
-			
-			
 		
 		this.class3 = new Image();
 		if(player.fleet[1] == "Destroyer")
