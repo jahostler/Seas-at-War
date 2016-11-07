@@ -7,6 +7,7 @@ class Player {
 		this.fleet[1] = "Submarine";
 		this.fleet[2] = "Cruiser";
 		this.fleet[3] = "Executioner";
+		
     }
 }
 
@@ -20,57 +21,130 @@ class gameWindow {
 		this.context = canvas.getContext('2d');
 		this.background = new Image();
 		this.background.src = 'images/gameBoard.png';
+		//TODO: Unugly it
 		
-		//check player's fleet for ship names
-		this.class2 = new Image();
-		if(player.fleet[0] == "Scrambler")
-			this.class2.src = 'images/Ships/ship2Scrambler.png';
-		else if(player.fleet[0] == "Scanner")
-			this.class2.src = 'images/Ships/ship2Scanner.png';
-		else {
-			this.class2.src = 'images/Ships/ship2Temp.png';
-			console.log("invalid class 2 ship name");
-		}
-		
-		this.class3 = new Image();
-		if(player.fleet[1] == "Destroyer")
-			this.class3.src = 'images/Ships/ship3Destroyer.png';
-		else if(player.fleet[1] == "Submarine")
-			this.class3.src = 'images/Ships/ship3Submarine.png';
-		else {
-			this.class3.src = 'images/Ships/ship3Temp.png';
-			console.log("invalid class 3 ship name");
-		}
-		
-		this.class4 = new Image();
-		if(player.fleet[2] == "Carrier")
-			this.class4.src = 'images/Ships/ship4Carrier.png';
-		else if(player.fleet[2] == "Cruiser")
-			this.class4.src = 'images/Ships/ship4Cruiser.png';
-		else
-			console.log("invalid class 4 ship name");
-		
-		this.class5 = new Image();
-		if(player.fleet[3] == "Artillery")
-			this.class5.src = 'images/Ships/ship5Artillery.png';
-		else if(player.fleet[3] == "Executioner")
-			this.class5.src = 'images/Ships/ship5Executioner.png';
-		else {
-			this.class5.src = 'images/Ships/ship5Temp.png';
-			console.log("invalid class 5 ship name");
-		}
+		this.class21 = new Image();
+		this.class31 = new Image();
+		this.class41 = new Image();
+		this.class51 = new Image();
+		this.class21Hor = new Image();
+		this.class31Hor = new Image();
+		this.class41Hor = new Image();
+		this.class51Hor = new Image();
+		this.class21.src = 'images/Ships/ship2Scrambler.png';
+		this.class31.src = 'images/Ships/ship3Submarine.png';
+		this.class41.src = 'images/Ships/ship4Cruiser.png';
+		this.class51.src = 'images/Ships/ship5Executioner.png';
+		this.class21Hor.src = 'images/Ships/ship2ScramblerHor.png';
+		this.class31Hor.src = 'images/Ships/ship3SubmarineHor.png';
+		this.class41Hor.src = 'images/Ships/ship4CruiserHor.png';
+		this.class51Hor.src = 'images/Ships/ship5ExecutionerHor.png';
+		this.class22 = new Image();
+		this.class32 = new Image();
+		this.class42 = new Image();
+		this.class52 = new Image();
+		this.class22Hor = new Image();
+		this.class32Hor = new Image();
+		this.class42Hor = new Image();
+		this.class52Hor = new Image();
+		this.class22.src = 'images/Ships/ship2Scanner.png';
+		this.class32.src = 'images/Ships/ship3Destroyer.png';
+		this.class42.src = 'images/Ships/ship4Carrier.png';
+		this.class52.src = 'images/Ships/ship5Artillery.png';
+		this.class22Hor.src = 'images/Ships/ship2ScannerHor.png';
+		this.class32Hor.src = 'images/Ships/ship3DestroyerHor.png';
+		this.class42Hor.src = 'images/Ships/ship4CarrierHor.png';
+		this.class52Hor.src = 'images/Ships/ship5ArtilleryHor.png';
 	}
 	
 	adjust(dimension) {
 		return dimension * this.scale;
 	}
 	
+	drawButton() {
+		var norm = document.getElementById('normalAttack');
+		var spec = document.getElementById('specialAttack');
+		
+		norm.style.left = this.adjust(norm.offsetLeft)+"px";
+		norm.style.top = this.adjust(norm.offsetTop)+"px";
+		spec.style.left = this.adjust(spec.offsetLeft)+"px";
+		spec.style.top = this.adjust(spec.offsetTop)+"px";
+	}
+	
 	draw() {
 		this.context.drawImage(this.background, 0, 0, this.adjust(this.background.width), this.adjust(this.background.height));
-		this.context.drawImage(this.class2, this.adjust(180), this.adjust(240), this.adjust(this.class2.width), this.adjust(this.class2.height));
-		this.context.drawImage(this.class3, this.adjust(250), this.adjust(240), this.adjust(this.class3.width), this.adjust(this.class3.height));
-		this.context.drawImage(this.class4, this.adjust(320), this.adjust(240), this.adjust(this.class4.width), this.adjust(this.class4.height));
-		this.context.drawImage(this.class5, this.adjust(390), this.adjust(240), this.adjust(this.class5.width), this.adjust(this.class5.height));
+
+		//class 2 display
+		if(client.fleet[0].shipName == "Scrambler"){
+			if(client.fleet[0].vert){
+				this.context.drawImage(this.class21, this.adjust(client.fleet[0].mainX * 70 + 40), this.adjust(client.fleet[0].mainY * 70 + 30), this.adjust(this.class21.width), this.adjust(this.class21.height));
+			}
+			else{
+				this.context.drawImage(this.class21Hor, this.adjust(client.fleet[0].mainX * 70 + 40), this.adjust(client.fleet[0].mainY * 70 + 30), this.adjust(this.class21.height), this.adjust(this.class21.width));
+			}
+		}
+		else if(client.fleet[0].shipName == "Scanner"){
+			if(client.fleet[0].vert){
+				this.context.drawImage(this.class22, this.adjust(client.fleet[0].mainX * 70 + 40), this.adjust(client.fleet[0].mainY * 70 + 30), this.adjust(this.class22.width), this.adjust(this.class22.height));
+			}
+			else{
+				this.context.drawImage(this.class22Hor, this.adjust(client.fleet[0].mainX * 70 + 40), this.adjust(client.fleet[0].mainY * 70 + 30), this.adjust(this.class22.height), this.adjust(this.class22.width));
+			}
+		}
+		//class 3 display
+		if(client.fleet[1].shipName == "Submarine"){
+			if(client.fleet[1].vert){
+				this.context.drawImage(this.class31, this.adjust(client.fleet[1].mainX * 70 + 40), this.adjust(client.fleet[1].mainY * 70 + 30), this.adjust(this.class31.width), this.adjust(this.class31.height));
+			}
+			else{
+				this.context.drawImage(this.class31Hor, this.adjust(client.fleet[1].mainX * 70 + 40), this.adjust(client.fleet[1].mainY * 70 + 30), this.adjust(this.class31.height), this.adjust(this.class31.width));
+			}
+		}
+		else if(client.fleet[1].shipName == "Destroyer"){
+			if(client.fleet[1].vert){
+				this.context.drawImage(this.class32, this.adjust(client.fleet[1].mainX * 70 + 40), this.adjust(client.fleet[1].mainY * 70 + 30), this.adjust(this.class32.width), this.adjust(this.class32.height));
+			}
+			else{
+				this.context.drawImage(this.class32Hor, this.adjust(client.fleet[1].mainX * 70 + 40), this.adjust(client.fleet[1].mainY * 70 + 30), this.adjust(this.class32.height), this.adjust(this.class32.width));
+			}
+		}
+		
+		//class 4 display
+		if(client.fleet[2].shipName == "Cruiser"){
+			if(client.fleet[2].vert){
+				this.context.drawImage(this.class41, this.adjust(client.fleet[2].mainX * 70 + 40), this.adjust(client.fleet[2].mainY * 70 + 30), this.adjust(this.class41.width), this.adjust(this.class41.height));
+			}
+			else{
+				this.context.drawImage(this.class41Hor, this.adjust(client.fleet[2].mainX * 70 + 40), this.adjust(client.fleet[2].mainY * 70 + 30), this.adjust(this.class41.height), this.adjust(this.class41.width));
+			}
+		}
+		else if(client.fleet[2].shipName == "Carrier"){
+			if(client.fleet[2].vert){
+				this.context.drawImage(this.class42, this.adjust(client.fleet[2].mainX * 70 + 40), this.adjust(client.fleet[2].mainY * 70 + 30), this.adjust(this.class42.width), this.adjust(this.class42.height));
+			}
+			else{
+				this.context.drawImage(this.class42Hor, this.adjust(client.fleet[2].mainX * 70 + 40), this.adjust(client.fleet[2].mainY * 70 + 30), this.adjust(this.class42.height), this.adjust(this.class42.width));
+			}
+		}
+		//class 5 display
+		if(client.fleet[3].shipName == "Executioner"){
+			if(client.fleet[3].vert){
+				this.context.drawImage(this.class51, this.adjust(client.fleet[3].mainX* 70 + 40), this.adjust(client.fleet[3].mainY* 70 + 30), this.adjust(this.class51.width), this.adjust(this.class51.height));
+			}
+			else{
+				this.context.drawImage(this.class51Hor, this.adjust(client.fleet[3].mainX* 70 + 40), this.adjust(client.fleet[3].mainY* 70 + 30), this.adjust(this.class51.height), this.adjust(this.class51.width));
+			}
+		}
+		if(client.fleet[3].shipName == "Artillery"){
+			if(client.fleet[3].vert){
+				this.context.drawImage(this.class52, this.adjust(client.fleet[3].mainX * 70 + 40), this.adjust(client.fleet[3].mainY * 70 + 30), this.adjust(this.class52.width), this.adjust(this.class52.height));
+			}
+			else{
+				this.context.drawImage(this.class52Hor, this.adjust(client.fleet[3].mainX * 70 + 40), this.adjust(client.fleet[3].mainY * 70 + 30), this.adjust(this.class52.height), this.adjust(this.class52.width));
+			}
+		}
+
+		
 	}
 }
 
@@ -165,10 +239,10 @@ class fleetPositionWindow {
 		this.class5Hor.src = 'images/Ships/ship5' + client.fleet[3] + 'Hor.png';
 		this.selectRectangle.src = 'images/selectRec.png';
 		this.moveableShips = new Array(4);
-		this.moveableShips[0] = new moveableShip(2, 2, 3); //TODO
-		this.moveableShips[1] = new moveableShip(3, 3, 3);
-		this.moveableShips[2] = new moveableShip(4, 4, 3);
-		this.moveableShips[3] = new moveableShip(5, 5, 3);
+		this.moveableShips[0] = new moveableShip(client.fleet[0], 2, 2, 3); //TODO
+		this.moveableShips[1] = new moveableShip(client.fleet[1], 3, 3, 3);
+		this.moveableShips[2] = new moveableShip(client.fleet[2], 4, 4, 3);
+		this.moveableShips[3] = new moveableShip(client.fleet[3], 5, 5, 3);
 		this.selectButtons = document.getElementsByClassName('shipSelectButton');
 		this.moveButtons = document.getElementsByClassName('shipMoveButton');
 		this.selectedShip = -1;
@@ -184,6 +258,7 @@ class fleetPositionWindow {
 		this.context.shadowOffsetX = 3;
 		this.context.shadowOffsetY = 3;
 		this.context.fillText('Waiting for other player...', this.adjust(200), this.adjust(950));
+		client.fleet = this.moveableShips;
 		var buttons = document.getElementById('positionFleet').querySelectorAll('button');
 		[].forEach.call(buttons, function(element) {
 			element.onclick = "";
@@ -506,7 +581,8 @@ class orderedPair{
 }
 
 class moveableShip {
-	constructor(shipSize,mainX,mainY) {
+	constructor(name,shipSize,mainX,mainY) {
+		this.shipName = name;
 		this.mainX = mainX;
 		this.mainY = mainY;
 		this.mainPoint = new orderedPair(mainX,mainY);

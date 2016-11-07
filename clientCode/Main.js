@@ -141,6 +141,7 @@ function startGameScreen() {
 	socket.on(gameID + ' ready', function(data) {
 		document.getElementById('positionFleet').style.display = 'none';
 		document.getElementById('gameWindow').style.display = 'block';
+		gameWindow.draw();
 	});
 	
 	
