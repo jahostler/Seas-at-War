@@ -185,7 +185,6 @@ class fleetPositionWindow {
 		this.context.shadowOffsetY = 3;
 		this.context.fillText('Waiting for other player...', this.adjust(200), this.adjust(950));
 		var buttons = document.getElementById('positionFleet').querySelectorAll('button');
-		console.log(buttons);
 		[].forEach.call(buttons, function(element) {
 			element.onclick = "";
 		});
