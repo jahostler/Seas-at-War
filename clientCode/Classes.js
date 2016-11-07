@@ -86,10 +86,12 @@ class fleetPositionWindow {
 		this.class3 = new Image();
 		this.class4 = new Image();
 		this.class5 = new Image();
+		this.selectRectangle = new Image();
 		this.class2.src = 'images/Ships/ship2' + client.fleet[0] + '.png';
 		this.class3.src = 'images/Ships/ship3' + client.fleet[1] + '.png';
 		this.class4.src = 'images/Ships/ship4' + client.fleet[2] + '.png';
 		this.class5.src = 'images/Ships/ship5' + client.fleet[3] + '.png';
+		this.selectRectangle.src = 'images/selectRec.png';
 		this.moveableShips = new Array(4);
 		this.moveableShips[0] = new moveableShip(2, 2, 3);
 		this.moveableShips[1] = new moveableShip(3, 3, 3);
@@ -139,11 +141,28 @@ class fleetPositionWindow {
 	
 	selectShip(shipID) {
 		this.selectedShip = shipID;
-		this.context.beginPath();
-		this.context.lineWidth="6";
-		this.context.strokeStyle="red";
-		this.context.rect(5,5,290,140); 
-		this.context.stroke();
+		this.draw();
+		var xPos;
+		var yPos;
+		switch(shipID) {
+			case 0:
+				xPos = 945;
+				yPos = 173;
+				break;
+			case 1:
+				xPos = 945;
+				yPos = 303;
+				break;
+			case 2:
+				xPos = 945;
+				yPos = 433;
+				break;
+			case 3:
+				xPos = 945;
+				yPos = 563;
+				break;
+		}
+		this.context.drawImage(this.selectRectangle, this.adjust(xPos), this.adjust(yPos), this.adjust(this.selectRectangle.width), this.adjust(this.selectRectangle.height));
 	}
 	
 	checkPosition(desiredMove) {
