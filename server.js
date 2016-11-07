@@ -105,6 +105,25 @@ io.on('connection', function(socket){
 		gameID = -1;
 	});
 	
+	socket.on('fleet finished', function(data) {
+		gameID = data.gID;
+		if(data.playerID == games.get(gameID).host) {
+			if(games.get(gameID).hostReady != true) {
+				console.log('host ready on game ' + gameID);
+				games.get(gameID).hostReady = true;
+			}
+		}
+		if(data.playerID == games.get(gameID).visitor) {
+			if(games.get(gameID).visitorReady != true) {
+				console.log('visitor ready on game ' + gameID);
+				games.get(gameID).visitorReady = true;
+			}
+		}
+		if(games.get(gameID).visitorReady && games.get(gameID).hostReady) {
+			io.sockets.emit(gameID + ' ready', {});
+		}
+	});
+	
     socket.on('disconnect', function () {
         var index = players.indexOf(newID);
 		if (games.delete(gameID)) {
@@ -144,7 +163,8 @@ http.listen(portNumber, function(){
 class Game {
 	constructor(hostID, visitorID) {
 		this.host = hostID;
+		this.hostReady = false;
 		this.visitor = visitorID;
+		this.visitorReady = false;
 	}
-		
 }

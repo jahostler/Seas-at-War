@@ -169,6 +169,15 @@ class fleetPositionWindow {
 
 	}
 	
+	waitMessage() {
+		this.context.font = '24px Arial';
+		this.context.fillStyle = 'white';
+		this.context.shadowColor = 'black';
+		this.context.shadowOffsetX = 3;
+		this.context.shadowOffsetY = 3;
+		this.context.fillText('Waiting for other player...', this.adjust(850), this.adjust(100));
+	}
+	
 	adjust(dimension) {
 		return dimension * this.scale;
 	}

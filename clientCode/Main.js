@@ -128,7 +128,12 @@ function toPositionSelect() {
 
 
 function startGameScreen() {
-	document.getElementById('positionFleet').style.display = 'none';
-	document.getElementById('gameWindow').style.display = 'block';
+	socket.emit('fleet finished', {gID: gameID, playerID: client.id});
+	positionWindow.waitMessage();
+	socket.on(gameID + ' ready', function(data) {
+		document.getElementById('positionFleet').style.display = 'none';
+		document.getElementById('gameWindow').style.display = 'block';
+	});
+	
 	
 }
