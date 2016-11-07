@@ -129,6 +129,6 @@ function toPositionSelect() {
 
 function startGameScreen() {
 	document.getElementById('positionFleet').style.display = 'none';
-	document.getElementById('gameScreen').style.display = 'block';
+	document.getElementById('gameWindow').style.display = 'block';
 	
 }
