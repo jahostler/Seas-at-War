@@ -179,10 +179,10 @@ class fleetPositionWindow {
 		this.class5Hor.src = 'images/Ships/ship5' + client.fleet[3] + 'Hor.png';
 		this.selectRectangle.src = 'images/selectRec.png';
 		this.moveableShips = new Array(4);
-		this.moveableShips[0] = new moveableShip(2, 2, 3); //TODO
-		this.moveableShips[1] = new moveableShip(3, 3, 3);
-		this.moveableShips[2] = new moveableShip(4, 4, 3);
-		this.moveableShips[3] = new moveableShip(5, 5, 3);
+		this.moveableShips[0] = new moveableShip(client.fleet[0], 2, 2, 3); //TODO
+		this.moveableShips[1] = new moveableShip(client.fleet[1], 3, 3, 3);
+		this.moveableShips[2] = new moveableShip(client.fleet[2], 4, 4, 3);
+		this.moveableShips[3] = new moveableShip(client.fleet[3], 5, 5, 3);
 		this.selectButtons = document.getElementsByClassName('shipSelectButton');
 		this.moveButtons = document.getElementsByClassName('shipMoveButton');
 		this.selectedShip = -1;
@@ -198,6 +198,11 @@ class fleetPositionWindow {
 		this.context.shadowOffsetX = 3;
 		this.context.shadowOffsetY = 3;
 		this.context.fillText('Waiting for other player...', this.adjust(200), this.adjust(950));
+		client.fleet = this.moveableShips;
+		var buttons = document.getElementById('positionFleet').querySelectorAll('button');
+		[].forEach.call(buttons, function(element) {
+			element.onclick = "";
+		});
 	}
 	
 	adjust(dimension) {
@@ -312,12 +317,9 @@ class fleetPositionWindow {
 				return false;
 			}
 			//ship collision check
-			console.log(this.moveableShips);
-			console.log(shipID);
 			for(var j = 0; j < this.moveableShips.length; j++){
 				if(j != shipID){
 					var compareShip = this.moveableShips[j].currentPosArray();
-					console.log(compareShip);
 					for(var k = 0; k < compareShip.length; k++){
 						var comparePos = compareShip[k];
 						if(current.equals(comparePos)){
@@ -519,7 +521,8 @@ class orderedPair{
 }
 
 class moveableShip {
-	constructor(shipSize,mainX,mainY) {
+	constructor(name,shipSize,mainX,mainY) {
+		this.shipName = name;
 		this.mainX = mainX;
 		this.mainY = mainY;
 		this.mainPoint = new orderedPair(mainX,mainY);
@@ -581,14 +584,12 @@ class moveableShip {
 		var pos = [new orderedPair(this.mainX + xChange,this.mainY + yChange)];
 		for (var i = 0; i < this.length-1; i++){
 			if(this.vert){
-				console.log("Hello");
 				pos.push(new orderedPair(this.mainX + xChange,this.mainY + 1 + i + yChange));
 			}
 			else{
 				pos.push(new orderedPair(this.mainX + 1 + i + xChange,this.mainY + yChange));
 			}
 		}
-		console.log(pos);
 		return pos;
 	}
 	move(direction){
