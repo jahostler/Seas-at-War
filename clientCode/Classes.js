@@ -184,6 +184,11 @@ class fleetPositionWindow {
 		this.context.shadowOffsetX = 3;
 		this.context.shadowOffsetY = 3;
 		this.context.fillText('Waiting for other player...', this.adjust(200), this.adjust(950));
+		var buttons = document.getElementById('positionFleet').querySelectorAll('button');
+		console.log(buttons);
+		[].forEach.call(buttons, function(element) {
+			element.onclick = "";
+		});
 	}
 	
 	adjust(dimension) {
@@ -298,12 +303,9 @@ class fleetPositionWindow {
 				return false;
 			}
 			//ship collision check
-			console.log(this.moveableShips);
-			console.log(shipID);
 			for(var j = 0; j < this.moveableShips.length; j++){
 				if(j != shipID){
 					var compareShip = this.moveableShips[j].currentPosArray();
-					console.log(compareShip);
 					for(var k = 0; k < compareShip.length; k++){
 						var comparePos = compareShip[k];
 						if(current.equals(comparePos)){
@@ -567,14 +569,12 @@ class moveableShip {
 		var pos = [new orderedPair(this.mainX + xChange,this.mainY + yChange)];
 		for (var i = 0; i < this.length-1; i++){
 			if(this.vert){
-				console.log("Hello");
 				pos.push(new orderedPair(this.mainX + xChange,this.mainY + 1 + i + yChange));
 			}
 			else{
 				pos.push(new orderedPair(this.mainX + 1 + i + xChange,this.mainY + yChange));
 			}
 		}
-		console.log(pos);
 		return pos;
 	}
 	move(direction){
