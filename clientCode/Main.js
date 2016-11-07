@@ -15,15 +15,18 @@ socket.on('welcome', function(data) {
 
 function initialize() {
     client = new Player();
+	//for testing purposes
 	enemy = new Player();
 	gameID = -1;
 	prepWindow = new buildAFleetWindow(document.getElementById('buildCanvas'), scaling);
 	positionWindow = new fleetPositionWindow(document.getElementById('positionCanvas'), scaling)
+	gameWindow = new gameWindow(document.getElementById('gameCanvas'), scaling, client);
 }
 
 function loadGame() {
 	prepWindow.draw();
 	prepWindow.drawButtons();
+	gameWindow.draw();
 }
 
 function shipDetails(shipname) {
@@ -123,3 +126,9 @@ function toPositionSelect() {
 	loadPositionSelect();
 }
 
+
+function startGameScreen() {
+	document.getElementById('positionFleet').style.display = 'none';
+	document.getElementById('gameWindow').style.display = 'block';
+	
+}

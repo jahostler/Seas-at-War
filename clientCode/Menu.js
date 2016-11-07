@@ -101,6 +101,7 @@ function backToMain(displayedScreen) {
 	document.getElementById('mainMenu').style.display = 'block';
 }
 
+
 function resizeGame() {
 	
 }

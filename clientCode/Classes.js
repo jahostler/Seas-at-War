@@ -10,6 +10,70 @@ class Player {
     }
 }
 
+class gameWindow {
+	//constructor needs a player
+	constructor(canvas, scale, player) {
+		this.scale = scale;
+		this.canvas = canvas;
+		this.context = canvas.getContext('2d');
+		this.background = new Image();
+		this.background.src = 'images/gameBoard.png';
+		
+		//check player's fleet for ship names
+		this.class2 = new Image();
+		if(player.fleet[0] == "Scrambler")
+			this.class2.src = 'images/Ships/ship2Scrambler.png';
+		else if(player.fleet[0] == "Scanner")
+			this.class2.src = 'images/Ships/ship2Scanner.png';
+		else {
+			this.class2.src = 'images/Ships/ship2Temp.png';
+			console.log("invalid class 2 ship name");
+		}
+			
+			
+		
+		this.class3 = new Image();
+		if(player.fleet[1] == "Destroyer")
+			this.class3.src = 'images/Ships/ship3Destroyer.png';
+		else if(player.fleet[1] == "Submarine")
+			this.class3.src = 'images/Ships/ship3Submarine.png';
+		else {
+			this.class3.src = 'images/Ships/ship3Temp.png';
+			console.log("invalid class 3 ship name");
+		}
+		
+		this.class4 = new Image();
+		if(player.fleet[2] == "Carrier")
+			this.class4.src = 'images/Ships/ship4Carrier.png';
+		else if(player.fleet[2] == "Cruiser")
+			this.class4.src = 'images/Ships/ship4Cruiser.png';
+		else
+			console.log("invalid class 4 ship name");
+		
+		this.class5 = new Image();
+		if(player.fleet[3] == "Artillery")
+			this.class5.src = 'images/Ships/ship5Artillery.png';
+		else if(player.fleet[3] == "Executioner")
+			this.class5.src = 'images/Ships/ship5Executioner.png';
+		else {
+			this.class5.src = 'images/Ships/ship5Temp.png';
+			console.log("invalid class 5 ship name");
+		}
+	}
+	
+	adjust(dimension) {
+		return dimension * this.scale;
+	}
+	
+	draw() {
+		this.context.drawImage(this.background, 0, 0, this.adjust(this.background.width), this.adjust(this.background.height));
+		this.context.drawImage(this.class2, this.adjust(180), this.adjust(240), this.adjust(this.class2.width), this.adjust(this.class2.height));
+		this.context.drawImage(this.class3, this.adjust(250), this.adjust(240), this.adjust(this.class3.width), this.adjust(this.class3.height));
+		this.context.drawImage(this.class4, this.adjust(320), this.adjust(240), this.adjust(this.class4.width), this.adjust(this.class4.height));
+		this.context.drawImage(this.class5, this.adjust(390), this.adjust(240), this.adjust(this.class5.width), this.adjust(this.class5.height));
+	}
+}
+
 class buildAFleetWindow {
 	constructor(canvas, scale) {
 		this.scale = scale;
