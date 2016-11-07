@@ -157,14 +157,15 @@ class fleetPositionWindow {
 		this.class5.src = 'images/Ships/ship5' + client.fleet[3] + '.png';
 		this.selectRectangle.src = 'images/selectRec.png';
 		this.moveableShips = new Array(4);
-		this.moveableShips[0] = new moveableShip(2, 2, 3);
+		this.moveableShips[0] = new moveableShip(2, 2, 3); //TODO
 		this.moveableShips[1] = new moveableShip(3, 3, 3);
 		this.moveableShips[2] = new moveableShip(4, 4, 3);
 		this.moveableShips[3] = new moveableShip(5, 5, 3);
 		this.selectButtons = document.getElementsByClassName('shipSelectButton');
 		this.moveButtons = document.getElementsByClassName('shipMoveButton');
 		this.selectedShip = -1;
-
+		this.xAdj = [0,0,0,0];
+		this.yAdj = [0,0,0,0];
 	}
 	
 	adjust(dimension) {
@@ -186,10 +187,10 @@ class fleetPositionWindow {
 	}
 	draw() {
 		this.context.drawImage(this.background, 0, 0, this.adjust(this.background.width), this.adjust(this.background.height));
-		this.context.drawImage(this.class2, this.adjust(180), this.adjust(240), this.adjust(this.class2.width), this.adjust(this.class2.height));
-		this.context.drawImage(this.class3, this.adjust(250), this.adjust(240), this.adjust(this.class3.width), this.adjust(this.class3.height));
-		this.context.drawImage(this.class4, this.adjust(320), this.adjust(240), this.adjust(this.class4.width), this.adjust(this.class4.height));
-		this.context.drawImage(this.class5, this.adjust(390), this.adjust(240), this.adjust(this.class5.width), this.adjust(this.class5.height));
+		this.context.drawImage(this.class2, this.adjust(180 + this.xAdj[0]), this.adjust(240 + this.yAdj[0]), this.adjust(this.class2.width), this.adjust(this.class2.height));
+		this.context.drawImage(this.class3, this.adjust(250 + this.xAdj[1]), this.adjust(240 + this.yAdj[1]), this.adjust(this.class3.width), this.adjust(this.class3.height));
+		this.context.drawImage(this.class4, this.adjust(320 + this.xAdj[2]), this.adjust(240 + this.yAdj[2]), this.adjust(this.class4.width), this.adjust(this.class4.height));
+		this.context.drawImage(this.class5, this.adjust(390 + this.xAdj[3]), this.adjust(240 + this.yAdj[3]), this.adjust(this.class5.width), this.adjust(this.class5.height));
 		this.context.font = 'bold 32px Arial';
 		this.context.fillStyle = 'white';
 		this.context.shadowColor = 'black';
@@ -230,21 +231,27 @@ class fleetPositionWindow {
 	}
 	
 	checkPosition(desiredMove) {
+		this.draw();
 		var shipID = this.selectedShip;
+		this.selectShip(shipID);
 		for(var i = 0; i < desiredMove.length; i++) {
 			var current = desiredMove[i];
 			//out of bounds X check
 			if(current.getX() < 0){
+				this.context.fillText('Invalid Move!', this.adjust(240), this.adjust(760));
 				return false;
 			}
 			else if(current.getX() > 8){
+				this.context.fillText('Invalid Move!', this.adjust(240), this.adjust(760));
 				return false;
 			}
 			//out of bounds Y check
 			if(current.getY() < 0){
+				this.context.fillText('Invalid Move!', this.adjust(240), this.adjust(760));
 				return false;
 			}
 			else if(current.getY() > 8){
+				this.context.fillText('Invalid Move!', this.adjust(240), this.adjust(760));
 				return false;
 			}
 			//ship collision check
@@ -257,6 +264,7 @@ class fleetPositionWindow {
 					for(var k = 0; k < compareShip.length; k++){
 						var comparePos = compareShip[k];
 						if(current.equals(comparePos)){
+							this.context.fillText('Invalid Move!', this.adjust(240), this.adjust(760));
 							return false;
 						}
 					}//end comparePos
@@ -268,9 +276,12 @@ class fleetPositionWindow {
 	}
 	moveAction(actionString){
 		var shipID = this.selectedShip;
+		
 		if(actionString == "Rotate"){
 			if(this.checkPosition(this.moveableShips[shipID].checkRotate()) == true){
 				this.moveableShips[shipID].rotate();
+				this.draw()
+				this.selectShip(shipID);
 				return true;
 			}
 			else{
@@ -280,6 +291,9 @@ class fleetPositionWindow {
 		else if(actionString == "Up"){
 			if(this.checkPosition(this.moveableShips[shipID].checkMove("Up")) == true){
 				this.moveableShips[shipID].move("Up");
+				this.yAdj[shipID] = this.yAdj[shipID] - 70;
+				this.draw()
+				this.selectShip(shipID);
 				return true;
 			}
 			else{
@@ -289,6 +303,9 @@ class fleetPositionWindow {
 		else if(actionString == "Down"){
 			if(this.checkPosition(this.moveableShips[shipID].checkMove("Down")) == true){
 				this.moveableShips[shipID].move("Down");
+				this.yAdj[shipID] = this.yAdj[shipID] + 70;
+				this.draw()
+				this.selectShip(shipID);
 				return true;
 			}
 			else{
@@ -298,6 +315,9 @@ class fleetPositionWindow {
 		else if(actionString == "Right"){
 			if(this.checkPosition(this.moveableShips[shipID].checkMove("Right")) == true){
 				this.moveableShips[shipID].move("Right");
+				this.xAdj[shipID] = this.xAdj[shipID] + 70;
+				this.draw()
+				this.selectShip(shipID);
 				return true;
 			}
 			else{
@@ -307,6 +327,9 @@ class fleetPositionWindow {
 		else if(actionString == "Left"){
 			if(this.checkPosition(this.moveableShips[shipID].checkMove("Left")) == true){
 				this.moveableShips[shipID].move("Left");
+				this.xAdj[shipID] = this.xAdj[shipID] - 70;
+				this.draw()
+				this.selectShip(shipID);
 				return true;
 			}
 			else{
