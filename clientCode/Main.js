@@ -35,6 +35,7 @@ function shipDetails(shipname) {
 			index = 0;
 			if (prepWindow.class2.src != 'images/Ships/ship2Scrambler.png') {
 				prepWindow.class2.src = 'images/Ships/ship2Scrambler.png';
+				positionWindow.class2.src = 'images/Ships/ship2Scrambler.png';
 				prepWindow.class2.addEventListener('load', prepWindow.draw.bind(prepWindow));
 				client.fleet[0] = "Scrambler";
 			}
@@ -43,6 +44,7 @@ function shipDetails(shipname) {
 			index = 1;
 			if (prepWindow.class2.src != 'images/Ships/ship2Scanner.png') {
 				prepWindow.class2.src = 'images/Ships/ship2Scanner.png';
+				positionWindow.class2.src = 'images/Ships/ship2Scanner.png';
 				prepWindow.class2.addEventListener('load', prepWindow.draw.bind(prepWindow));
 				client.fleet[0] = "Scanner";
 			}
@@ -51,6 +53,7 @@ function shipDetails(shipname) {
 			index = 2;
 			if (prepWindow.class3.src != 'images/Ships/ship3Submarine.png') {
 				prepWindow.class3.src = 'images/Ships/ship3Submarine.png';
+				positionWindow.class3.src = 'images/Ships/ship3Submarine.png';				
 				prepWindow.class3.addEventListener('load', prepWindow.draw.bind(prepWindow));
 				client.fleet[1] = "Submarine";
 			}
@@ -59,6 +62,7 @@ function shipDetails(shipname) {
 			index = 3;
 			if (prepWindow.class3.src != 'images/Ships/ship3Destroyer.png') {
 				prepWindow.class3.src = 'images/Ships/ship3Destroyer.png';
+				positionWindow.class3.src = 'images/Ships/ship3Destroyer.png';
 				prepWindow.class3.addEventListener('load', prepWindow.draw.bind(prepWindow));
 				client.fleet[1] = "Destroyer";
 			}
@@ -67,6 +71,7 @@ function shipDetails(shipname) {
 			index = 4;
 			if (prepWindow.class4.src != 'images/Ships/ship4Cruiser.png') {
 				prepWindow.class4.src = 'images/Ships/ship4Cruiser.png';
+				positionWindow.class4.src = 'images/Ships/ship4Cruiser.png';
 				prepWindow.class4.addEventListener('load', prepWindow.draw.bind(prepWindow));
 				client.fleet[2] = "Cruiser";
 			}
@@ -75,6 +80,7 @@ function shipDetails(shipname) {
 			index = 5;
 			if (prepWindow.class4.src != 'images/Ships/ship4Carrier.png') {
 				prepWindow.class4.src = 'images/Ships/ship4Carrier.png';
+				positionWindow.class4.src = 'images/Ships/ship4Carrier.png';
 				prepWindow.class4.addEventListener('load', prepWindow.draw.bind(prepWindow));
 				client.fleet[2] = "Carrier";
 			}
@@ -83,6 +89,7 @@ function shipDetails(shipname) {
 			index = 6;
 			if (prepWindow.class5.src != 'images/Ships/ship5Executioner.png') {
 				prepWindow.class5.src = 'images/Ships/ship5Executioner.png';
+				positionWindow.class5.src = 'images/Ships/ship5Executioner.png';
 				prepWindow.class5.addEventListener('load', prepWindow.draw.bind(prepWindow));
 				client.fleet[3] = "Executioner";
 			}
@@ -91,6 +98,7 @@ function shipDetails(shipname) {
 			index = 7;
 			if (prepWindow.class5.src != 'images/Ships/ship5Artillery.png') {
 				prepWindow.class5.src = 'images/Ships/ship5Artillery.png';
+				positionWindow.class5.src = 'images/Ships/ship5Artillery.png';
 				prepWindow.class5.addEventListener('load', prepWindow.draw.bind(prepWindow));
 				client.fleet[3] = "Artillery";
 			}

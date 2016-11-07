@@ -174,32 +174,32 @@
 					<span> Finish Fleet! </span>
 			</button>
 			
-			<button id="up" class="shipMoveButton">
+			<button id="up" class="shipMoveButton" onclick="console.log(positionWindow.moveAction('Up'))">
 				<span> &#8679; </span>
 			</button>
-			<button id="down" class="shipMoveButton">
+			<button id="down" class="shipMoveButton" onclick="console.log(positionWindow.moveAction('Down'))">
 				<span> &#8681; </span>
 			</button>
-			<button id="left" class="shipMoveButton">
+			<button id="left" class="shipMoveButton" onclick="console.log(positionWindow.moveAction('Left'))">
 				<span> &#8678; </span>
 			</button>
-			<button id="right" class="shipMoveButton">
+			<button id="right" class="shipMoveButton" onclick="console.log(positionWindow.moveAction('Right'))">
 				<span> &#8680; </span>
 			</button>
-			<button id="rotate" class="shipMoveButton">
+			<button id="rotate" class="shipMoveButton" onclick="console.log(positionWindow.moveAction('Rotate'))">
 				<span> Rotate </span>
 			</button>
 			
-			<button id="move2" class="shipSelectButton">
+			<button id="move2" class="shipSelectButton" onclick="positionWindow.selectShip(0)">
 				<span> Class 2 </span>
 			</button>
-			<button id="move3" class="shipSelectButton">
+			<button id="move3" class="shipSelectButton" onclick="positionWindow.selectShip(1)">
 				<span> Class 3 </span>
 			</button>
-			<button id="move4" class="shipSelectButton">
+			<button id="move4" class="shipSelectButton" onclick="positionWindow.selectShip(2)">
 				<span> Class 4 </span>
 			</button>
-			<button id="move5" class="shipSelectButton">
+			<button id="move5" class="shipSelectButton" onclick="positionWindow.selectShip(3)">
 				<span> Class 5 </span>
 			</button>
 			
