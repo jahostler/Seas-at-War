@@ -15,6 +15,8 @@ class gameWindow {
 	constructor(canvas, scale, player) {
 		this.scale = scale;
 		this.canvas = canvas;
+		this.canvas.width = this.adjust(1920);
+		this.canvas.height = this.adjust(1080);
 		this.context = canvas.getContext('2d');
 		this.background = new Image();
 		this.background.src = 'images/gameBoard.png';
