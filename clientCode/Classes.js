@@ -152,11 +152,19 @@ class fleetPositionWindow {
 		this.class3 = new Image();
 		this.class4 = new Image();
 		this.class5 = new Image();
+		this.class2Hor = new Image();
+		this.class3Hor = new Image();
+		this.class4Hor = new Image();
+		this.class5Hor = new Image();
 		this.selectRectangle = new Image();
 		this.class2.src = 'images/Ships/ship2' + client.fleet[0] + '.png';
 		this.class3.src = 'images/Ships/ship3' + client.fleet[1] + '.png';
 		this.class4.src = 'images/Ships/ship4' + client.fleet[2] + '.png';
 		this.class5.src = 'images/Ships/ship5' + client.fleet[3] + '.png';
+		this.class2Hor.src = 'images/Ships/ship2' + client.fleet[0] + 'Hor.png';
+		this.class3Hor.src = 'images/Ships/ship3' + client.fleet[1] + 'Hor.png';
+		this.class4Hor.src = 'images/Ships/ship4' + client.fleet[2] + 'Hor.png';
+		this.class5Hor.src = 'images/Ships/ship5' + client.fleet[3] + 'Hor.png';
 		this.selectRectangle.src = 'images/selectRec.png';
 		this.moveableShips = new Array(4);
 		this.moveableShips[0] = new moveableShip(2, 2, 3); //TODO
@@ -168,6 +176,7 @@ class fleetPositionWindow {
 		this.selectedShip = -1;
 		this.xAdj = [0,0,0,0];
 		this.yAdj = [0,0,0,0];
+		this.rotAdj = [false,false,false,false];
 	}
 	
 	waitMessage() {
@@ -198,10 +207,35 @@ class fleetPositionWindow {
 	}
 	draw() {
 		this.context.drawImage(this.background, 0, 0, this.adjust(this.background.width), this.adjust(this.background.height));
-		this.context.drawImage(this.class2, this.adjust(180 + this.xAdj[0]), this.adjust(240 + this.yAdj[0]), this.adjust(this.class2.width), this.adjust(this.class2.height));
-		this.context.drawImage(this.class3, this.adjust(250 + this.xAdj[1]), this.adjust(240 + this.yAdj[1]), this.adjust(this.class3.width), this.adjust(this.class3.height));
-		this.context.drawImage(this.class4, this.adjust(320 + this.xAdj[2]), this.adjust(240 + this.yAdj[2]), this.adjust(this.class4.width), this.adjust(this.class4.height));
-		this.context.drawImage(this.class5, this.adjust(390 + this.xAdj[3]), this.adjust(240 + this.yAdj[3]), this.adjust(this.class5.width), this.adjust(this.class5.height));
+		//class 2 display
+		if(this.rotAdj[0] == false){
+			this.context.drawImage(this.class2, this.adjust(180 + this.xAdj[0]), this.adjust(240 + this.yAdj[0]), this.adjust(this.class2.width), this.adjust(this.class2.height));
+		}
+		else{
+			this.context.drawImage(this.class2Hor, this.adjust(180 + this.xAdj[0]), this.adjust(240 + this.yAdj[0]), this.adjust(this.class2.height), this.adjust(this.class2.width));
+		}
+		//class 3 display
+		if(this.rotAdj[1] == false){
+			this.context.drawImage(this.class3, this.adjust(250 + this.xAdj[1]), this.adjust(240 + this.yAdj[1]), this.adjust(this.class3.width), this.adjust(this.class3.height));
+		}
+		else{
+			this.context.drawImage(this.class3Hor, this.adjust(250 + this.xAdj[1]), this.adjust(240 + this.yAdj[1]), this.adjust(this.class3.height), this.adjust(this.class3.width));
+		}
+		//class 4 display
+		if(this.rotAdj[2] == false){
+			this.context.drawImage(this.class4, this.adjust(320 + this.xAdj[2]), this.adjust(240 + this.yAdj[2]), this.adjust(this.class4.width), this.adjust(this.class4.height));
+		}
+		else{
+			this.context.drawImage(this.class4Hor, this.adjust(320 + this.xAdj[2]), this.adjust(240 + this.yAdj[2]), this.adjust(this.class4.height), this.adjust(this.class4.width));
+		}
+		//class 5 display
+		if(this.rotAdj[3] == false){
+			this.context.drawImage(this.class5, this.adjust(390 + this.xAdj[3]), this.adjust(240 + this.yAdj[3]), this.adjust(this.class5.width), this.adjust(this.class5.height));
+		}
+		else{
+			this.context.drawImage(this.class5Hor, this.adjust(390 + this.xAdj[3]), this.adjust(240 + this.yAdj[3]), this.adjust(this.class5.height), this.adjust(this.class5.width));
+		}
+		
 		this.context.font = 'bold 32px Arial';
 		this.context.fillStyle = 'white';
 		this.context.shadowColor = 'black';
@@ -291,7 +325,39 @@ class fleetPositionWindow {
 		if(actionString == "Rotate"){
 			if(this.checkPosition(this.moveableShips[shipID].checkRotate()) == true){
 				this.moveableShips[shipID].rotate();
-				this.draw()
+				if(this.moveableShips[shipID].vert){
+					switch(shipID){
+						case 0: 
+							this.rotAdj[0] = false;
+							break;
+						case 1:
+							this.rotAdj[1] = false;
+							break;
+						case 2:
+							this.rotAdj[2] = false;
+							break;
+						case 3:
+							this.rotAdj[3] = false;
+							break;
+					}
+				}
+				else{
+					switch(shipID){
+						case 0: 
+							this.rotAdj[0] = true;
+							break;
+						case 1:
+							this.rotAdj[1] = true;
+							break;
+						case 2:
+							this.rotAdj[2] = true;
+							break;
+						case 3:
+							this.rotAdj[3] = true;
+							break;
+					}
+				}
+				this.draw();
 				this.selectShip(shipID);
 				return true;
 			}
