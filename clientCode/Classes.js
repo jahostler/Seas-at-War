@@ -65,12 +65,26 @@ class gameWindow {
 		return dimension * this.scale;
 	}
 	
+	drawButton() {
+		var norm = document.getElementById('normalAttack');
+		var spec = document.getElementById('specialAttack');
+		
+		norm.style.left = this.adjust(norm.offsetLeft)+"px";
+		norm.style.top = this.adjust(norm.offsetTop)+"px";
+		spec.style.left = this.adjust(spec.offsetLeft)+"px";
+		spec.style.top = this.adjust(spec.offsetTop)+"px";
+	}
+	
 	draw() {
 		this.context.drawImage(this.background, 0, 0, this.adjust(this.background.width), this.adjust(this.background.height));
 		this.context.drawImage(this.class2, this.adjust(180), this.adjust(240), this.adjust(this.class2.width), this.adjust(this.class2.height));
 		this.context.drawImage(this.class3, this.adjust(250), this.adjust(240), this.adjust(this.class3.width), this.adjust(this.class3.height));
 		this.context.drawImage(this.class4, this.adjust(320), this.adjust(240), this.adjust(this.class4.width), this.adjust(this.class4.height));
 		this.context.drawImage(this.class5, this.adjust(390), this.adjust(240), this.adjust(this.class5.width), this.adjust(this.class5.height));
+		
+		this.context.drawImage();
+		
+		
 	}
 }
 
