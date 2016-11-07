@@ -77,8 +77,156 @@ class gameWindow {
 		var mousePos = new orderedPair (
 										Math.round((evt.clientX-rect.left)/(rect.right-rect.left)*playWindow.canvas.width),
 										Math.round((evt.clientY-rect.top)/(rect.bottom-rect.top)*playWindow.canvas.height));
-		console.log(mousePos);
-		return mousePos;
+		//console.log(mousePos);
+		playWindow.processClick(mousePos);
+	}
+	
+	processClick(posPair){
+		var xPair = posPair.posX;
+		var yPair = posPair.posY;
+		if(xPair >= playWindow.adjust(40) && xPair <= playWindow.adjust(670) && yPair >= playWindow.adjust(30) && yPair <= playWindow.adjust(660)){
+			//Handle home grid
+			xPair = xPair - playWindow.adjust(40);
+			switch(true){
+				case (xPair <= playWindow.adjust(70)):
+					xPair = 0;
+					break;
+				case (xPair <= playWindow.adjust(140)):
+					xPair = 1;
+					break;
+				case (xPair <= playWindow.adjust(210)):
+					xPair = 2;
+					break;
+				case (xPair <= playWindow.adjust(280)):
+					xPair = 3;
+					break;
+				case (xPair <= playWindow.adjust(350)):
+					xPair = 4;
+					break;
+				case (xPair <= playWindow.adjust(420)):
+					xPair = 5;
+					break;
+				case (xPair <= playWindow.adjust(490)):
+					xPair = 6;
+					break;
+				case (xPair <= playWindow.adjust(560)):
+					xPair = 7;
+					break;
+				case (xPair <= playWindow.adjust(630)):
+					xPair = 8;
+					break;
+				default: 
+					xPair = -1;
+					break;
+			}
+			yPair = yPair - playWindow.adjust(30);
+			switch(true){
+				case (yPair <= playWindow.adjust(70)):
+					yPair = 0;
+					break;
+				case (yPair <= playWindow.adjust(140)):
+					yPair = 1;
+					break;
+				case (yPair <= playWindow.adjust(210)):
+					yPair = 2;
+					break;
+				case (yPair <= playWindow.adjust(280)):
+					yPair = 3;
+					break;
+				case (yPair <= playWindow.adjust(350)):
+					yPair = 4;
+					break;
+				case (yPair <= playWindow.adjust(420)):
+					yPair = 5;
+					break;
+				case (yPair <= playWindow.adjust(490)):
+					yPair = 6;
+					break;
+				case (yPair <= playWindow.adjust(560)):
+					yPair = 7;
+					break;
+				case (yPair <= playWindow.adjust(630)):
+					yPair = 8;
+					break;
+				default: 
+					yPair = -1;
+					break;
+			}
+			//xPair and yPair are now values 0 through 8
+			console.log("Home: (" + xPair + "," + yPair + ")");
+		}
+		else if(xPair >= playWindow.adjust(710) && xPair <= playWindow.adjust(1340) && yPair >= playWindow.adjust(30) && yPair <= playWindow.adjust(660)){
+			//Handle enemy grid
+			xPair = xPair - playWindow.adjust(710);
+			switch(true){
+				case (xPair <= playWindow.adjust(70)):
+					xPair = 0;
+					break;
+				case (xPair <= playWindow.adjust(140)):
+					xPair = 1;
+					break;
+				case (xPair <= playWindow.adjust(210)):
+					xPair = 2;
+					break;
+				case (xPair <= playWindow.adjust(280)):
+					xPair = 3;
+					break;
+				case (xPair <= playWindow.adjust(350)):
+					xPair = 4;
+					break;
+				case (xPair <= playWindow.adjust(420)):
+					xPair = 5;
+					break;
+				case (xPair <= playWindow.adjust(490)):
+					xPair = 6;
+					break;
+				case (xPair <= playWindow.adjust(560)):
+					xPair = 7;
+					break;
+				case (xPair <= playWindow.adjust(630)):
+					xPair = 8;
+					break;
+				default: 
+					xPair = -1;
+					break;
+			}
+			yPair = yPair - playWindow.adjust(30);
+			switch(true){
+				case (yPair <= playWindow.adjust(70)):
+					yPair = 0;
+					break;
+				case (yPair <= playWindow.adjust(140)):
+					yPair = 1;
+					break;
+				case (yPair <= playWindow.adjust(210)):
+					yPair = 2;
+					break;
+				case (yPair <= playWindow.adjust(280)):
+					yPair = 3;
+					break;
+				case (yPair <= playWindow.adjust(350)):
+					yPair = 4;
+					break;
+				case (yPair <= playWindow.adjust(420)):
+					yPair = 5;
+					break;
+				case (yPair <= playWindow.adjust(490)):
+					yPair = 6;
+					break;
+				case (yPair <= playWindow.adjust(560)):
+					yPair = 7;
+					break;
+				case (yPair <= playWindow.adjust(630)):
+					yPair = 8;
+					break;
+				default:
+					yPair = -1;
+					break;
+			}
+			//xPair and yPair are now values 0 through 8
+			console.log("Enemy: (" + xPair + "," + yPair + ")");
+		}
+		
 	}
 	
 	draw() {
