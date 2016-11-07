@@ -33,6 +33,10 @@ function joinID() {
 		document.getElementById('joinGameError').innerHTML = 'Cannot find session ID';
 		return;
 	});
+	socket.on(client.id + ' join full' , function(data) {
+		document.getElementById('joinGameError').innerHTML = 'Game is full';
+		return;
+	});
 	socket.on(client.id + ' join success' , function(data) {
 		document.getElementById('joinGame').style.display = 'none';
 		document.getElementById('buildAFleet').style.display = 'block';
@@ -73,7 +77,7 @@ function prevInstruction() {
 			instructions[i].style.display = 'none';
 			instructions[i-1].style.display = 'block';
 			if (i == 1) {
-				document.geElementById('previousInstruction').style.display = 'none';
+				document.getElementById('previousInstruction').style.display = 'none';
 			}
 			if (i == 6) {
 				document.getElementById('nextInstruction').style.display = 'block';

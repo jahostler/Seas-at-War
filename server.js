@@ -94,7 +94,12 @@ io.on('connection', function(socket){
 		}
 		else {
 			gameID = data.gameID;
+			if (games.get(gameID).gameFull) {
+				socket.emit(data.clientID + ' join full', {});
+				return;
+			}
 			games.set(gameID, new Game(games.get(gameID), data.clientID));
+			games.get(gameID).gameFull = true;
 			socket.emit(games.get(gameID).visitor + ' join success', {});
 			io.sockets.emit(games.get(gameID).host + ' join success', {});
 		}
@@ -166,5 +171,6 @@ class Game {
 		this.hostReady = false;
 		this.visitor = visitorID;
 		this.visitorReady = false;
+		this.gameFull = false;
 	}
 }
