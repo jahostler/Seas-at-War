@@ -2,6 +2,10 @@
 	user-select: none;	
 }
 
+*:focus {
+	outline: none;
+}
+
 div {
 	position: absolute;
 	background-color: black;
@@ -68,8 +72,8 @@ button {
 	background-image: -webkit-linear-gradient(top, #57606d, #000000);
 	font-size: 24px;
 	padding: 30px 20px 30px 20px;
-	top: 625px;
-	left: 65px;
+	top: 840px;
+	left: 90px;
 }
 
 #specialAttack {
@@ -77,8 +81,8 @@ button {
 	background-image: -webkit-linear-gradient(top, #57606d, #000000);
 	font-size: 24px;
 	padding: 30px 20px 30px 20px;
-	top: 625px;
-	left: 405px;
+	top: 840px;
+	left: 550px;
 }
 
 #scramblerDes {
@@ -278,4 +282,6 @@ button span {
 	left: 750px;
 }
 
-#gameWindow
+#gameCanvas {
+
+}

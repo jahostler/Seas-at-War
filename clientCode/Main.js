@@ -4,7 +4,7 @@ var gameID;
 var prepWindow;
 var positionWindow;
 var socket = io.connect();
-var currentGame;
+var playWindow;
 var scaling = .75;
 
 socket.on('welcome', function(data) {
@@ -20,13 +20,12 @@ function initialize() {
 	gameID = -1;
 	prepWindow = new buildAFleetWindow(document.getElementById('buildCanvas'), scaling);
 	positionWindow = new fleetPositionWindow(document.getElementById('positionCanvas'), scaling)
-	gameWindow = new gameWindow(document.getElementById('gameCanvas'), scaling, client);
+	playWindow = new gameWindow(document.getElementById('gameCanvas'), scaling, client);
 }
 
 function loadGame() {
 	prepWindow.draw();
 	prepWindow.drawButtons();
-	gameWindow.draw();
 }
 
 function shipDetails(shipname) {
@@ -141,7 +140,8 @@ function startGameScreen() {
 	socket.on(gameID + ' ready', function(data) {
 		document.getElementById('positionFleet').style.display = 'none';
 		document.getElementById('gameWindow').style.display = 'block';
-		gameWindow.draw();
+		playWindow.drawButtons();
+		playWindow.draw();
 	});
 	
 	

@@ -21,6 +21,7 @@ class gameWindow {
 		this.context = canvas.getContext('2d');
 		this.background = new Image();
 		this.background.src = 'images/gameBoard.png';
+		this.canvas.addEventListener('click', this.getMousePos, false);
 		//TODO: Unugly it
 		
 		this.class21 = new Image();
@@ -61,7 +62,7 @@ class gameWindow {
 		return dimension * this.scale;
 	}
 	
-	drawButton() {
+	drawButtons() {
 		var norm = document.getElementById('normalAttack');
 		var spec = document.getElementById('specialAttack');
 		
@@ -71,9 +72,22 @@ class gameWindow {
 		spec.style.top = this.adjust(spec.offsetTop)+"px";
 	}
 	
+	getMousePos(evt) {
+		var rect = playWindow.canvas.getBoundingClientRect();
+		var mousePos = new orderedPair (
+										Math.round((evt.clientX-rect.left)/(rect.right-rect.left)*playWindow.canvas.width),
+										Math.round((evt.clientY-rect.top)/(rect.bottom-rect.top)*playWindow.canvas.height));
+		console.log(mousePos);
+		return mousePos;
+	}
+	
 	draw() {
 		this.context.drawImage(this.background, 0, 0, this.adjust(this.background.width), this.adjust(this.background.height));
-
+		this.context.font = 'bold 32px Arial';
+		this.context.fillStyle = 'white';
+		this.context.shadowColor = 'black';
+		this.context.shadowOffsetX = 3;
+		this.context.shadowOffsetY = 3;
 		//class 2 display
 		if(client.fleet[0].shipName == "Scrambler"){
 			if(client.fleet[0].vert){
@@ -143,11 +157,6 @@ class gameWindow {
 				this.context.drawImage(this.class52Hor, this.adjust(client.fleet[3].mainX * 70 + 40), this.adjust(client.fleet[3].mainY * 70 + 30), this.adjust(this.class52.height), this.adjust(this.class52.width));
 			}
 		}
-		this.context.font = 'bold 32px Arial';
-		this.context.fillStyle = 'white';
-		this.context.shadowColor = 'black';
-		this.context.shadowOffsetX = 3;
-		this.context.shadowOffsetY = 3;
 		this.context.fillText('Turn', this.adjust(1575), this.adjust(75));
 		this.context.fillText('Timer', this.adjust(1560), this.adjust(435));
 		this.context.fillText('Chat', this.adjust(1320), this.adjust(750));
@@ -188,15 +197,15 @@ class buildAFleetWindow {
 	}
 	draw() {
 		this.context.drawImage(this.background, 0, 0, this.adjust(this.background.width), this.adjust(this.background.height));
-		this.context.drawImage(this.class2, this.adjust(180), this.adjust(240), this.adjust(this.class2.width), this.adjust(this.class2.height));
-		this.context.drawImage(this.class3, this.adjust(250), this.adjust(240), this.adjust(this.class3.width), this.adjust(this.class3.height));
-		this.context.drawImage(this.class4, this.adjust(320), this.adjust(240), this.adjust(this.class4.width), this.adjust(this.class4.height));
-		this.context.drawImage(this.class5, this.adjust(390), this.adjust(240), this.adjust(this.class5.width), this.adjust(this.class5.height));
 		this.context.font = 'bold 32px Arial';
 		this.context.fillStyle = 'white';
 		this.context.shadowColor = 'black';
 		this.context.shadowOffsetX = 3;
 		this.context.shadowOffsetY = 3;
+		this.context.drawImage(this.class2, this.adjust(180), this.adjust(240), this.adjust(this.class2.width), this.adjust(this.class2.height));
+		this.context.drawImage(this.class3, this.adjust(250), this.adjust(240), this.adjust(this.class3.width), this.adjust(this.class3.height));
+		this.context.drawImage(this.class4, this.adjust(320), this.adjust(240), this.adjust(this.class4.width), this.adjust(this.class4.height));
+		this.context.drawImage(this.class5, this.adjust(390), this.adjust(240), this.adjust(this.class5.width), this.adjust(this.class5.height));
 		this.context.fillText('Build Fleet Menu', this.adjust(850), this.adjust(100));
 		this.context.font = '22px Arial';
 		this.context.fillText('Scrambler', this.adjust(850), this.adjust(225));
@@ -291,6 +300,11 @@ class fleetPositionWindow {
 	}
 	draw() {
 		this.context.drawImage(this.background, 0, 0, this.adjust(this.background.width), this.adjust(this.background.height));
+		this.context.font = 'bold 32px Arial';
+		this.context.fillStyle = 'white';
+		this.context.shadowColor = 'black';
+		this.context.shadowOffsetX = 3;
+		this.context.shadowOffsetY = 3;
 		//class 2 display
 		if(this.rotAdj[0] == false){
 			this.context.drawImage(this.class2, this.adjust(180 + this.xAdj[0]), this.adjust(240 + this.yAdj[0]), this.adjust(this.class2.width), this.adjust(this.class2.height));
@@ -319,12 +333,6 @@ class fleetPositionWindow {
 		else{
 			this.context.drawImage(this.class5Hor, this.adjust(390 + this.xAdj[3]), this.adjust(240 + this.yAdj[3]), this.adjust(this.class5.height), this.adjust(this.class5.width));
 		}
-		
-		this.context.font = 'bold 32px Arial';
-		this.context.fillStyle = 'white';
-		this.context.shadowColor = 'black';
-		this.context.shadowOffsetX = 3;
-		this.context.shadowOffsetY = 3;
 		this.context.fillText('Move Fleet Menu', this.adjust(850), this.adjust(100));
 		this.context.font = '28px Arial';
 		this.context.fillText(client.fleet[0], this.adjust(950), this.adjust(225));
