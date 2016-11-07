@@ -15,6 +15,8 @@ class gameWindow {
 	constructor(canvas, scale, player) {
 		this.scale = scale;
 		this.canvas = canvas;
+		this.canvas.width = this.adjust(1920);
+		this.canvas.height = this.adjust(1080);
 		this.context = canvas.getContext('2d');
 		this.background = new Image();
 		this.background.src = 'images/gameBoard.png';
@@ -166,6 +168,15 @@ class fleetPositionWindow {
 		this.selectedShip = -1;
 		this.xAdj = [0,0,0,0];
 		this.yAdj = [0,0,0,0];
+	}
+	
+	waitMessage() {
+		this.context.font = '24px Arial';
+		this.context.fillStyle = 'white';
+		this.context.shadowColor = 'black';
+		this.context.shadowOffsetX = 3;
+		this.context.shadowOffsetY = 3;
+		this.context.fillText('Waiting for other player...', this.adjust(850), this.adjust(100));
 	}
 	
 	adjust(dimension) {

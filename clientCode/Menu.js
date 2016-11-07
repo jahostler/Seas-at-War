@@ -36,6 +36,7 @@ function joinID() {
 	socket.on(client.id + ' join success' , function(data) {
 		document.getElementById('joinGame').style.display = 'none';
 		document.getElementById('buildAFleet').style.display = 'block';
+		gameID = input;
 		loadGame();
 	});
 }
