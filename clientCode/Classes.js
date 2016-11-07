@@ -143,7 +143,14 @@ class gameWindow {
 				this.context.drawImage(this.class52Hor, this.adjust(client.fleet[3].mainX * 70 + 40), this.adjust(client.fleet[3].mainY * 70 + 30), this.adjust(this.class52.height), this.adjust(this.class52.width));
 			}
 		}
-
+		this.context.font = 'bold 32px Arial';
+		this.context.fillStyle = 'white';
+		this.context.shadowColor = 'black';
+		this.context.shadowOffsetX = 3;
+		this.context.shadowOffsetY = 3;
+		this.context.fillText('Turn', this.adjust(1575), this.adjust(75));
+		this.context.fillText('Timer', this.adjust(1560), this.adjust(435));
+		this.context.fillText('Chat', this.adjust(1320), this.adjust(750));
 		
 	}
 }
