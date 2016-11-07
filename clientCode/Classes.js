@@ -175,7 +175,7 @@ class fleetPositionWindow {
 		this.context.shadowColor = 'black';
 		this.context.shadowOffsetX = 3;
 		this.context.shadowOffsetY = 3;
-		this.context.fillText('Waiting for other player...', this.adjust(850), this.adjust(100));
+		this.context.fillText('Waiting for other player...', this.adjust(200), this.adjust(950));
 	}
 	
 	adjust(dimension) {
