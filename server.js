@@ -138,6 +138,7 @@ io.on('connection', function(socket){
         console.log("Player " + newID + " deleted from records.");
 		console.log(players);
 		console.log(games);
+		io.sockets.emit(gameID + ' player disconnect');
     });
     
 });

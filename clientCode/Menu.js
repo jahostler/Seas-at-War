@@ -8,7 +8,7 @@ function newGame() {
 	socket.on(client.id + ' join success' , function(data) {
 		document.getElementById('hostGame').style.display = 'none';
 		document.getElementById('buildAFleet').style.display = 'block';
-		loadGame();
+		document.getElementById('buildAFleet').addEventListener('load', loadGame(), false);
 	});
 }
 function removeGame() {
@@ -38,10 +38,10 @@ function joinID() {
 		return;
 	});
 	socket.on(client.id + ' join success' , function(data) {
+		gameID = input;
 		document.getElementById('joinGame').style.display = 'none';
 		document.getElementById('buildAFleet').style.display = 'block';
-		gameID = input;
-		loadGame();
+		document.getElementById('buildAFleet').addEventListener('load', loadGame(), false);
 	});
 }
 

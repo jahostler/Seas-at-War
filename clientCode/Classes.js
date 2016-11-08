@@ -1,6 +1,7 @@
 class Player {
     constructor() {
         this.homeGrid = new Grid();
+		this.targetGrid = new Grid();
 		this.id = -1;
         this.fleet = new Array(4);
 		this.fleet[0] = "Scrambler";
@@ -19,57 +20,52 @@ class gameWindow {
 		this.canvas.width = this.adjust(1920);
 		this.canvas.height = this.adjust(1080);
 		this.context = canvas.getContext('2d');
-		this.background = new Image();
-		this.background.src = 'images/gameBoard.png';
+		this.background = backgrounds[2];
 		this.canvas.addEventListener('click', this.getMousePos, false);
-		//TODO: Unugly it
+		this.selectedShip = -1;
+		this.selectedTile = new orderedPair(-1, -1);
+		this.numOfImagesLoaded = 0;
+		this.targetHitIcon = new Image();
+		this.targetHitIcon.src = 'images/targetHitIcon.png';
+		this.targetMissIcon = new Image();
+		this.targetMissIcon.src = 'images/targetMissIcon.png';
+		this.homeHitIcon = new Image();
+		this.homeHitIcon.src = 'images/homeHitIcon.png';
+		this.homeMissIcon = new Image();
+		this.homeMissIcon.src = 'images/homeMissIcon.png';
 		
-		this.class21 = new Image();
-		this.class31 = new Image();
-		this.class41 = new Image();
-		this.class51 = new Image();
-		this.class21Hor = new Image();
-		this.class31Hor = new Image();
-		this.class41Hor = new Image();
-		this.class51Hor = new Image();
-		this.class21.src = 'images/Ships/ship2Scrambler.png';
-		this.class31.src = 'images/Ships/ship3Submarine.png';
-		this.class41.src = 'images/Ships/ship4Cruiser.png';
-		this.class51.src = 'images/Ships/ship5Executioner.png';
-		this.class21Hor.src = 'images/Ships/ship2ScramblerHor.png';
-		this.class31Hor.src = 'images/Ships/ship3SubmarineHor.png';
-		this.class41Hor.src = 'images/Ships/ship4CruiserHor.png';
-		this.class51Hor.src = 'images/Ships/ship5ExecutionerHor.png';
-		this.class22 = new Image();
-		this.class32 = new Image();
-		this.class42 = new Image();
-		this.class52 = new Image();
-		this.class22Hor = new Image();
-		this.class32Hor = new Image();
-		this.class42Hor = new Image();
-		this.class52Hor = new Image();
-		this.class22.src = 'images/Ships/ship2Scanner.png';
-		this.class32.src = 'images/Ships/ship3Destroyer.png';
-		this.class42.src = 'images/Ships/ship4Carrier.png';
-		this.class52.src = 'images/Ships/ship5Artillery.png';
-		this.class22Hor.src = 'images/Ships/ship2ScannerHor.png';
-		this.class32Hor.src = 'images/Ships/ship3DestroyerHor.png';
-		this.class42Hor.src = 'images/Ships/ship4CarrierHor.png';
-		this.class52Hor.src = 'images/Ships/ship5ArtilleryHor.png';
+		this.images = [new Image(), new Image(), new Image(), new Image()];
+		for (var i = 0; i < this.images.length; i++) {
+			var imageName = (i+2) + client.fleet[i].shipName;
+			if (!client.fleet[i].vert) {
+				imageName += 'Hor';
+			}
+			this.images[i].src = 'images/Ships/ship' + imageName + '.png';
+			this.images[i].addEventListener('load', this.loadPage, false);
+		}
 	}
 	
 	adjust(dimension) {
 		return dimension * this.scale;
 	}
 	
+	
 	drawButtons() {
 		var norm = document.getElementById('normalAttack');
 		var spec = document.getElementById('specialAttack');
 		
-		norm.style.left = this.adjust(norm.offsetLeft)+"px";
-		norm.style.top = this.adjust(norm.offsetTop)+"px";
-		spec.style.left = this.adjust(spec.offsetLeft)+"px";
-		spec.style.top = this.adjust(spec.offsetTop)+"px";
+		norm.style.left = this.adjust(normalAttackDims[0])+"px";
+		norm.style.top = this.adjust(normalAttackDims[1])+"px";
+		spec.style.left = this.adjust(specialAttackDims[0])+"px";
+		spec.style.top = this.adjust(specialAttackDims[1])+"px";
+		norm.disabled = true;
+		spec.disabled = true;
+	}
+	homeGridStart() {
+		return new orderedPair(playWindow.adjust(40), playWindow.adjust(30));
+	}
+	targetGridStart() {
+		return new orderedPair(playWindow.adjust(710), playWindow.adjust(30));
 	}
 	
 	getMousePos(evt) {
@@ -77,13 +73,23 @@ class gameWindow {
 		var mousePos = new orderedPair (
 										Math.round((evt.clientX-rect.left)/(rect.right-rect.left)*playWindow.canvas.width),
 										Math.round((evt.clientY-rect.top)/(rect.bottom-rect.top)*playWindow.canvas.height));
-		//console.log(mousePos);
 		playWindow.processClick(mousePos);
+	}
+	
+	loadPage() {
+		playWindow.numOfImagesLoaded++;
+		if (playWindow.numOfImagesLoaded == 4) {
+			playWindow.draw();
+			document.getElementById('positionFleet').style.display = 'none';
+			document.getElementById('gameWindow').style.display = 'block';
+			playWindow.drawButtons();
+		}
 	}
 	
 	processClick(posPair){
 		var xPair = posPair.posX;
 		var yPair = posPair.posY;
+		var gridName = "none";
 		if(xPair >= playWindow.adjust(40) && xPair <= playWindow.adjust(670) && yPair >= playWindow.adjust(30) && yPair <= playWindow.adjust(660)){
 			//Handle home grid
 			xPair = xPair - playWindow.adjust(40);
@@ -115,9 +121,6 @@ class gameWindow {
 				case (xPair <= playWindow.adjust(630)):
 					xPair = 8;
 					break;
-				default: 
-					xPair = -1;
-					break;
 			}
 			yPair = yPair - playWindow.adjust(30);
 			switch(true){
@@ -148,12 +151,10 @@ class gameWindow {
 				case (yPair <= playWindow.adjust(630)):
 					yPair = 8;
 					break;
-				default: 
-					yPair = -1;
-					break;
 			}
+			gridName = "home";
 			//xPair and yPair are now values 0 through 8
-			console.log("Home: (" + xPair + "," + yPair + ")");
+			console.log(gridName + ": (" + xPair + "," + yPair + ")");
 		}
 		else if(xPair >= playWindow.adjust(710) && xPair <= playWindow.adjust(1340) && yPair >= playWindow.adjust(30) && yPair <= playWindow.adjust(660)){
 			//Handle enemy grid
@@ -186,9 +187,6 @@ class gameWindow {
 				case (xPair <= playWindow.adjust(630)):
 					xPair = 8;
 					break;
-				default: 
-					xPair = -1;
-					break;
 			}
 			yPair = yPair - playWindow.adjust(30);
 			switch(true){
@@ -219,14 +217,63 @@ class gameWindow {
 				case (yPair <= playWindow.adjust(630)):
 					yPair = 8;
 					break;
-				default:
-					yPair = -1;
-					break;
 			}
 			//xPair and yPair are now values 0 through 8
-			console.log("Enemy: (" + xPair + "," + yPair + ")");
+			gridName = "target";
+			console.log(gridName + ": (" + xPair + "," + yPair + ")");
 		}
-		
+		if (gridName != "none") {
+			var gridCoordinate = new orderedPair(xPair, yPair);
+			if (gridName == "home") {
+				for(var i = 0; i < client.fleet.length; i++) {
+					var element = client.fleet[i];
+					if (element.containsPoint(gridCoordinate) && i != playWindow.selectedShip) {
+						playWindow.draw();
+						playWindow.drawShipSelector(i);
+						playWindow.selectedTile = new orderedPair(-1,-1);
+						document.getElementById('normalAttack').disabled = true;
+						document.getElementById('specialAttack').disabled = true;
+						break;
+					}
+				}
+			}
+			else {
+				if (playWindow.selectedShip != -1) {
+					playWindow.draw();
+					playWindow.drawShipSelector(playWindow.selectedShip);
+					playWindow.drawTileSelector(gridCoordinate);
+					playWindow.selectedTile = gridCoordinate;
+					document.getElementById('normalAttack').disabled = false;
+					document.getElementById('specialAttack').disabled = false;
+				}
+				else {
+					playWindow.draw();
+					this.context.font = '26px Arial';
+					playWindow.context.fillText("Must select Ship first!", this.adjust(90), this.adjust(810));
+					document.getElementById('normalAttack').disabled = true;
+					document.getElementById('specialAttack').disabled = true;
+				}
+			}
+		}
+	}
+	
+	drawShipSelector(shipIndex) {
+		var currentShip = client.fleet[shipIndex];
+		var drawPoint = client.homeGrid.field[currentShip.mainX][currentShip.mainY].corner;
+		var selectorW = playWindow.adjust(playWindow.images[shipIndex].width);
+		var selectorH = playWindow.adjust(playWindow.images[shipIndex].height);
+		playWindow.selectedShip = shipIndex;
+		playWindow.context.lineWidth="3";
+		playWindow.context.strokeStyle="red";
+		playWindow.context.strokeRect(drawPoint.posX, drawPoint.posY, selectorW, selectorH);
+	}
+	
+	drawTileSelector(gridCoordinate) {
+		var drawPoint = client.targetGrid.field[gridCoordinate.posX][gridCoordinate.posY].corner;
+		var dimension = playWindow.adjust(70);
+		playWindow.context.lineWidth="3";
+		playWindow.context.strokeStyle="red";
+		playWindow.context.strokeRect(drawPoint.posX, drawPoint.posY, dimension, dimension);
 	}
 	
 	draw() {
@@ -236,79 +283,12 @@ class gameWindow {
 		this.context.shadowColor = 'black';
 		this.context.shadowOffsetX = 3;
 		this.context.shadowOffsetY = 3;
-		//class 2 display
-		if(client.fleet[0].shipName == "Scrambler"){
-			if(client.fleet[0].vert){
-				this.context.drawImage(this.class21, this.adjust(client.fleet[0].mainX * 70 + 40), this.adjust(client.fleet[0].mainY * 70 + 30), this.adjust(this.class21.width), this.adjust(this.class21.height));
-			}
-			else{
-				this.context.drawImage(this.class21Hor, this.adjust(client.fleet[0].mainX * 70 + 40), this.adjust(client.fleet[0].mainY * 70 + 30), this.adjust(this.class21.height), this.adjust(this.class21.width));
-			}
-		}
-		else if(client.fleet[0].shipName == "Scanner"){
-			if(client.fleet[0].vert){
-				this.context.drawImage(this.class22, this.adjust(client.fleet[0].mainX * 70 + 40), this.adjust(client.fleet[0].mainY * 70 + 30), this.adjust(this.class22.width), this.adjust(this.class22.height));
-			}
-			else{
-				this.context.drawImage(this.class22Hor, this.adjust(client.fleet[0].mainX * 70 + 40), this.adjust(client.fleet[0].mainY * 70 + 30), this.adjust(this.class22.height), this.adjust(this.class22.width));
-			}
-		}
-		//class 3 display
-		if(client.fleet[1].shipName == "Submarine"){
-			if(client.fleet[1].vert){
-				this.context.drawImage(this.class31, this.adjust(client.fleet[1].mainX * 70 + 40), this.adjust(client.fleet[1].mainY * 70 + 30), this.adjust(this.class31.width), this.adjust(this.class31.height));
-			}
-			else{
-				this.context.drawImage(this.class31Hor, this.adjust(client.fleet[1].mainX * 70 + 40), this.adjust(client.fleet[1].mainY * 70 + 30), this.adjust(this.class31.height), this.adjust(this.class31.width));
-			}
-		}
-		else if(client.fleet[1].shipName == "Destroyer"){
-			if(client.fleet[1].vert){
-				this.context.drawImage(this.class32, this.adjust(client.fleet[1].mainX * 70 + 40), this.adjust(client.fleet[1].mainY * 70 + 30), this.adjust(this.class32.width), this.adjust(this.class32.height));
-			}
-			else{
-				this.context.drawImage(this.class32Hor, this.adjust(client.fleet[1].mainX * 70 + 40), this.adjust(client.fleet[1].mainY * 70 + 30), this.adjust(this.class32.height), this.adjust(this.class32.width));
-			}
-		}
-		
-		//class 4 display
-		if(client.fleet[2].shipName == "Cruiser"){
-			if(client.fleet[2].vert){
-				this.context.drawImage(this.class41, this.adjust(client.fleet[2].mainX * 70 + 40), this.adjust(client.fleet[2].mainY * 70 + 30), this.adjust(this.class41.width), this.adjust(this.class41.height));
-			}
-			else{
-				this.context.drawImage(this.class41Hor, this.adjust(client.fleet[2].mainX * 70 + 40), this.adjust(client.fleet[2].mainY * 70 + 30), this.adjust(this.class41.height), this.adjust(this.class41.width));
-			}
-		}
-		else if(client.fleet[2].shipName == "Carrier"){
-			if(client.fleet[2].vert){
-				this.context.drawImage(this.class42, this.adjust(client.fleet[2].mainX * 70 + 40), this.adjust(client.fleet[2].mainY * 70 + 30), this.adjust(this.class42.width), this.adjust(this.class42.height));
-			}
-			else{
-				this.context.drawImage(this.class42Hor, this.adjust(client.fleet[2].mainX * 70 + 40), this.adjust(client.fleet[2].mainY * 70 + 30), this.adjust(this.class42.height), this.adjust(this.class42.width));
-			}
-		}
-		//class 5 display
-		if(client.fleet[3].shipName == "Executioner"){
-			if(client.fleet[3].vert){
-				this.context.drawImage(this.class51, this.adjust(client.fleet[3].mainX* 70 + 40), this.adjust(client.fleet[3].mainY* 70 + 30), this.adjust(this.class51.width), this.adjust(this.class51.height));
-			}
-			else{
-				this.context.drawImage(this.class51Hor, this.adjust(client.fleet[3].mainX* 70 + 40), this.adjust(client.fleet[3].mainY* 70 + 30), this.adjust(this.class51.height), this.adjust(this.class51.width));
-			}
-		}
-		if(client.fleet[3].shipName == "Artillery"){
-			if(client.fleet[3].vert){
-				this.context.drawImage(this.class52, this.adjust(client.fleet[3].mainX * 70 + 40), this.adjust(client.fleet[3].mainY * 70 + 30), this.adjust(this.class52.width), this.adjust(this.class52.height));
-			}
-			else{
-				this.context.drawImage(this.class52Hor, this.adjust(client.fleet[3].mainX * 70 + 40), this.adjust(client.fleet[3].mainY * 70 + 30), this.adjust(this.class52.height), this.adjust(this.class52.width));
-			}
+		for (var i = 0; i < this.images.length; i++) {
+			this.context.drawImage(this.images[i], this.adjust(client.fleet[i].mainX * 70 + 40), this.adjust(client.fleet[i].mainY * 70 + 30), this.adjust(this.images[i].width), this.adjust(this.images[i].height));				
 		}
 		this.context.fillText('Turn', this.adjust(1575), this.adjust(75));
 		this.context.fillText('Timer', this.adjust(1560), this.adjust(435));
 		this.context.fillText('Chat', this.adjust(1320), this.adjust(750));
-		
 	}
 }
 
@@ -319,29 +299,25 @@ class buildAFleetWindow {
 		this.canvas.width = this.adjust(1920);
 		this.canvas.height = this.adjust(1080);
 		this.context = canvas.getContext('2d');
-		this.background = new Image();
-		this.background.src = 'images/Ships/shipSelect.png';
-		this.class2 = new Image();
-		this.class2.src = 'images/Ships/ship2temp.png';
-		this.class3 = new Image();
-		this.class3.src = 'images/Ships/ship3temp.png';
-		this.class4 = new Image();
-		this.class4.src = 'images/Ships/ship4temp.png';
-		this.class5 = new Image();
-		this.class5.src = 'images/Ships/ship5temp.png';
+		this.background = backgrounds[0];
+		this.class2 = tempImages[0];
+		this.class3 = tempImages[1];
+		this.class4 = tempImages[2];
+		this.class5 = tempImages[3];
 		this.buildButtons = document.getElementsByClassName('buildButton');
+		this.divX = -1;
+		this.divY = -1;
 	}
 	adjust(dimension) {
 		return dimension * this.scale;
 	}
 	drawButtons() {
-		document.getElementById('finishShipSelect').style.left = this.adjust(document.getElementById('finishShipSelect').offsetLeft)+'px';
-		document.getElementById('finishShipSelect').style.top = this.adjust(document.getElementById('finishShipSelect').offsetTop)+'px';
-		var window = this;
-		[].forEach.call(this.buildButtons, function(element) {
-			element.style.left = window.adjust(element.offsetLeft)+'px';
-			element.style.top = window.adjust(element.offsetTop)+'px';
-		});
+		document.getElementById('finishShipSelect').style.left = this.adjust(finishShipSelectDims[0])+'px';
+		document.getElementById('finishShipSelect').style.top = this.adjust(finishShipSelectDims[1])+'px';
+		for (var i = 0; i < this.buildButtons.length; i++) {
+			this.buildButtons[i].style.left = this.adjust(buildButtonDims[i][0])+'px';
+			this.buildButtons[i].style.top = this.adjust(buildButtonDims[i][1])+'px';
+		}
 	}
 	draw() {
 		this.context.drawImage(this.background, 0, 0, this.adjust(this.background.width), this.adjust(this.background.height));
@@ -355,7 +331,7 @@ class buildAFleetWindow {
 		this.context.drawImage(this.class4, this.adjust(320), this.adjust(240), this.adjust(this.class4.width), this.adjust(this.class4.height));
 		this.context.drawImage(this.class5, this.adjust(390), this.adjust(240), this.adjust(this.class5.width), this.adjust(this.class5.height));
 		this.context.fillText('Build Fleet Menu', this.adjust(850), this.adjust(100));
-		this.context.font = '22px Arial';
+		this.context.font = '24px Arial';
 		this.context.fillText('Scrambler', this.adjust(850), this.adjust(225));
 		this.context.fillText('Scanner', this.adjust(850), this.adjust(315));
 		this.context.fillText('Submarine', this.adjust(850), this.adjust(435));
@@ -382,8 +358,7 @@ class fleetPositionWindow {
 		this.canvas.width = this.adjust(1920);
 		this.canvas.height = this.adjust(1080);
 		this.context = canvas.getContext('2d');
-		this.background = new Image();
-		this.background.src = 'images/Ships/shipSelect.png';
+		this.background = backgrounds[1];
 		this.class2 = new Image();
 		this.class3 = new Image();
 		this.class4 = new Image();
@@ -421,11 +396,14 @@ class fleetPositionWindow {
 		this.context.shadowColor = 'black';
 		this.context.shadowOffsetX = 3;
 		this.context.shadowOffsetY = 3;
-		this.context.fillText('Waiting for other player...', this.adjust(200), this.adjust(950));
+		this.context.fillText('Waiting for other player...', this.adjust(177), this.adjust(950));
+		for (var i = 0; i < this.moveableShips.length; i++) {
+			this.moveableShips[i].shipName = client.fleet[i];
+		}
 		client.fleet = this.moveableShips;
 		var buttons = document.getElementById('positionFleet').querySelectorAll('button');
 		[].forEach.call(buttons, function(element) {
-			element.onclick = "";
+			element.disabled = true;
 		});
 	}
 	
@@ -434,17 +412,22 @@ class fleetPositionWindow {
 	}
 	
 	drawButtons() {
-		document.getElementById('finishFleet').style.left = this.adjust(document.getElementById('finishFleet').offsetLeft)+'px';
-		document.getElementById('finishFleet').style.top = this.adjust(document.getElementById('finishFleet').offsetTop)+'px';
-		var window = this;
-		[].forEach.call(this.selectButtons, function(element) {
-			element.style.left = window.adjust(element.offsetLeft)+'px';
-			element.style.top = window.adjust(element.offsetTop)+'px';
-		});
-		[].forEach.call(this.moveButtons, function(element) {
-			element.style.left = window.adjust(element.offsetLeft)+'px';
-			element.style.top = window.adjust(element.offsetTop)+'px';
-		});
+		document.getElementById('finishFleet').style.left = this.adjust(finishFleetDims[0])+'px';
+		document.getElementById('finishFleet').style.top = this.adjust(finishFleetDims[1])+'px';
+		console.log("select");
+		for (var i = 0; i < this.selectButtons.length; i++) {
+			console.log(selectButtonDims[i][0]);
+			console.log(selectButtonDims[i][1]);
+			this.selectButtons[i].style.left = this.adjust(selectButtonDims[i][0])+'px';
+			this.selectButtons[i].style.top = this.adjust(selectButtonDims[i][1])+'px';
+		}
+		console.log("move");
+		for (var i = 0; i < this.moveButtons.length; i++) {
+			console.log(moveButtonDims[i][0]);
+			console.log(moveButtonDims[i][1]);
+			this.moveButtons[i].style.left = this.adjust(moveButtonDims[i][0])+'px';
+			this.moveButtons[i].style.top = this.adjust(moveButtonDims[i][1])+'px';
+		}
 	}
 	draw() {
 		this.context.drawImage(this.background, 0, 0, this.adjust(this.background.width), this.adjust(this.background.height));
@@ -657,66 +640,6 @@ class fleetPositionWindow {
 	}
 }
 
-
-
-class Grid {
-	constructor() {
-		this.field = new Array(9);
-		for (var i = 0; i < 9; i++) {
-			this.field[i] = new Array(9);
-		}
-	}
-}
-
-class Tile {
-	constructor() {
-		this.hasShip = false; //whether or not a ship occupies this tile
-		this.hasBeenShot = false; //whether or not enemy has fired on this tile
-		this.shipHit = undefined; //true = "hit", false = "miss"
-	}
-	
-	shipPresent() {
-		return this.hasShip;
-	}
-	
-	shot() {
-		return this.hasBeenShot;
-	}
-	
-	updateTile() {} //TODO
-	
-	fire() {
-		this.hasBeenShot = true;
-		if(shipPresent()) {
-			this.shipHit = true;
-		}
-		else {
-			this.shipHit = false;
-		}
-	}
-	
-}
-//general battleship
-class generalShip {
-    constructor() {
-		this.ship = new Array(3);
-		this.sunk = false;
-		this.selected = false;
-	}
-	shipSunk(){
-		return this.sunk;
-	}
-	shipSelected(){
-		return this.selected;
-	}
-	/* ship coordinates
-	shipCoor(){
-		return coordinates
-	} */
-
-	
-}
-
 class orderedPair{
 	constructor(x,y) {
 		this.posX = x;
@@ -743,6 +666,68 @@ class orderedPair{
 	}
 }
 
+
+
+class Tile {
+	constructor(pair) {
+		this.corner = pair;			//top left corner pixel coordinates
+		this.hasShip = false; 		//whether or not a ship occupies this tile
+		this.hasBeenShot = false; 	//whether or not enemy has fired on this tile
+		this.shipHit = undefined; 	//true = "hit", false = "miss"
+		this.shipIndex = -1;  		//contains index of ship in client fleet
+	}
+	
+	shipPresent() {
+		return this.hasShip;
+	}
+	
+	shot() {
+		return this.hasBeenShot;
+	}
+	
+	updateTile() {} //TODO
+}
+
+class Grid {
+	constructor() {
+		this.field = new Array(9);
+		for (var i = 0; i < 9; i++) {
+			this.field[i] = new Array(9);
+		}
+	}
+	
+	loadGrid(topLeftCorner, tileSize) {
+		var x = topLeftCorner.posX;
+		var y = topLeftCorner.posY;
+		for (var i = 0; i < 9; i++) {
+			for (var j = 0; j < 9; j++) {
+				this.field[i][j] = new Tile(new orderedPair(i*tileSize + x, j*tileSize + y));
+			}
+		}
+	}
+}
+//general battleship
+class generalShip {
+    constructor() {
+		this.ship = new Array(3);
+		this.sunk = false;
+		this.selected = false;
+	}
+	shipSunk(){
+		return this.sunk;
+	}
+	shipSelected(){
+		return this.selected;
+	}
+	/* ship coordinates
+	shipCoor(){
+		return coordinates
+	} */
+
+	
+}
+
+
 class moveableShip {
 	constructor(name,shipSize,mainX,mainY) {
 		this.shipName = name;
@@ -752,10 +737,18 @@ class moveableShip {
 		this.vert = true;
 		this.length = shipSize;
 	}
+	containsPoint(point) {
+		var posArray = this.currentPosArray();
+		for (var i = 0; i < posArray.length; i++) {
+			if (posArray[i].equals(point))
+				return true;
+		}
+		return false;
+	}
 	currentPosArray(){
 		var pos = [this.mainPoint];
 		for (var i = 0; i < this.length-1; i++){
-			if(this.vert == true){
+			if(this.vert){
 				pos.push(new orderedPair(this.mainX,this.mainY + 1 + i));
 			}
 			else{
@@ -838,6 +831,16 @@ class moveableShip {
 		this.mainY = this.mainY + yChange;
 		this.mainPoint.move(this.mainX,this.mainY);
 	}
+	fire(tile) {
+		tile.hasBeenShot = true;
+		if(tile.shipPresent()) {
+			tile.shipHit = true;
+		}
+		else {
+			tile.shipHit = false;
+		}
+	}
+	
 }
 
 /* //class 2

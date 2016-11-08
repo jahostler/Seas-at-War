@@ -3,6 +3,20 @@
 }
 
 *:focus {
+	outline: none !important;
+}
+
+*:disabled {
+	filter: sepia(60%) brightness(50%) !important;
+	border:3px solid #000000 !important;
+	cursor: default !important;
+}
+
+*{
+	user-select: none;	
+}
+
+*:focus {
 	outline: none;
 }
 
@@ -11,7 +25,6 @@ div {
 	background-color: black;
 	background-repeat: no-repeat;
 	background-size: contain;
-	display: none;
 	top: 0;
 	right: 0;
 	bottom: 0;
