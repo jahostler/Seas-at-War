@@ -209,13 +209,13 @@ button span {
 }
 
 #buildAFleet div{
-	width: 400px;
+	width: 420px;
 	height: 200px;
 	word-wrap: break-word;
 	display: none;
 	background-color: rgba(0,0,0,0);
-	margin-top: 570px;
-	margin-left: 69px;
+	top: 780px;
+	left: 100px;
 	font-size: 22px;
 	color: white;
 }
@@ -295,6 +295,7 @@ button span {
 	left: 750px;
 }
 
-#gameCanvas {
-
+#serverDisconnectMessage {
+	color: red;
+	font-size: 30px;
 }

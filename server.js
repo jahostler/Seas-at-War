@@ -125,20 +125,24 @@ io.on('connection', function(socket){
 			}
 		}
 		if(games.get(gameID).visitorReady && games.get(gameID).hostReady) {
-			io.sockets.emit(gameID + ' ready', {});
+			var firstPlayer = games.get(gameID).host;
+			if (getRandomInt(0, 1) == 1) {
+				firstPlayer = games.get(gameID).visitor;
+			}
+			io.sockets.emit(gameID + ' ready', firstPlayer);
 		}
 	});
 	
     socket.on('disconnect', function () {
         var index = players.indexOf(newID);
 		if (games.delete(gameID)) {
+			io.sockets.emit(gameID + ' player disconnect');
 			console.log("Game " + gameID + " deleted from records");
 		}
 		players.splice(index, 1);
         console.log("Player " + newID + " deleted from records.");
 		console.log(players);
 		console.log(games);
-		io.sockets.emit(gameID + ' player disconnect');
     });
     
 });
@@ -156,6 +160,11 @@ function getGameID() {
         gameID += 1;
     return gameID;
 };
+
+//returns random integer in range [min, max]
+function getRandomInt(min, max) {  //http://stackoverflow.com/questions/1527803/generating-random-whole-numbers-in-javascript-in-a-specific-range
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 
 var portNumber = 35000;
 if (process.argv.length >= 3) {

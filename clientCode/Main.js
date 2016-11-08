@@ -28,7 +28,7 @@ socket.on('disconnect', function(data) {
 	for(var i = 0; i < divs.length; i++) {
 		divs[i].style.display = 'none';
 	}
-	document.getElementById('mainMenu').style.display = 'block';
+	document.getElementById('serverDisconnectMessage').style.display = 'block';
 });
 
 function initialize() {
@@ -88,7 +88,7 @@ function loadGame() {
 			divs[i].style.display = 'none';
 		}
 		document.getElementById('mainMenu').style.display = 'block';
-		gameID = -1;
+		removeGame();
 	});
 	prepWindow.draw();
 	prepWindow.drawButtons();
@@ -192,6 +192,7 @@ function shipDetails(shipname) {
 	[].forEach.call(descriptions, function(element){
 			element.style.display = 'none';
 	});
+	console.log(descriptions[index]);
 	descriptions[index].style.display = 'block';
 	if (prepWindow.divX == -1) {
 		prepWindow.divX = prepWindow.adjust(document.getElementsByClassName('shipDes')[index].offsetLeft) + 'px';
@@ -219,6 +220,9 @@ function startGameScreen() {
 	socket.emit('fleet finished', {gID: gameID, playerID: client.id});
 	positionWindow.waitMessage();
 	socket.on(gameID + ' ready', function(data) {
+		if (data == client.id) {
+			client.hasTurn = true;
+		}
 		playWindow = new gameWindow(document.getElementById('gameCanvas'), scaling, client);
 		initializeGame();
 	});
@@ -236,5 +240,4 @@ function initializeGame() {
 			client.homeGrid.field[xCor][yCor].shipIndex = i;
 		}
 	}
-	console.log(client.homeGrid);
 }

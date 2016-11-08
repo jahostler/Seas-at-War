@@ -13,6 +13,11 @@ function newGame() {
 }
 function removeGame() {
 	socket.emit('delete game', gameID);
+	client.fleet = ["Scrambler", "Submarine", "Cruiser", "Executioner"];
+	var buttons = document.getElementById('positionFleet').querySelectorAll('button');
+	[].forEach.call(buttons, function(element) {
+		element.disabled = false;
+	});
 	gameID = -1;
 }
 function hostGame() {
