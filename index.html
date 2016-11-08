@@ -35,7 +35,7 @@
 		<div id="hostGame"> 
 			<h1>Host Game Menu</h1>
 			<p></p>
-			<span id="sessionID"></span>
+			<p id="sessionID"></p>
 			<p>
 				<button class="button3" onClick="backToMain('hostGame')">
 					<span> Back </span> 
@@ -210,17 +210,18 @@
 		<div id="gameWindow">
 			<canvas id="gameCanvas" tabindex="1"></canvas>
 			
-			<button id="normalAttack" class="fireButton" onClick="">
+			<button id="normalAttack" class="fireButton">
 				<span> Normal Attack </span>
 			</button>
-			<button id="specialAttack" class="fireButton" onClick="">
+			<button id="specialAttack" class="fireButton">
 				<span> Special Attack </span>
 			</button>
 			
 		</div>
 		
 		<div id="playerDisconnectMessage">
-			<button id="Continue">
+			<p> Other player disconnected. </p>
+			<button class="button1" onclick="backToMain('playerDisconnectMessage')">
 				<span> Continue </span>
 			</button>
 		</div>

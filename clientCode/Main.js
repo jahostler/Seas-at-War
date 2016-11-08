@@ -23,7 +23,7 @@ socket.on('welcome', function(data) {
 });
 
 socket.on('disconnect', function(data) {
-	console.log("server disconnected"); 	//todo:  add formal message telling client server disconnected
+	//todo:  add formal message telling client server disconnected
 	var divs = document.getElementsByTagName('div');
 	for(var i = 0; i < divs.length; i++) {
 		divs[i].style.display = 'none';
@@ -33,9 +33,14 @@ socket.on('disconnect', function(data) {
 
 function initialize() {
     client = new Player();
-	//for testing purposes
 	enemy = new Player();
 	gameID = -1;
+	var instructImages = document.getElementsByClassName('instructImg');
+	var instructImgDims = [instructImages[0].width * 0.9, instructImages[0].height * 0.9];
+	for (var i = 0; i < instructImages.length; i++) {
+		instructImages[i].style.width = instructImgDims[0] + 'px';
+		instructImages[i].style.height = instructImgDims[1] + 'px';
+	}
 	backgrounds = [new Image(), new Image(), new Image()];
 	backgrounds[0].src = 'images/Ships/shipSelect.png';
 	backgrounds[1].src = 'images/Ships/shipSelect.png';
@@ -82,12 +87,12 @@ function loadGame() {
 	prepWindow = new buildAFleetWindow(document.getElementById('buildCanvas'), scaling); //todo: fix scaling of buttons
 	positionWindow = new fleetPositionWindow(document.getElementById('positionCanvas'), scaling)
 	socket.on(gameID + ' player disconnect', function(data){
-		console.log("other player disconnected"); 	//todo:  add formal message telling client other player disconnected
+		//todo:  add formal message telling client other player disconnected
 		var divs = document.getElementsByTagName('div');
 		for(var i = 0; i < divs.length; i++) {
 			divs[i].style.display = 'none';
 		}
-		document.getElementById('mainMenu').style.display = 'block';
+		document.getElementById('playerDisconnectMessage').style.display = 'block';
 		removeGame();
 	});
 	prepWindow.draw();

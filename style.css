@@ -1,9 +1,32 @@
 *{
-	user-select: none;	
+	-webkit-user-select: none;	
 }
 
 *:focus {
 	outline: none !important;
+}
+
+html{
+	margin: 0px;
+	padding: 0px;
+	width: 100%;
+	height: 100%;
+}
+body {
+	margin: 0px;
+	padding: 0px;
+	width: 100%;
+	height: 100%;
+}
+
+p:hover {
+	cursor: default !important;
+}
+h1:hover {
+	cursor: default !important;
+}
+h2:hover{
+	cursor: default !important;
 }
 
 *:disabled {
@@ -248,14 +271,15 @@ button span {
 
 #up {
 	top: 675px;
-	left: 950px;
-	padding: 10px 25px 10px 25px;
+	left: 947px;
+	padding: 11px 26px 11px 26px;
 }
 
 #down {
 	top: 775px;
-	left: 950px;
-	padding: 10px 25px 10px 25px;
+	left: 947px;
+	font-size:29px;
+	padding: 11px 26px 11px 26px;
 }
 
 #left {
@@ -269,7 +293,7 @@ button span {
 }
 
 #rotate {
-	padding: 20px 70px 20px 70px;
+	padding: 20px 75px 20px 75px;
 	font-size: 21px;
 	top: 875px;
 	left: 850px;
@@ -293,6 +317,11 @@ button span {
 #move5 {
 	top: 560px;
 	left: 750px;
+}
+
+#playerDisconnectMessage {
+	color: red;
+	font-size: 30px;
 }
 
 #serverDisconnectMessage {

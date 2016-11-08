@@ -69,6 +69,9 @@ class gameWindow {
 		norm.style.top = this.adjust(normalAttackDims[1])+"px";
 		spec.style.left = this.adjust(specialAttackDims[0])+"px";
 		spec.style.top = this.adjust(specialAttackDims[1])+"px";
+		console.log(client.fleet[playWindow.selectedShip]);
+		norm.addEventListener('click', playWindow.moveMade(), false);
+		norm.addEventListener('click', playWindow.moveMade(), false);
 		this.disableButtons();
 	}
 	homeGridStart() {
@@ -76,6 +79,10 @@ class gameWindow {
 	}
 	targetGridStart() {
 		return new orderedPair(playWindow.adjust(710), playWindow.adjust(30));
+	}
+	moveMade() {
+		//executes turn
+		
 	}
 	
 	getMousePos(evt) {
