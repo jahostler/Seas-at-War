@@ -89,7 +89,7 @@ class gameWindow {
 			playerID: client.id,
 			ship: currentShip,
 			coordinates: currentTiles,
-			gID: gameID;
+			gID: gameID
 		};
 		socket.emit("Turn done", attackData);
 	}
