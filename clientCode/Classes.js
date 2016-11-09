@@ -289,7 +289,7 @@ class gameWindow {
 				}
 			}
 			else {
-				if (!client.targetGrid.field[xPair][yPair].isHit()) {
+				if (!client.targetGrid.field[xPair][yPair].isShotAt()) {
 					if (playWindow.selectedShip != -1) {
 						playWindow.draw();
 						playWindow.drawShipSelector(playWindow.selectedShip);
@@ -323,7 +323,7 @@ class gameWindow {
 			for(var j = 0; j < client.homeGrid.field[i].length; j++) {
 				var homeTile = client.homeGrid.field[i][j];
 				var targetTile = client.targetGrid.field[i][j];
-				if (homeTile.isHit()) {
+				if (homeTile.isShotAt()) {
 					if (homeTile.shipHit == true) {
 						this.context.drawImage(this.homeHitIcon, homeTile.corner.posX, homeTile.corner.posY, this.adjust(70), this.adjust(70));
 					}
@@ -331,7 +331,7 @@ class gameWindow {
 						this.context.drawImage(this.homeMissIcon, homeTile.corner.posX, homeTile.corner.posY, this.adjust(70), this.adjust(70));
 					}
 				}
-				if (targetTile.isHit()) {
+				if (targetTile.isShotAt()) {
 					if (targetTile.shipHit == true) {
 						this.context.drawImage(this.targetHitIcon, targetTile.corner.posX, targetTile.corner.posY, this.adjust(70), this.adjust(70));
 					}
@@ -766,7 +766,7 @@ class Tile {
 	shipPresent() {
 		return this.hasShip;
 	}
-	isHit() {
+	isShotAt() {
 		return this.shipHit != null;
 	}
 	
