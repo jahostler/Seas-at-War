@@ -233,6 +233,15 @@ function startGameScreen() {
 	});
 }
 
+function isGameOver() {
+	for (var i = 0; i < client.fleet.length; i++) {
+		if (client.fleet[i].alive) {
+			return false;
+		}
+	}
+	return true;
+}
+
 function initializeGame() {
 	client.homeGrid.loadGrid(playWindow.homeGridStart(), playWindow.adjust(70));
 	client.targetGrid.loadGrid(playWindow.targetGridStart(), playWindow.adjust(70));
@@ -246,6 +255,38 @@ function initializeGame() {
 		}
 	}
 	socket.on(client.id + ' attack made', function(attackData){
-		
+		var updatedTiles = new Array(attackData.coordinates.length);
+		for (var i = 0; i < updatedTiles.length ; i++) {
+			var x = attackData.coordinates[i].posX;
+			var y = attackData.coordinates[i].posY;
+			client.homeGrid.field[x][y].updateTile();
+			updatedTiles[i] = client.homeGrid.field[x][y];
+		}
+		for (var i = 0; i < client.fleet.length; i++){
+			client.fleet[i].updateAlive();
+		}
+		var returnData = {
+			tiles: updatedTiles,
+			gID: gameID,
+			playerID: client.id
+		};
+		socket.emit('game updated', returnData);
+		if (isGameOver()) {
+			//todo:  display game over screen
+			socket.emit('game over', {gID: gameID, playerID: client.id});
+		}
+		else {
+			client.hasTurn = true;
+			playWindow.draw();
+			playWindow.selectedTile = new orderedPair(-1, -1);
+			if (playWindow.selectedShip != -1) {
+				if (client.fleet[playWindow.selectedShip].alive) {
+					playWindow.drawShipSelector(playWindow.selectedShip);
+				}
+				else {
+					playWindow.selectedShip = -1;
+				}
+			}
+		}
 	});
 }

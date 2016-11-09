@@ -71,6 +71,7 @@ io.on('connection', function(socket){
 	var gameID = -1;
     players.push(newID);
     socket.emit('welcome', newID);
+	
     socket.on('new player created', function(data) {
         if (data != newID) {
 			console.log(data);
@@ -81,6 +82,7 @@ io.on('connection', function(socket){
             console.log("Player " + newID + " creation successful!");
         }
     });
+	
 	socket.on('new game', function(data) {
 		gameID = getGameID();
 		var hostID = data;
@@ -88,6 +90,7 @@ io.on('connection', function(socket){
 		socket.emit(hostID + ' gameID created', gameID);
 		console.log("Game " + gameID + " was created with host " + hostID);
 	});
+	
 	socket.on('join game', function(data) {
 		if (!games.has(data.gameID)) {
 			socket.emit(data.clientID + ' join error', {});
@@ -103,20 +106,6 @@ io.on('connection', function(socket){
 			socket.emit(games.get(gameID).visitor + ' join success', {});
 			io.sockets.emit(games.get(gameID).host + ' join success', {});
 		}
-	});
-	socket.on('delete game', function(data) {
-		games.delete(data);
-		console.log("Game " + data + " deleted from records");
-		gameID = -1;
-	});
-	socket.on('turn done', function(attackData){
-		var gameID = attackData.gID;
-		var currentGame = games.get(gameID);
-		var recipientID = currentGame.host;
-		if (attackData.playerID == currentGame.host) {
-			recipientID = currentGame.visitor;
-		}
-		io.sockets.emit(recipientID + ' attack made', attackData);
 	});
 	
 	socket.on('fleet finished', function(data) {
@@ -140,6 +129,39 @@ io.on('connection', function(socket){
 			}
 			io.sockets.emit(gameID + ' ready', firstPlayer);
 		}
+	});
+	
+	socket.on('delete game', function(data) {
+		games.delete(data);
+		console.log("Game " + data + " deleted from records");
+		gameID = -1;
+	});
+	
+	socket.on('turn done', function(attackData){
+		console.log(attackData);
+		var gameID = attackData.gID;
+		var currentGame = games.get(gameID);
+		var recipientID = currentGame.host;
+		if (attackData.playerID == currentGame.host) {
+			recipientID = currentGame.visitor;
+		}
+		io.sockets.emit(recipientID + ' attack made', attackData);
+	});
+	
+	socket.on('game updated', function(updateData){
+		var gameID = updateData.gID;
+		var currentGame = games.get(gameID);
+		var recipientID = currentGame.host;
+		if (updateData.playerID == currentGame.host) {
+			recipientID = currentGame.visitor;
+		}
+		console.log(recipientID + " update made");
+		io.sockets.emit(recipientID + ' make update', updateData);
+	});
+	
+	
+	socket.on('game over', function(data) {
+		//todo
 	});
 	
     socket.on('disconnect', function () {

@@ -3,7 +3,7 @@ class Player {
         this.homeGrid = new Grid();
 		this.targetGrid = new Grid();
 		this.id = -1;
-        this.fleet = ["Scrambler", "Submarine", "Cruiser", "Executioner"];
+        this.fleet = ['Scrambler', 'Submarine', 'Cruiser', 'Executioner'];
 		this.hasTurn = false;
     }
 }
@@ -50,13 +50,13 @@ class gameWindow {
 		this.context.font = 'bold 45px Times New Roman';
 		this.context.fillStyle = 'red';
 		if (client.hasTurn) {
-			this.context.fillText("Your Turn", this.adjust(1500), this.adjust(190));
+			this.context.fillText('Your Turn', this.adjust(1500), this.adjust(190));
 			this.context.font = '20px Times Arial';
 			this.context.fillStyle = 'white';
-			this.context.fillText("Select Ship and Tile to attack", this.adjust(1480), this.adjust(235));
+			this.context.fillText('Select Ship and Tile to attack', this.adjust(1480), this.adjust(235));
 		}
 		else {
-			this.context.fillText("Enemy Turn", this.adjust(1470), this.adjust(210));
+			this.context.fillText('Enemy Turn', this.adjust(1470), this.adjust(210));
 		}
 	}
 	
@@ -65,12 +65,16 @@ class gameWindow {
 		var norm = document.getElementById('normalAttack');
 		var spec = document.getElementById('specialAttack');
 		
-		norm.style.left = this.adjust(normalAttackDims[0])+"px";
-		norm.style.top = this.adjust(normalAttackDims[1])+"px";
-		spec.style.left = this.adjust(specialAttackDims[0])+"px";
-		spec.style.top = this.adjust(specialAttackDims[1])+"px";
-		norm.addEventListener('click', playWindow.moveMade("normal"), false);
-		spec.addEventListener('click', playWindow.moveMade("special"), false);
+		norm.style.left = this.adjust(normalAttackDims[0])+'px';
+		norm.style.top = this.adjust(normalAttackDims[1])+'px';
+		spec.style.left = this.adjust(specialAttackDims[0])+'px';
+		spec.style.top = this.adjust(specialAttackDims[1])+'px';
+		norm.addEventListener('click', function(data){
+			playWindow.moveMade('normal');
+		}, false);
+		spec.addEventListener('click', function(data){
+			playWindow.moveMade('special');
+		}, false);
 		this.disableButtons();
 	}
 	homeGridStart() {
@@ -82,16 +86,36 @@ class gameWindow {
 	moveMade(attackType) {
 		//executes turn
 		var currentShip = client.fleet[playWindow.selectedShip];
-		console.log(currentShip);
-		var currentTiles = [playWindow.selectedTile];
-		console.log(currentShip);
-		var attackData = {
-			playerID: client.id,
-			ship: currentShip,
-			coordinates: currentTiles,
-			gID: gameID
-		};
-		socket.emit("Turn done", attackData);
+		if (currentShip != -1) {
+			var currentTiles = [playWindow.selectedTile];
+			if (attackType == 'special') {
+				//todo:  implement special attacks
+			}
+			var attackData = {
+				playerID: client.id,
+				ship: currentShip,
+				coordinates: currentTiles,
+				gID: gameID
+			};
+			socket.emit('turn done', attackData);
+			socket.on(client.id + ' make update', function(data){
+				var updatedTiles = data.tiles;
+				console.log("Before");
+				console.log(client.targetGrid.field);
+				for (var i = 0; i < updatedTiles.length; i++) {
+					var x = updatedTiles[i].corner.posX;
+					var y = updatedTiles[i].corner.posY;
+					console.log('Updated: (' + currentTiles[i].posX + ', ' + currentTiles[i].posY + ')');
+					client.targetGrid.field[currentTiles[i].posX][currentTiles[i].posY].hasShip = updatedTiles[i].hasShip;
+					client.targetGrid.field[currentTiles[i].posX][currentTiles[i].posY].shipHit = updatedTiles[i].shipHit;
+				}
+				console.log("After");
+				console.log(client.targetGrid.field);
+				client.hasTurn = false;
+				playWindow.disableButtons();
+				playWindow.draw();
+			});
+		}
 	}
 	
 	getMousePos(evt) {
@@ -117,7 +141,7 @@ class gameWindow {
 	processClick(posPair){
 		var xPair = posPair.posX;
 		var yPair = posPair.posY;
-		var gridName = "none";
+		var gridName = 'none';
 		if(xPair >= playWindow.adjust(40) && xPair <= playWindow.adjust(670) && yPair >= playWindow.adjust(30) && yPair <= playWindow.adjust(660)){
 			//Handle home grid
 			xPair = xPair - playWindow.adjust(40);
@@ -180,9 +204,9 @@ class gameWindow {
 					yPair = 8;
 					break;
 			}
-			gridName = "home";
+			gridName = 'home';
 			//xPair and yPair are now values 0 through 8
-			console.log(gridName + ": (" + xPair + "," + yPair + ")");
+			//console.log(gridName + ': (' + xPair + ',' + yPair + ')');
 		}
 		else if(xPair >= playWindow.adjust(710) && xPair <= playWindow.adjust(1340) && yPair >= playWindow.adjust(30) && yPair <= playWindow.adjust(660)){
 			//Handle enemy grid
@@ -247,15 +271,15 @@ class gameWindow {
 					break;
 			}
 			//xPair and yPair are now values 0 through 8
-			gridName = "target";
-			console.log(gridName + ": (" + xPair + "," + yPair + ")");
+			gridName = 'target';
+			//console.log(gridName + ': (' + xPair + ',' + yPair + ')');
 		}
-		if (gridName != "none") {
+		if (gridName != 'none') {
 			var gridCoordinate = new orderedPair(xPair, yPair);
-			if (gridName == "home") {
+			if (gridName == 'home') {
 				for(var i = 0; i < client.fleet.length; i++) {
 					var element = client.fleet[i];
-					if (element.containsPoint(gridCoordinate) && i != playWindow.selectedShip) {
+					if (element.containsPoint(gridCoordinate) && i != playWindow.selectedShip && element.alive) {
 						playWindow.draw();
 						playWindow.drawShipSelector(i);
 						playWindow.selectedTile = new orderedPair(-1,-1);
@@ -265,18 +289,20 @@ class gameWindow {
 				}
 			}
 			else {
-				if (playWindow.selectedShip != -1) {
-					playWindow.draw();
-					playWindow.drawShipSelector(playWindow.selectedShip);
-					playWindow.drawTileSelector(gridCoordinate);
-					playWindow.selectedTile = gridCoordinate;
-					playWindow.enableButtons();
-				}
-				else {
-					playWindow.draw();
-					this.context.font = '26px Arial';
-					playWindow.context.fillText("Must select Ship first!", this.adjust(90), this.adjust(810));
-					
+				if (!client.targetGrid.field[xPair][yPair].isHit()) {
+					if (playWindow.selectedShip != -1) {
+						playWindow.draw();
+						playWindow.drawShipSelector(playWindow.selectedShip);
+						playWindow.drawTileSelector(gridCoordinate);
+						playWindow.selectedTile = gridCoordinate;
+						playWindow.enableButtons();
+					}
+					else {
+						playWindow.draw();
+						this.context.font = '26px Arial';
+						playWindow.context.fillText('Must select Ship first!', this.adjust(90), this.adjust(810));
+
+					}
 				}
 			}
 		}
@@ -292,22 +318,47 @@ class gameWindow {
 		//document.getElementById('specialAttack').disabled = false;	//todo:  implement special attacks
 	}
 	
+	drawGrids() {
+		for(var i = 0; i < client.homeGrid.field.length; i++) {
+			for(var j = 0; j < client.homeGrid.field[i].length; j++) {
+				var homeTile = client.homeGrid.field[i][j];
+				var targetTile = client.targetGrid.field[i][j];
+				if (homeTile.isHit()) {
+					if (homeTile.shipHit == true) {
+						this.context.drawImage(this.homeHitIcon, homeTile.corner.posX, homeTile.corner.posY, this.adjust(70), this.adjust(70));
+					}
+					else if (homeTile.shipHit == false) {
+						this.context.drawImage(this.homeMissIcon, homeTile.corner.posX, homeTile.corner.posY, this.adjust(70), this.adjust(70));
+					}
+				}
+				if (targetTile.isHit()) {
+					if (targetTile.shipHit == true) {
+						this.context.drawImage(this.targetHitIcon, targetTile.corner.posX, targetTile.corner.posY, this.adjust(70), this.adjust(70));
+					}
+					else if (targetTile.shipHit == false) {
+						this.context.drawImage(this.targetMissIcon, targetTile.corner.posX, targetTile.corner.posY, this.adjust(70), this.adjust(70));
+					}
+				}
+			}
+		}
+	}
+	
 	drawShipSelector(shipIndex) {
 		var currentShip = client.fleet[shipIndex];
 		var drawPoint = client.homeGrid.field[currentShip.mainX][currentShip.mainY].corner;
 		var selectorW = playWindow.adjust(playWindow.images[shipIndex].width);
 		var selectorH = playWindow.adjust(playWindow.images[shipIndex].height);
 		playWindow.selectedShip = shipIndex;
-		playWindow.context.lineWidth="3";
-		playWindow.context.strokeStyle="red";
+		playWindow.context.lineWidth='3';
+		playWindow.context.strokeStyle='red';
 		playWindow.context.strokeRect(drawPoint.posX, drawPoint.posY, selectorW, selectorH);
 	}
 	
 	drawTileSelector(gridCoordinate) {
 		var drawPoint = client.targetGrid.field[gridCoordinate.posX][gridCoordinate.posY].corner;
 		var dimension = playWindow.adjust(70);
-		playWindow.context.lineWidth="3";
-		playWindow.context.strokeStyle="red";
+		playWindow.context.lineWidth='3';
+		playWindow.context.strokeStyle='red';
 		playWindow.context.strokeRect(drawPoint.posX, drawPoint.posY, dimension, dimension);
 	}
 	
@@ -325,6 +376,7 @@ class gameWindow {
 		this.context.fillText('Timer', this.adjust(1560), this.adjust(435));
 		this.context.fillText('Chat', this.adjust(1320), this.adjust(750));
 		this.drawTurnMessage();
+		this.drawGrids();
 	}
 }
 
@@ -577,7 +629,7 @@ class fleetPositionWindow {
 	moveAction(actionString){
 		var shipID = this.selectedShip;
 		
-		if(actionString == "Rotate"){
+		if(actionString == 'Rotate'){
 			if(this.checkPosition(this.moveableShips[shipID].checkRotate()) == true){
 				this.moveableShips[shipID].rotate();
 				if(this.moveableShips[shipID].vert){
@@ -620,9 +672,9 @@ class fleetPositionWindow {
 				return false;
 			}
 		}
-		else if(actionString == "Up"){
-			if(this.checkPosition(this.moveableShips[shipID].checkMove("Up")) == true){
-				this.moveableShips[shipID].move("Up");
+		else if(actionString == 'Up'){
+			if(this.checkPosition(this.moveableShips[shipID].checkMove('Up')) == true){
+				this.moveableShips[shipID].move('Up');
 				this.yAdj[shipID] = this.yAdj[shipID] - 70;
 				this.draw()
 				this.selectShip(shipID);
@@ -632,9 +684,9 @@ class fleetPositionWindow {
 				return false;
 			}
 		}
-		else if(actionString == "Down"){
-			if(this.checkPosition(this.moveableShips[shipID].checkMove("Down")) == true){
-				this.moveableShips[shipID].move("Down");
+		else if(actionString == 'Down'){
+			if(this.checkPosition(this.moveableShips[shipID].checkMove('Down')) == true){
+				this.moveableShips[shipID].move('Down');
 				this.yAdj[shipID] = this.yAdj[shipID] + 70;
 				this.draw()
 				this.selectShip(shipID);
@@ -644,9 +696,9 @@ class fleetPositionWindow {
 				return false;
 			}
 		}
-		else if(actionString == "Right"){
-			if(this.checkPosition(this.moveableShips[shipID].checkMove("Right")) == true){
-				this.moveableShips[shipID].move("Right");
+		else if(actionString == 'Right'){
+			if(this.checkPosition(this.moveableShips[shipID].checkMove('Right')) == true){
+				this.moveableShips[shipID].move('Right');
 				this.xAdj[shipID] = this.xAdj[shipID] + 70;
 				this.draw()
 				this.selectShip(shipID);
@@ -656,9 +708,9 @@ class fleetPositionWindow {
 				return false;
 			}
 		}
-		else if(actionString == "Left"){
-			if(this.checkPosition(this.moveableShips[shipID].checkMove("Left")) == true){
-				this.moveableShips[shipID].move("Left");
+		else if(actionString == 'Left'){
+			if(this.checkPosition(this.moveableShips[shipID].checkMove('Left')) == true){
+				this.moveableShips[shipID].move('Left');
 				this.xAdj[shipID] = this.xAdj[shipID] - 70;
 				this.draw()
 				this.selectShip(shipID);
@@ -707,20 +759,26 @@ class Tile {
 	constructor(pair) {
 		this.corner = pair;			//top left corner pixel coordinates
 		this.hasShip = false; 		//whether or not a ship occupies this tile
-		this.hasBeenShot = false; 	//whether or not a player has fired on this tile
-		this.shipHit = undefined; 	//true = "hit", false = "miss"
+		this.shipHit = undefined; 	//true = 'hit', false = 'miss', undefined = 'not shot at'
 		this.shipIndex = -1;  		//contains index of ship in client fleet
 	}
 	
 	shipPresent() {
 		return this.hasShip;
 	}
-	
-	shot() {
-		return this.hasBeenShot;
+	isHit() {
+		return this.shipHit != null;
 	}
 	
-	updateTile() {} //TODO
+	updateTile() { //TODO
+		if(this.shipPresent()) {
+			this.shipHit = true;
+		}
+		else {
+			this.shipHit = false;
+		}
+	} 
+	
 }
 
 class Grid {
@@ -771,7 +829,21 @@ class moveableShip {
 		this.mainPoint = new orderedPair(mainX,mainY);
 		this.vert = true;
 		this.length = shipSize;
+		this.alive = true;
 	}
+	updateAlive() {
+		var posArray = this.currentPosArray();
+		var counter = 0;
+		for (var i = 0; i < posArray.length; i++) {
+			if (client.homeGrid.field[posArray[i].posX][posArray[i].posY].shipHit)
+				counter++;
+		}
+		if (counter == this.length) {
+			this.alive = false;
+		}
+			
+	}
+	
 	containsPoint(point) {
 		var posArray = this.currentPosArray();
 		for (var i = 0; i < posArray.length; i++) {
@@ -815,19 +887,19 @@ class moveableShip {
 	checkMove(direction){
 		var xChange = 0;
 		var yChange = 0;
-		if(direction == "Up"){
+		if(direction == 'Up'){
 			xChange = 0;
 			yChange = -1;
 		}
-		else if(direction == "Down"){
+		else if(direction == 'Down'){
 			xChange = 0;
 			yChange = 1;
 		}
-		else if(direction == "Right"){
+		else if(direction == 'Right'){
 			xChange = 1;
 			yChange = 0;
 		}
-		else if(direction == "Left"){
+		else if(direction == 'Left'){
 			xChange = -1;
 			yChange = 0;
 		}
@@ -846,19 +918,19 @@ class moveableShip {
 	move(direction){
 		var xChange = 0;
 		var yChange = 0;
-		if(direction == "Up"){
+		if(direction == 'Up'){
 			xChange = 0;
 			yChange = -1;
 		}
-		else if(direction == "Down"){
+		else if(direction == 'Down'){
 			xChange = 0;
 			yChange = 1;
 		}
-		else if(direction == "Right"){
+		else if(direction == 'Right'){
 			xChange = 1;
 			yChange = 0;
 		}
-		else if(direction == "Left"){
+		else if(direction == 'Left'){
 			xChange = -1;
 			yChange = 0;
 		}
@@ -866,16 +938,6 @@ class moveableShip {
 		this.mainY = this.mainY + yChange;
 		this.mainPoint.move(this.mainX,this.mainY);
 	}
-	fire(tile) {
-		tile.hasBeenShot = true;
-		if(tile.shipPresent()) {
-			tile.shipHit = true;
-		}
-		else {
-			tile.shipHit = false;
-		}
-	}
-	
 }
 
 /* //class 2
