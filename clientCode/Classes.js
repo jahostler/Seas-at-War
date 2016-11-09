@@ -50,10 +50,10 @@ class gameWindow {
 		this.context.font = 'bold 45px Times New Roman';
 		this.context.fillStyle = 'red';
 		if (client.hasTurn) {
-			this.context.fillText("Your Turn", this.adjust(1500), this.adjust(210));
+			this.context.fillText("Your Turn", this.adjust(1500), this.adjust(190));
 			this.context.font = '20px Times Arial';
 			this.context.fillStyle = 'white';
-			this.context.fillText("Select Ship and Tile to attack", this.adjust(1480), this.adjust(255));
+			this.context.fillText("Select Ship and Tile to attack", this.adjust(1480), this.adjust(235));
 		}
 		else {
 			this.context.fillText("Enemy Turn", this.adjust(1470), this.adjust(210));
@@ -69,9 +69,8 @@ class gameWindow {
 		norm.style.top = this.adjust(normalAttackDims[1])+"px";
 		spec.style.left = this.adjust(specialAttackDims[0])+"px";
 		spec.style.top = this.adjust(specialAttackDims[1])+"px";
-		console.log(client.fleet[playWindow.selectedShip]);
-		norm.addEventListener('click', playWindow.moveMade(), false);
-		norm.addEventListener('click', playWindow.moveMade(), false);
+		norm.addEventListener('click', playWindow.moveMade("normal"), false);
+		spec.addEventListener('click', playWindow.moveMade("special"), false);
 		this.disableButtons();
 	}
 	homeGridStart() {
@@ -80,9 +79,19 @@ class gameWindow {
 	targetGridStart() {
 		return new orderedPair(playWindow.adjust(710), playWindow.adjust(30));
 	}
-	moveMade() {
+	moveMade(attackType) {
 		//executes turn
-		
+		var currentShip = client.fleet[playWindow.selectedShip];
+		console.log(currentShip);
+		var currentTiles = [playWindow.selectedTile];
+		console.log(currentShip);
+		var attackData = {
+			playerID: client.id,
+			ship: currentShip,
+			coordinates: currentTiles,
+			gID: gameID;
+		};
+		socket.emit("Turn done", attackData);
 	}
 	
 	getMousePos(evt) {

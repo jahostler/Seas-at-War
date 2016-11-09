@@ -109,6 +109,15 @@ io.on('connection', function(socket){
 		console.log("Game " + data + " deleted from records");
 		gameID = -1;
 	});
+	socket.on('turn done', function(attackData){
+		var gameID = attackData.gID;
+		var currentGame = games.get(gameID);
+		var recipientID = currentGame.host;
+		if (attackData.playerID == currentGame.host) {
+			recipientID = currentGame.visitor;
+		}
+		io.sockets.emit(recipientID + ' attack made', attackData);
+	});
 	
 	socket.on('fleet finished', function(data) {
 		gameID = data.gID;

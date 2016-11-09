@@ -245,4 +245,7 @@ function initializeGame() {
 			client.homeGrid.field[xCor][yCor].shipIndex = i;
 		}
 	}
+	socket.on(client.id + ' attack made', function(attackData){
+		
+	});
 }
