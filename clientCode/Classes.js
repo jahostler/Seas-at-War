@@ -56,7 +56,10 @@ class gameWindow {
 			this.context.fillText('Select Ship and Tile to attack', this.adjust(1480), this.adjust(235));
 		}
 		else {
-			this.context.fillText('Enemy Turn', this.adjust(1470), this.adjust(210));
+			this.context.fillText('Enemy Turn', this.adjust(1470), this.adjust(190));
+			this.context.font = '22px Times Arial';
+			this.context.fillStyle = 'white';
+			this.context.fillText('Waiting for other player...', this.adjust(1490), this.adjust(235));
 		}
 	}
 	
@@ -100,8 +103,7 @@ class gameWindow {
 			socket.emit('turn done', attackData);
 			socket.on(client.id + ' make update', function(data){
 				var updatedTiles = data.tiles;
-				console.log("Before");
-				console.log(client.targetGrid.field);
+				console.log(updatedTiles);
 				for (var i = 0; i < updatedTiles.length; i++) {
 					var x = updatedTiles[i].corner.posX;
 					var y = updatedTiles[i].corner.posY;
@@ -109,11 +111,10 @@ class gameWindow {
 					client.targetGrid.field[currentTiles[i].posX][currentTiles[i].posY].hasShip = updatedTiles[i].hasShip;
 					client.targetGrid.field[currentTiles[i].posX][currentTiles[i].posY].shipHit = updatedTiles[i].shipHit;
 				}
-				console.log("After");
-				console.log(client.targetGrid.field);
 				client.hasTurn = false;
 				playWindow.disableButtons();
 				playWindow.draw();
+				socket.off(client.id + ' make update');
 			});
 		}
 	}
@@ -341,6 +342,14 @@ class gameWindow {
 				}
 			}
 		}
+//		for (var i = 0; i < client.fleet.length; i++) {
+//			if (!client.fleet[i].alive) {
+//				if (client.fleet.vert) {
+//					this.context.moveTo(client.fleet[i].mainX + this.adjust(35), client.fleet[i].mainY);
+//					this.context.lineTo()
+//				}
+//			}
+//		}
 	}
 	
 	drawShipSelector(shipIndex) {
@@ -767,7 +776,7 @@ class Tile {
 		return this.hasShip;
 	}
 	isShotAt() {
-		return this.shipHit != null;
+		return this.shipHit != undefined;
 	}
 	
 	updateTile() { //TODO

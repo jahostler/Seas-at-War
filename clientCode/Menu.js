@@ -101,11 +101,14 @@ function backToMain(displayedScreen) {
 	if (displayedScreen == 'hostGame') {
 		removeGame();
 	}
-	if (displayedScreen == 'instructions') {
+	else if (displayedScreen == 'instructions') {
 		var instructions = document.getElementsByClassName('instructImg');
 		[].forEach.call(instructions, function(element){
 			element.style.display = 'none';
 		});
+	}
+	else if (displayedScreen == 'gameOver') {
+		removeGame();
 	}
 	document.getElementById(displayedScreen).style.display = 'none';
 	document.getElementById('mainMenu').style.display = 'block';

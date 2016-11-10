@@ -103,8 +103,8 @@ io.on('connection', function(socket){
 			}
 			games.set(gameID, new Game(games.get(gameID), data.clientID));
 			games.get(gameID).gameFull = true;
-			socket.emit(games.get(gameID).visitor + ' join success', {});
-			io.sockets.emit(games.get(gameID).host + ' join success', {});
+			socket.emit(games.get(gameID).visitor + ' join success', gameID);
+			io.sockets.emit(games.get(gameID).host + ' join success', gameID);
 		}
 	});
 	
@@ -161,7 +161,15 @@ io.on('connection', function(socket){
 	
 	
 	socket.on('game over', function(data) {
-		//todo
+		var gameID = data.gID;
+		var currentGame = games.get(gameID);
+		var recipientID = currentGame.host;
+		if (data.playerID == currentGame.host) {
+			recipientID = currentGame.visitor;
+		}
+		console.log("Game " + gameID + " is over");
+		games.delete(gameID);
+		io.sockets.emit(recipientID + 'end game', {});
 	});
 	
     socket.on('disconnect', function () {

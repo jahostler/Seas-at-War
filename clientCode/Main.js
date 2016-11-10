@@ -1,5 +1,4 @@
 var client;
-var enemy;
 var gameID;
 var prepWindow;
 var positionWindow;
@@ -33,7 +32,6 @@ socket.on('disconnect', function(data) {
 
 function initialize() {
     client = new Player();
-	enemy = new Player();
 	gameID = -1;
 	var instructImages = document.getElementsByClassName('instructImg');
 	var instructImgDims = [instructImages[0].width * 0.9, instructImages[0].height * 0.9];
@@ -262,7 +260,7 @@ function initializeGame() {
 			client.homeGrid.field[x][y].updateTile();
 			updatedTiles[i] = client.homeGrid.field[x][y];
 		}
-		for (var i = 0; i < client.fleet.length; i++){
+		for (var i = 0; i < client.fleet.length; i++) {
 			client.fleet[i].updateAlive();
 		}
 		var returnData = {
@@ -271,14 +269,19 @@ function initializeGame() {
 			playerID: client.id
 		};
 		socket.emit('game updated', returnData);
+		client.hasTurn = true;
+		playWindow.draw();
+		playWindow.selectedTile = new orderedPair(-1, -1);
 		if (isGameOver()) {
 			//todo:  display game over screen
+			client.hasTurn = false;
+			playWindow.disableButtons();
 			socket.emit('game over', {gID: gameID, playerID: client.id});
+			document.getElementById('gameOverMessage').innerHTML = 'You Lose!';
+			document.getElementById('gameOver').style.display = 'block';
+			document.getElementById('gameWindow').style.display = 'none';
 		}
 		else {
-			client.hasTurn = true;
-			playWindow.draw();
-			playWindow.selectedTile = new orderedPair(-1, -1);
 			if (playWindow.selectedShip != -1) {
 				if (client.fleet[playWindow.selectedShip].alive) {
 					playWindow.drawShipSelector(playWindow.selectedShip);
@@ -288,5 +291,12 @@ function initializeGame() {
 				}
 			}
 		}
+	});
+	socket.on(client.id + 'end game', function(data){
+		client.hasTurn = false;
+		playWindow.disableButtons();
+		document.getElementById('gameOverMessage').innerHTML = 'You Win!';
+		document.getElementById('gameOver').style.display = 'block';
+		document.getElementById('gameWindow').style.display = 'none';
 	});
 }
