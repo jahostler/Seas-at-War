@@ -1,3 +1,10 @@
+/*
+main.js
+---------------------
+Responsible for creating client's game, receiving events from the server
+
+*/
+
 var client;
 var gameID;
 var prepWindow;
@@ -15,7 +22,7 @@ var buildButtonDims;
 var selectButtonDims;
 var moveButtonDims;
 
-
+//creates the game interface, and initializes client-side data
 function initialize() {
     client = new Player();
 	gameID = -1;
@@ -66,12 +73,15 @@ function initialize() {
 	document.getElementById('mainMenu').style.display = 'block';
 }
 
+//on receiving a welcome event from server, get playerid from server
+//send confirmation back to server
 socket.on('welcome', function(data) {
 	console.log("Your player ID is " + data);
 	client.id = data;
 	socket.emit('new player created', client.id);
 });
 
+//on receiving a disconnect event from server, hide all gameplay windows and display a disconnection message
 socket.on('disconnect', function(data) {
 	//todo:  add formal message telling client server disconnected
 	var divs = document.getElementsByTagName('div');
@@ -81,6 +91,8 @@ socket.on('disconnect', function(data) {
 	document.getElementById('serverDisconnectMessage').style.display = 'block';
 });
 
+//send a new game event to the server
+//once the server sends back the appropriate game creation event, create the game
 function newGame() {
 	socket.emit('new game', client.id);
 	socket.on(client.id + ' gameID created', function(data) {
@@ -95,6 +107,7 @@ function newGame() {
 	});
 }
 
+//informt the server that the game should be deleted, and disable all gameplay windows
 function removeGame() {
 	socket.emit('delete game', gameID);
 	client.fleet = ["Scrambler", "Submarine", "Cruiser", "Executioner"];
@@ -105,6 +118,7 @@ function removeGame() {
 	gameID = -1;
 }
 
+//create a new gameplay window
 function loadGame() {
 	console.log("Your game ID is " + gameID);
 	prepWindow = new buildAFleetWindow(document.getElementById('buildCanvas'), scaling); //todo: fix scaling of buttons
@@ -122,6 +136,8 @@ function loadGame() {
 	prepWindow.drawButtons();
 }
 
+//gets the data associated with a ship
+//data includes a description of ship's ability, as well as images
 function shipDetails(shipname) {
 	var index = -1;
 	var descriptions = document.getElementsByClassName('shipDes');
@@ -237,13 +253,16 @@ function loadPositionSelect() {
 	positionWindow.draw();
 }
 
+//transition from fleet selection to fleet positioning window
 function toPositionSelect() {
 	document.getElementById('buildAFleet').style.display = 'none';
 	document.getElementById('positionFleet').style.display = 'block';
 	loadPositionSelect();
 }
 
-
+//inform server that this client has completed ship positioning, and is ready to begin game
+//once server emits a ready event (i.e. both players are ready), begins game
+//server randomly assigns a player to go first
 function startGameScreen() {
 	socket.emit('fleet finished', {gID: gameID, playerID: client.id});
 	positionWindow.waitMessage();
@@ -256,6 +275,7 @@ function startGameScreen() {
 	});
 }
 
+//checks if all of the player's ships have been sunk, returning a boolean value
 function isGameOver() {
 	for (var i = 0; i < client.fleet.length; i++) {
 		if (client.fleet[i].alive) {
@@ -265,6 +285,7 @@ function isGameOver() {
 	return true;
 }
 
+//loads graphics for playing the game, and listens for game updates (such as a tile being attacked or the game ending)
 function initializeGame() {
 	client.homeGrid.loadGrid(playWindow.homeGridStart(), playWindow.adjust(70));
 	client.targetGrid.loadGrid(playWindow.targetGridStart(), playWindow.adjust(70));
