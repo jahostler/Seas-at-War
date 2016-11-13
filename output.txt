@@ -1,0 +1,1211 @@
+listening on *: 38000
+request starting...
+a user connected
+request starting...
+a user connected
+request starting...
+a user connected
+Player 10002 creation successful!
+Game 1 was created with host 10002
+request starting...
+a user connected
+Player 10003 creation successful!
+host ready on game 1
+visitor ready on game 1
+{ playerID: 10002,
+  ship: 
+   { shipName: 'Artillery',
+     mainX: 4,
+     mainY: 7,
+     mainPoint: { posX: 4, posY: 7 },
+     vert: false,
+     length: 5,
+     alive: true },
+  coordinates: [ { posX: 4, posY: 3 } ],
+  gID: 1 }
+10002 update made
+Player 10000 deleted from records.
+[ 10001, 10002, 10003 ]
+Map {
+  1 => Game {
+  host: 10002,
+  hostReady: true,
+  visitor: 10003,
+  visitorReady: true,
+  gameFull: true } }
+{ playerID: 10003,
+  ship: 
+   { shipName: 'Submarine',
+     mainX: 3,
+     mainY: 3,
+     mainPoint: { posX: 3, posY: 3 },
+     vert: true,
+     length: 3,
+     alive: true },
+  coordinates: [ { posX: 6, posY: 1 } ],
+  gID: 1 }
+10003 update made
+Player 10001 deleted from records.
+[ 10002, 10003 ]
+Map {
+  1 => Game {
+  host: 10002,
+  hostReady: true,
+  visitor: 10003,
+  visitorReady: true,
+  gameFull: true } }
+{ playerID: 10002,
+  ship: 
+   { shipName: 'Artillery',
+     mainX: 4,
+     mainY: 7,
+     mainPoint: { posX: 4, posY: 7 },
+     vert: false,
+     length: 5,
+     alive: true },
+  coordinates: [ { posX: 6, posY: 1 } ],
+  gID: 1 }
+10002 update made
+{ playerID: 10003,
+  ship: 
+   { shipName: 'Submarine',
+     mainX: 3,
+     mainY: 3,
+     mainPoint: { posX: 3, posY: 3 },
+     vert: true,
+     length: 3,
+     alive: true },
+  coordinates: [ { posX: 6, posY: 0 } ],
+  gID: 1 }
+10003 update made
+{ playerID: 10002,
+  ship: 
+   { shipName: 'Artillery',
+     mainX: 4,
+     mainY: 7,
+     mainPoint: { posX: 4, posY: 7 },
+     vert: false,
+     length: 5,
+     alive: true },
+  coordinates: [ { posX: 3, posY: 4 } ],
+  gID: 1 }
+10002 update made
+{ playerID: 10003,
+  ship: 
+   { shipName: 'Submarine',
+     mainX: 3,
+     mainY: 3,
+     mainPoint: { posX: 3, posY: 3 },
+     vert: true,
+     length: 3,
+     alive: true },
+  coordinates: [ { posX: 6, posY: 2 } ],
+  gID: 1 }
+10003 update made
+{ playerID: 10002,
+  ship: 
+   { shipName: 'Artillery',
+     mainX: 4,
+     mainY: 7,
+     mainPoint: { posX: 4, posY: 7 },
+     vert: false,
+     length: 5,
+     alive: true },
+  coordinates: [ { posX: 3, posY: 5 } ],
+  gID: 1 }
+10002 update made
+{ playerID: 10003,
+  ship: 
+   { shipName: 'Submarine',
+     mainX: 3,
+     mainY: 3,
+     mainPoint: { posX: 3, posY: 3 },
+     vert: true,
+     length: 3,
+     alive: true },
+  coordinates: [ { posX: 6, posY: 3 } ],
+  gID: 1 }
+10003 update made
+{ playerID: 10002,
+  ship: 
+   { shipName: 'Artillery',
+     mainX: 4,
+     mainY: 7,
+     mainPoint: { posX: 4, posY: 7 },
+     vert: false,
+     length: 5,
+     alive: true },
+  coordinates: [ { posX: 3, posY: 6 } ],
+  gID: 1 }
+10002 update made
+{ playerID: 10003,
+  ship: 
+   { shipName: 'Submarine',
+     mainX: 3,
+     mainY: 3,
+     mainPoint: { posX: 3, posY: 3 },
+     vert: true,
+     length: 3,
+     alive: true },
+  coordinates: [ { posX: 6, posY: 4 } ],
+  gID: 1 }
+10003 update made
+{ playerID: 10002,
+  ship: 
+   { shipName: 'Artillery',
+     mainX: 4,
+     mainY: 7,
+     mainPoint: { posX: 4, posY: 7 },
+     vert: false,
+     length: 5,
+     alive: true },
+  coordinates: [ { posX: 3, posY: 3 } ],
+  gID: 1 }
+10002 update made
+{ playerID: 10003,
+  ship: 
+   { shipName: 'Scanner',
+     mainX: 2,
+     mainY: 0,
+     mainPoint: { posX: 2, posY: 0 },
+     vert: true,
+     length: 2,
+     alive: true },
+  coordinates: [ { posX: 2, posY: 5 } ],
+  gID: 1 }
+10003 update made
+{ playerID: 10002,
+  ship: 
+   { shipName: 'Artillery',
+     mainX: 4,
+     mainY: 7,
+     mainPoint: { posX: 4, posY: 7 },
+     vert: false,
+     length: 5,
+     alive: true },
+  coordinates: [ { posX: 1, posY: 4 } ],
+  gID: 1 }
+10002 update made
+{ playerID: 10003,
+  ship: 
+   { shipName: 'Scanner',
+     mainX: 2,
+     mainY: 0,
+     mainPoint: { posX: 2, posY: 0 },
+     vert: true,
+     length: 2,
+     alive: true },
+  coordinates: [ { posX: 5, posY: 6 } ],
+  gID: 1 }
+10003 update made
+{ playerID: 10002,
+  ship: 
+   { shipName: 'Artillery',
+     mainX: 4,
+     mainY: 7,
+     mainPoint: { posX: 4, posY: 7 },
+     vert: false,
+     length: 5,
+     alive: true },
+  coordinates: [ { posX: 6, posY: 6 } ],
+  gID: 1 }
+10002 update made
+{ playerID: 10003,
+  ship: 
+   { shipName: 'Scanner',
+     mainX: 2,
+     mainY: 0,
+     mainPoint: { posX: 2, posY: 0 },
+     vert: true,
+     length: 2,
+     alive: true },
+  coordinates: [ { posX: 1, posY: 7 } ],
+  gID: 1 }
+10003 update made
+{ playerID: 10002,
+  ship: 
+   { shipName: 'Artillery',
+     mainX: 4,
+     mainY: 7,
+     mainPoint: { posX: 4, posY: 7 },
+     vert: false,
+     length: 5,
+     alive: true },
+  coordinates: [ { posX: 1, posY: 1 } ],
+  gID: 1 }
+10002 update made
+{ playerID: 10003,
+  ship: 
+   { shipName: 'Scanner',
+     mainX: 2,
+     mainY: 0,
+     mainPoint: { posX: 2, posY: 0 },
+     vert: true,
+     length: 2,
+     alive: true },
+  coordinates: [ { posX: 1, posY: 2 } ],
+  gID: 1 }
+10003 update made
+{ playerID: 10002,
+  ship: 
+   { shipName: 'Artillery',
+     mainX: 4,
+     mainY: 7,
+     mainPoint: { posX: 4, posY: 7 },
+     vert: false,
+     length: 5,
+     alive: true },
+  coordinates: [ { posX: 1, posY: 7 } ],
+  gID: 1 }
+10002 update made
+{ playerID: 10003,
+  ship: 
+   { shipName: 'Scanner',
+     mainX: 2,
+     mainY: 0,
+     mainPoint: { posX: 2, posY: 0 },
+     vert: true,
+     length: 2,
+     alive: true },
+  coordinates: [ { posX: 7, posY: 7 } ],
+  gID: 1 }
+10003 update made
+{ playerID: 10002,
+  ship: 
+   { shipName: 'Artillery',
+     mainX: 4,
+     mainY: 7,
+     mainPoint: { posX: 4, posY: 7 },
+     vert: false,
+     length: 5,
+     alive: true },
+  coordinates: [ { posX: 0, posY: 7 } ],
+  gID: 1 }
+10002 update made
+{ playerID: 10003,
+  ship: 
+   { shipName: 'Scanner',
+     mainX: 2,
+     mainY: 0,
+     mainPoint: { posX: 2, posY: 0 },
+     vert: true,
+     length: 2,
+     alive: true },
+  coordinates: [ { posX: 8, posY: 7 } ],
+  gID: 1 }
+10003 update made
+{ playerID: 10002,
+  ship: 
+   { shipName: 'Artillery',
+     mainX: 4,
+     mainY: 7,
+     mainPoint: { posX: 4, posY: 7 },
+     vert: false,
+     length: 5,
+     alive: true },
+  coordinates: [ { posX: 2, posY: 7 } ],
+  gID: 1 }
+10002 update made
+{ playerID: 10003,
+  ship: 
+   { shipName: 'Scanner',
+     mainX: 2,
+     mainY: 0,
+     mainPoint: { posX: 2, posY: 0 },
+     vert: true,
+     length: 2,
+     alive: true },
+  coordinates: [ { posX: 6, posY: 7 } ],
+  gID: 1 }
+10003 update made
+{ playerID: 10002,
+  ship: 
+   { shipName: 'Artillery',
+     mainX: 4,
+     mainY: 7,
+     mainPoint: { posX: 4, posY: 7 },
+     vert: false,
+     length: 5,
+     alive: true },
+  coordinates: [ { posX: 3, posY: 7 } ],
+  gID: 1 }
+10002 update made
+{ playerID: 10003,
+  ship: 
+   { shipName: 'Scanner',
+     mainX: 2,
+     mainY: 0,
+     mainPoint: { posX: 2, posY: 0 },
+     vert: true,
+     length: 2,
+     alive: true },
+  coordinates: [ { posX: 5, posY: 7 } ],
+  gID: 1 }
+10003 update made
+{ playerID: 10002,
+  ship: 
+   { shipName: 'Artillery',
+     mainX: 4,
+     mainY: 7,
+     mainPoint: { posX: 4, posY: 7 },
+     vert: false,
+     length: 5,
+     alive: true },
+  coordinates: [ { posX: 4, posY: 7 } ],
+  gID: 1 }
+10002 update made
+{ playerID: 10003,
+  ship: 
+   { shipName: 'Scanner',
+     mainX: 2,
+     mainY: 0,
+     mainPoint: { posX: 2, posY: 0 },
+     vert: true,
+     length: 2,
+     alive: true },
+  coordinates: [ { posX: 4, posY: 7 } ],
+  gID: 1 }
+10003 update made
+{ playerID: 10002,
+  ship: 
+   { shipName: 'Scanner',
+     mainX: 0,
+     mainY: 8,
+     mainPoint: { posX: 0, posY: 8 },
+     vert: false,
+     length: 2,
+     alive: true },
+  coordinates: [ { posX: 7, posY: 3 } ],
+  gID: 1 }
+10002 update made
+{ playerID: 10003,
+  ship: 
+   { shipName: 'Scanner',
+     mainX: 2,
+     mainY: 0,
+     mainPoint: { posX: 2, posY: 0 },
+     vert: true,
+     length: 2,
+     alive: true },
+  coordinates: [ { posX: 3, posY: 2 } ],
+  gID: 1 }
+10003 update made
+{ playerID: 10002,
+  ship: 
+   { shipName: 'Scanner',
+     mainX: 0,
+     mainY: 8,
+     mainPoint: { posX: 0, posY: 8 },
+     vert: false,
+     length: 2,
+     alive: true },
+  coordinates: [ { posX: 5, posY: 8 } ],
+  gID: 1 }
+10002 update made
+{ playerID: 10003,
+  ship: 
+   { shipName: 'Scanner',
+     mainX: 2,
+     mainY: 0,
+     mainPoint: { posX: 2, posY: 0 },
+     vert: true,
+     length: 2,
+     alive: true },
+  coordinates: [ { posX: 2, posY: 8 } ],
+  gID: 1 }
+10003 update made
+{ playerID: 10002,
+  ship: 
+   { shipName: 'Scanner',
+     mainX: 0,
+     mainY: 8,
+     mainPoint: { posX: 0, posY: 8 },
+     vert: false,
+     length: 2,
+     alive: true },
+  coordinates: [ { posX: 2, posY: 2 } ],
+  gID: 1 }
+10002 update made
+{ playerID: 10003,
+  ship: 
+   { shipName: 'Scanner',
+     mainX: 2,
+     mainY: 0,
+     mainPoint: { posX: 2, posY: 0 },
+     vert: true,
+     length: 2,
+     alive: true },
+  coordinates: [ { posX: 7, posY: 5 } ],
+  gID: 1 }
+10003 update made
+{ playerID: 10002,
+  ship: 
+   { shipName: 'Scanner',
+     mainX: 0,
+     mainY: 8,
+     mainPoint: { posX: 0, posY: 8 },
+     vert: false,
+     length: 2,
+     alive: true },
+  coordinates: [ { posX: 4, posY: 1 } ],
+  gID: 1 }
+10002 update made
+{ playerID: 10003,
+  ship: 
+   { shipName: 'Scanner',
+     mainX: 2,
+     mainY: 0,
+     mainPoint: { posX: 2, posY: 0 },
+     vert: true,
+     length: 2,
+     alive: true },
+  coordinates: [ { posX: 0, posY: 5 } ],
+  gID: 1 }
+10003 update made
+{ playerID: 10002,
+  ship: 
+   { shipName: 'Scanner',
+     mainX: 0,
+     mainY: 8,
+     mainPoint: { posX: 0, posY: 8 },
+     vert: false,
+     length: 2,
+     alive: true },
+  coordinates: [ { posX: 6, posY: 4 } ],
+  gID: 1 }
+10002 update made
+{ playerID: 10003,
+  ship: 
+   { shipName: 'Scanner',
+     mainX: 2,
+     mainY: 0,
+     mainPoint: { posX: 2, posY: 0 },
+     vert: true,
+     length: 2,
+     alive: true },
+  coordinates: [ { posX: 4, posY: 4 } ],
+  gID: 1 }
+10003 update made
+{ playerID: 10002,
+  ship: 
+   { shipName: 'Scanner',
+     mainX: 0,
+     mainY: 8,
+     mainPoint: { posX: 0, posY: 8 },
+     vert: false,
+     length: 2,
+     alive: true },
+  coordinates: [ { posX: 6, posY: 5 } ],
+  gID: 1 }
+10002 update made
+{ playerID: 10003,
+  ship: 
+   { shipName: 'Scanner',
+     mainX: 2,
+     mainY: 0,
+     mainPoint: { posX: 2, posY: 0 },
+     vert: true,
+     length: 2,
+     alive: true },
+  coordinates: [ { posX: 2, posY: 0 } ],
+  gID: 1 }
+10003 update made
+{ playerID: 10002,
+  ship: 
+   { shipName: 'Scanner',
+     mainX: 0,
+     mainY: 8,
+     mainPoint: { posX: 0, posY: 8 },
+     vert: false,
+     length: 2,
+     alive: true },
+  coordinates: [ { posX: 8, posY: 1 } ],
+  gID: 1 }
+10002 update made
+{ playerID: 10003,
+  ship: 
+   { shipName: 'Scanner',
+     mainX: 2,
+     mainY: 0,
+     mainPoint: { posX: 2, posY: 0 },
+     vert: true,
+     length: 2,
+     alive: true },
+  coordinates: [ { posX: 3, posY: 0 } ],
+  gID: 1 }
+10003 update made
+{ playerID: 10002,
+  ship: 
+   { shipName: 'Scanner',
+     mainX: 0,
+     mainY: 8,
+     mainPoint: { posX: 0, posY: 8 },
+     vert: false,
+     length: 2,
+     alive: true },
+  coordinates: [ { posX: 8, posY: 5 } ],
+  gID: 1 }
+10002 update made
+{ playerID: 10003,
+  ship: 
+   { shipName: 'Scanner',
+     mainX: 2,
+     mainY: 0,
+     mainPoint: { posX: 2, posY: 0 },
+     vert: true,
+     length: 2,
+     alive: true },
+  coordinates: [ { posX: 1, posY: 0 } ],
+  gID: 1 }
+10003 update made
+{ playerID: 10002,
+  ship: 
+   { shipName: 'Scanner',
+     mainX: 0,
+     mainY: 8,
+     mainPoint: { posX: 0, posY: 8 },
+     vert: false,
+     length: 2,
+     alive: true },
+  coordinates: [ { posX: 0, posY: 2 } ],
+  gID: 1 }
+10002 update made
+{ playerID: 10003,
+  ship: 
+   { shipName: 'Scanner',
+     mainX: 2,
+     mainY: 0,
+     mainPoint: { posX: 2, posY: 0 },
+     vert: true,
+     length: 2,
+     alive: true },
+  coordinates: [ { posX: 8, posY: 2 } ],
+  gID: 1 }
+10003 update made
+{ playerID: 10002,
+  ship: 
+   { shipName: 'Scanner',
+     mainX: 0,
+     mainY: 8,
+     mainPoint: { posX: 0, posY: 8 },
+     vert: false,
+     length: 2,
+     alive: true },
+  coordinates: [ { posX: 7, posY: 8 } ],
+  gID: 1 }
+10002 update made
+{ playerID: 10003,
+  ship: 
+   { shipName: 'Scanner',
+     mainX: 2,
+     mainY: 0,
+     mainPoint: { posX: 2, posY: 0 },
+     vert: true,
+     length: 2,
+     alive: true },
+  coordinates: [ { posX: 2, posY: 3 } ],
+  gID: 1 }
+10003 update made
+{ playerID: 10002,
+  ship: 
+   { shipName: 'Scanner',
+     mainX: 0,
+     mainY: 8,
+     mainPoint: { posX: 0, posY: 8 },
+     vert: false,
+     length: 2,
+     alive: true },
+  coordinates: [ { posX: 3, posY: 0 } ],
+  gID: 1 }
+10002 update made
+{ playerID: 10003,
+  ship: 
+   { shipName: 'Scanner',
+     mainX: 2,
+     mainY: 0,
+     mainPoint: { posX: 2, posY: 0 },
+     vert: true,
+     length: 2,
+     alive: true },
+  coordinates: [ { posX: 1, posY: 4 } ],
+  gID: 1 }
+10003 update made
+{ playerID: 10002,
+  ship: 
+   { shipName: 'Scanner',
+     mainX: 0,
+     mainY: 8,
+     mainPoint: { posX: 0, posY: 8 },
+     vert: false,
+     length: 2,
+     alive: true },
+  coordinates: [ { posX: 5, posY: 2 } ],
+  gID: 1 }
+10002 update made
+{ playerID: 10003,
+  ship: 
+   { shipName: 'Scanner',
+     mainX: 2,
+     mainY: 0,
+     mainPoint: { posX: 2, posY: 0 },
+     vert: true,
+     length: 2,
+     alive: true },
+  coordinates: [ { posX: 3, posY: 6 } ],
+  gID: 1 }
+10003 update made
+{ playerID: 10002,
+  ship: 
+   { shipName: 'Scanner',
+     mainX: 0,
+     mainY: 8,
+     mainPoint: { posX: 0, posY: 8 },
+     vert: false,
+     length: 2,
+     alive: true },
+  coordinates: [ { posX: 6, posY: 2 } ],
+  gID: 1 }
+10002 update made
+{ playerID: 10003,
+  ship: 
+   { shipName: 'Scanner',
+     mainX: 2,
+     mainY: 0,
+     mainPoint: { posX: 2, posY: 0 },
+     vert: true,
+     length: 2,
+     alive: true },
+  coordinates: [ { posX: 5, posY: 2 } ],
+  gID: 1 }
+10003 update made
+{ playerID: 10002,
+  ship: 
+   { shipName: 'Scanner',
+     mainX: 0,
+     mainY: 8,
+     mainPoint: { posX: 0, posY: 8 },
+     vert: false,
+     length: 2,
+     alive: true },
+  coordinates: [ { posX: 7, posY: 2 } ],
+  gID: 1 }
+10002 update made
+{ playerID: 10003,
+  ship: 
+   { shipName: 'Scanner',
+     mainX: 2,
+     mainY: 0,
+     mainPoint: { posX: 2, posY: 0 },
+     vert: true,
+     length: 2,
+     alive: true },
+  coordinates: [ { posX: 5, posY: 3 } ],
+  gID: 1 }
+10003 update made
+{ playerID: 10002,
+  ship: 
+   { shipName: 'Scanner',
+     mainX: 0,
+     mainY: 8,
+     mainPoint: { posX: 0, posY: 8 },
+     vert: false,
+     length: 2,
+     alive: true },
+  coordinates: [ { posX: 4, posY: 2 } ],
+  gID: 1 }
+10002 update made
+{ playerID: 10003,
+  ship: 
+   { shipName: 'Scanner',
+     mainX: 2,
+     mainY: 0,
+     mainPoint: { posX: 2, posY: 0 },
+     vert: true,
+     length: 2,
+     alive: true },
+  coordinates: [ { posX: 4, posY: 1 } ],
+  gID: 1 }
+10003 update made
+{ playerID: 10002,
+  ship: 
+   { shipName: 'Scanner',
+     mainX: 0,
+     mainY: 8,
+     mainPoint: { posX: 0, posY: 8 },
+     vert: false,
+     length: 2,
+     alive: true },
+  coordinates: [ { posX: 8, posY: 2 } ],
+  gID: 1 }
+10002 update made
+{ playerID: 10003,
+  ship: 
+   { shipName: 'Scanner',
+     mainX: 2,
+     mainY: 0,
+     mainPoint: { posX: 2, posY: 0 },
+     vert: true,
+     length: 2,
+     alive: true },
+  coordinates: [ { posX: 5, posY: 0 } ],
+  gID: 1 }
+10003 update made
+{ playerID: 10002,
+  ship: 
+   { shipName: 'Scanner',
+     mainX: 0,
+     mainY: 8,
+     mainPoint: { posX: 0, posY: 8 },
+     vert: false,
+     length: 2,
+     alive: true },
+  coordinates: [ { posX: 1, posY: 6 } ],
+  gID: 1 }
+10002 update made
+{ playerID: 10003,
+  ship: 
+   { shipName: 'Scanner',
+     mainX: 2,
+     mainY: 0,
+     mainPoint: { posX: 2, posY: 0 },
+     vert: true,
+     length: 2,
+     alive: true },
+  coordinates: [ { posX: 0, posY: 1 } ],
+  gID: 1 }
+10003 update made
+{ playerID: 10002,
+  ship: 
+   { shipName: 'Scanner',
+     mainX: 0,
+     mainY: 8,
+     mainPoint: { posX: 0, posY: 8 },
+     vert: false,
+     length: 2,
+     alive: true },
+  coordinates: [ { posX: 7, posY: 0 } ],
+  gID: 1 }
+10002 update made
+{ playerID: 10003,
+  ship: 
+   { shipName: 'Scanner',
+     mainX: 2,
+     mainY: 0,
+     mainPoint: { posX: 2, posY: 0 },
+     vert: true,
+     length: 2,
+     alive: true },
+  coordinates: [ { posX: 0, posY: 3 } ],
+  gID: 1 }
+10003 update made
+{ playerID: 10002,
+  ship: 
+   { shipName: 'Scanner',
+     mainX: 0,
+     mainY: 8,
+     mainPoint: { posX: 0, posY: 8 },
+     vert: false,
+     length: 2,
+     alive: true },
+  coordinates: [ { posX: 5, posY: 0 } ],
+  gID: 1 }
+10002 update made
+{ playerID: 10003,
+  ship: 
+   { shipName: 'Scanner',
+     mainX: 2,
+     mainY: 0,
+     mainPoint: { posX: 2, posY: 0 },
+     vert: true,
+     length: 2,
+     alive: true },
+  coordinates: [ { posX: 3, posY: 7 } ],
+  gID: 1 }
+10003 update made
+{ playerID: 10002,
+  ship: 
+   { shipName: 'Scanner',
+     mainX: 0,
+     mainY: 8,
+     mainPoint: { posX: 0, posY: 8 },
+     vert: false,
+     length: 2,
+     alive: true },
+  coordinates: [ { posX: 1, posY: 0 } ],
+  gID: 1 }
+10002 update made
+{ playerID: 10003,
+  ship: 
+   { shipName: 'Scanner',
+     mainX: 2,
+     mainY: 0,
+     mainPoint: { posX: 2, posY: 0 },
+     vert: true,
+     length: 2,
+     alive: true },
+  coordinates: [ { posX: 4, posY: 5 } ],
+  gID: 1 }
+10003 update made
+{ playerID: 10002,
+  ship: 
+   { shipName: 'Scanner',
+     mainX: 0,
+     mainY: 8,
+     mainPoint: { posX: 0, posY: 8 },
+     vert: false,
+     length: 2,
+     alive: true },
+  coordinates: [ { posX: 3, posY: 1 } ],
+  gID: 1 }
+10002 update made
+{ playerID: 10003,
+  ship: 
+   { shipName: 'Scanner',
+     mainX: 2,
+     mainY: 0,
+     mainPoint: { posX: 2, posY: 0 },
+     vert: true,
+     length: 2,
+     alive: true },
+  coordinates: [ { posX: 7, posY: 6 } ],
+  gID: 1 }
+10003 update made
+{ playerID: 10002,
+  ship: 
+   { shipName: 'Scanner',
+     mainX: 0,
+     mainY: 8,
+     mainPoint: { posX: 0, posY: 8 },
+     vert: false,
+     length: 2,
+     alive: true },
+  coordinates: [ { posX: 1, posY: 3 } ],
+  gID: 1 }
+10002 update made
+{ playerID: 10003,
+  ship: 
+   { shipName: 'Scanner',
+     mainX: 2,
+     mainY: 0,
+     mainPoint: { posX: 2, posY: 0 },
+     vert: true,
+     length: 2,
+     alive: true },
+  coordinates: [ { posX: 1, posY: 6 } ],
+  gID: 1 }
+10003 update made
+{ playerID: 10002,
+  ship: 
+   { shipName: 'Scanner',
+     mainX: 0,
+     mainY: 8,
+     mainPoint: { posX: 0, posY: 8 },
+     vert: false,
+     length: 2,
+     alive: true },
+  coordinates: [ { posX: 0, posY: 4 } ],
+  gID: 1 }
+10002 update made
+{ playerID: 10003,
+  ship: 
+   { shipName: 'Scanner',
+     mainX: 2,
+     mainY: 0,
+     mainPoint: { posX: 2, posY: 0 },
+     vert: true,
+     length: 2,
+     alive: true },
+  coordinates: [ { posX: 2, posY: 1 } ],
+  gID: 1 }
+10003 update made
+{ playerID: 10002,
+  ship: 
+   { shipName: 'Scanner',
+     mainX: 0,
+     mainY: 8,
+     mainPoint: { posX: 0, posY: 8 },
+     vert: false,
+     length: 2,
+     alive: true },
+  coordinates: [ { posX: 2, posY: 5 } ],
+  gID: 1 }
+10002 update made
+{ playerID: 10003,
+  ship: 
+   { shipName: 'Scanner',
+     mainX: 2,
+     mainY: 0,
+     mainPoint: { posX: 2, posY: 0 },
+     vert: true,
+     length: 2,
+     alive: true },
+  coordinates: [ { posX: 4, posY: 8 } ],
+  gID: 1 }
+10003 update made
+{ playerID: 10002,
+  ship: 
+   { shipName: 'Scanner',
+     mainX: 0,
+     mainY: 8,
+     mainPoint: { posX: 0, posY: 8 },
+     vert: false,
+     length: 2,
+     alive: true },
+  coordinates: [ { posX: 2, posY: 8 } ],
+  gID: 1 }
+10002 update made
+{ playerID: 10003,
+  ship: 
+   { shipName: 'Scanner',
+     mainX: 2,
+     mainY: 0,
+     mainPoint: { posX: 2, posY: 0 },
+     vert: true,
+     length: 2,
+     alive: true },
+  coordinates: [ { posX: 6, posY: 8 } ],
+  gID: 1 }
+10003 update made
+{ playerID: 10002,
+  ship: 
+   { shipName: 'Scanner',
+     mainX: 0,
+     mainY: 8,
+     mainPoint: { posX: 0, posY: 8 },
+     vert: false,
+     length: 2,
+     alive: true },
+  coordinates: [ { posX: 4, posY: 5 } ],
+  gID: 1 }
+10002 update made
+{ playerID: 10003,
+  ship: 
+   { shipName: 'Scanner',
+     mainX: 2,
+     mainY: 0,
+     mainPoint: { posX: 2, posY: 0 },
+     vert: true,
+     length: 2,
+     alive: true },
+  coordinates: [ { posX: 7, posY: 1 } ],
+  gID: 1 }
+10003 update made
+{ playerID: 10002,
+  ship: 
+   { shipName: 'Scanner',
+     mainX: 0,
+     mainY: 8,
+     mainPoint: { posX: 0, posY: 8 },
+     vert: false,
+     length: 2,
+     alive: true },
+  coordinates: [ { posX: 5, posY: 5 } ],
+  gID: 1 }
+10002 update made
+{ playerID: 10003,
+  ship: 
+   { shipName: 'Scanner',
+     mainX: 2,
+     mainY: 0,
+     mainPoint: { posX: 2, posY: 0 },
+     vert: true,
+     length: 2,
+     alive: true },
+  coordinates: [ { posX: 7, posY: 3 } ],
+  gID: 1 }
+10003 update made
+{ playerID: 10002,
+  ship: 
+   { shipName: 'Scanner',
+     mainX: 0,
+     mainY: 8,
+     mainPoint: { posX: 0, posY: 8 },
+     vert: false,
+     length: 2,
+     alive: true },
+  coordinates: [ { posX: 7, posY: 6 } ],
+  gID: 1 }
+10002 update made
+{ playerID: 10003,
+  ship: 
+   { shipName: 'Scanner',
+     mainX: 2,
+     mainY: 0,
+     mainPoint: { posX: 2, posY: 0 },
+     vert: true,
+     length: 2,
+     alive: true },
+  coordinates: [ { posX: 3, posY: 4 } ],
+  gID: 1 }
+10003 update made
+{ playerID: 10002,
+  ship: 
+   { shipName: 'Scanner',
+     mainX: 0,
+     mainY: 8,
+     mainPoint: { posX: 0, posY: 8 },
+     vert: false,
+     length: 2,
+     alive: true },
+  coordinates: [ { posX: 6, posY: 7 } ],
+  gID: 1 }
+10002 update made
+{ playerID: 10003,
+  ship: 
+   { shipName: 'Scanner',
+     mainX: 2,
+     mainY: 0,
+     mainPoint: { posX: 2, posY: 0 },
+     vert: true,
+     length: 2,
+     alive: true },
+  coordinates: [ { posX: 4, posY: 3 } ],
+  gID: 1 }
+10003 update made
+{ playerID: 10002,
+  ship: 
+   { shipName: 'Scanner',
+     mainX: 0,
+     mainY: 8,
+     mainPoint: { posX: 0, posY: 8 },
+     vert: false,
+     length: 2,
+     alive: true },
+  coordinates: [ { posX: 0, posY: 8 } ],
+  gID: 1 }
+10002 update made
+{ playerID: 10003,
+  ship: 
+   { shipName: 'Scanner',
+     mainX: 2,
+     mainY: 0,
+     mainPoint: { posX: 2, posY: 0 },
+     vert: true,
+     length: 2,
+     alive: true },
+  coordinates: [ { posX: 8, posY: 0 } ],
+  gID: 1 }
+10003 update made
+{ playerID: 10002,
+  ship: 
+   { shipName: 'Scanner',
+     mainX: 0,
+     mainY: 8,
+     mainPoint: { posX: 0, posY: 8 },
+     vert: false,
+     length: 2,
+     alive: true },
+  coordinates: [ { posX: 4, posY: 8 } ],
+  gID: 1 }
+10002 update made
+{ playerID: 10003,
+  ship: 
+   { shipName: 'Scanner',
+     mainX: 2,
+     mainY: 0,
+     mainPoint: { posX: 2, posY: 0 },
+     vert: true,
+     length: 2,
+     alive: true },
+  coordinates: [ { posX: 8, posY: 4 } ],
+  gID: 1 }
+10003 update made
+{ playerID: 10002,
+  ship: 
+   { shipName: 'Scanner',
+     mainX: 0,
+     mainY: 8,
+     mainPoint: { posX: 0, posY: 8 },
+     vert: false,
+     length: 2,
+     alive: true },
+  coordinates: [ { posX: 5, posY: 4 } ],
+  gID: 1 }
+10002 update made
+{ playerID: 10003,
+  ship: 
+   { shipName: 'Scanner',
+     mainX: 2,
+     mainY: 0,
+     mainPoint: { posX: 2, posY: 0 },
+     vert: true,
+     length: 2,
+     alive: true },
+  coordinates: [ { posX: 8, posY: 5 } ],
+  gID: 1 }
+10003 update made
+{ playerID: 10002,
+  ship: 
+   { shipName: 'Scanner',
+     mainX: 0,
+     mainY: 8,
+     mainPoint: { posX: 0, posY: 8 },
+     vert: false,
+     length: 2,
+     alive: true },
+  coordinates: [ { posX: 5, posY: 6 } ],
+  gID: 1 }
+10002 update made
+{ playerID: 10003,
+  ship: 
+   { shipName: 'Scanner',
+     mainX: 2,
+     mainY: 0,
+     mainPoint: { posX: 2, posY: 0 },
+     vert: true,
+     length: 2,
+     alive: true },
+  coordinates: [ { posX: 0, posY: 7 } ],
+  gID: 1 }
+10003 update made
+{ playerID: 10002,
+  ship: 
+   { shipName: 'Scanner',
+     mainX: 0,
+     mainY: 8,
+     mainPoint: { posX: 0, posY: 8 },
+     vert: false,
+     length: 2,
+     alive: true },
+  coordinates: [ { posX: 7, posY: 4 } ],
+  gID: 1 }
+10002 update made
+{ playerID: 10003,
+  ship: 
+   { shipName: 'Scanner',
+     mainX: 2,
+     mainY: 0,
+     mainPoint: { posX: 2, posY: 0 },
+     vert: true,
+     length: 2,
+     alive: true },
+  coordinates: [ { posX: 1, posY: 8 } ],
+  gID: 1 }
+10003 update made
+{ playerID: 10002,
+  ship: 
+   { shipName: 'Scanner',
+     mainX: 0,
+     mainY: 8,
+     mainPoint: { posX: 0, posY: 8 },
+     vert: false,
+     length: 2,
+     alive: true },
+  coordinates: [ { posX: 8, posY: 7 } ],
+  gID: 1 }
+10002 update made
+{ playerID: 10003,
+  ship: 
+   { shipName: 'Scanner',
+     mainX: 2,
+     mainY: 0,
+     mainPoint: { posX: 2, posY: 0 },
+     vert: true,
+     length: 2,
+     alive: true },
+  coordinates: [ { posX: 0, posY: 8 } ],
+  gID: 1 }
+10003 update made
+Game 1 is over
+Game 1 deleted from records
+Game 1 deleted from records
