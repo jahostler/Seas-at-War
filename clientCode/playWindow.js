@@ -141,6 +141,7 @@ class gameWindow {
 	//TODO: add comments
 	getMousePos(evt) {
 		if (client.hasTurn) {
+			//http://www.html5canvastutorials.com/advanced/html5-canvas-mouse-coordinates/
 			var rect = playWindow.canvas.getBoundingClientRect();
 			var mousePos = new orderedPair (
 											Math.round((evt.clientX-rect.left)/(rect.right-rect.left)*playWindow.canvas.width),
