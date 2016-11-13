@@ -1,3 +1,9 @@
+//Server.js
+/*
+	Responsible for reading/sending socket.io events to and from clients, and manages all games being played
+	
+*/
+
 "use strict";
 var express = require('express');
 var app = express();
@@ -6,7 +12,9 @@ var io = require('socket.io')(http);
 var fs = require('fs');
 var path = require('path');
 
+//holds a Map of all games being played
 var games = new Map();
+//holds a Map of all players in games, 2 players per game
 var players = new Array();
 
 app.get('/', function(request, response){
@@ -15,9 +23,10 @@ app.get('/', function(request, response){
     var filePath = '.' + request.url;
     if (filePath == './')
         filePath = './index.html';
-
+	
     var extname = path.extname(filePath);
     var contentType = 'text/html';
+	//reading files
     switch (extname) {
         case '.js':
             contentType = 'text/javascript';
@@ -65,6 +74,8 @@ app.use('/clientCode', express.static(__dirname + '/clientCode'));
 app.use('/images', express.static(__dirname + '/images'));
 app.use('/style.css', express.static(__dirname + '/style.css'));
 
+//reads a connection event from a client
+//once 2 players attempt to connect with the same id, start a new game
 io.on('connection', function(socket){
 	console.log('a user connected');
     var newID = getPlayerID();
@@ -83,6 +94,8 @@ io.on('connection', function(socket){
         }
     });
 	
+	//on receiving a new game event from a client, create a new game
+	//once game has been created, add to map, and set sending client as host
 	socket.on('new game', function(data) {
 		gameID = getGameID();
 		var hostID = data;
@@ -91,6 +104,8 @@ io.on('connection', function(socket){
 		console.log("Game " + gameID + " was created with host " + hostID);
 	});
 	
+	//if the client attempts to connect to a valid game id (and it is not full), add that player to the game
+	//set the game to full so others may no longer join
 	socket.on('join game', function(data) {
 		if (!games.has(data.gameID)) {
 			socket.emit(data.clientID + ' join error', {});
@@ -108,6 +123,8 @@ io.on('connection', function(socket){
 		}
 	});
 	
+	//when player has finished their fleet selection and positioning, set the player as ready
+	//if both players are ready, start the game
 	socket.on('fleet finished', function(data) {
 		gameID = data.gID;
 		if(data.playerID == games.get(gameID).host) {
@@ -131,12 +148,14 @@ io.on('connection', function(socket){
 		}
 	});
 	
+	//remove the game from Map
 	socket.on('delete game', function(data) {
 		games.delete(data);
 		console.log("Game " + data + " deleted from records");
 		gameID = -1;
 	});
 	
+	//records the player's attack, sends an attack event to the other player in the game
 	socket.on('turn done', function(attackData){
 		console.log(attackData);
 		var gameID = attackData.gID;
@@ -148,6 +167,7 @@ io.on('connection', function(socket){
 		io.sockets.emit(recipientID + ' attack made', attackData);
 	});
 	
+	//TODO: explain
 	socket.on('game updated', function(updateData){
 		var gameID = updateData.gID;
 		var currentGame = games.get(gameID);
@@ -159,7 +179,7 @@ io.on('connection', function(socket){
 		io.sockets.emit(recipientID + ' make update', updateData);
 	});
 	
-	
+	//when the game is over, delete it 
 	socket.on('game over', function(data) {
 		var gameID = data.gID;
 		var currentGame = games.get(gameID);
@@ -172,6 +192,7 @@ io.on('connection', function(socket){
 		io.sockets.emit(recipientID + 'end game', {});
 	});
 	
+	//ends the game on a player disconnect
     socket.on('disconnect', function () {
         var index = players.indexOf(newID);
 		if (games.delete(gameID)) {
@@ -186,6 +207,7 @@ io.on('connection', function(socket){
     
 });
 
+//generates a unique player id
 function getPlayerID() {
     var clientID = 10000 + players.length;
     while (players.indexOf(clientID) != -1)
@@ -193,6 +215,7 @@ function getPlayerID() {
     return clientID;
 };
 
+//generates a unique game id
 function getGameID() {
     var gameID = 1 + games.size;
     while (games.has(gameID))
@@ -214,6 +237,8 @@ http.listen(portNumber, function(){
    console.log('listening on *: ' + portNumber);
  });
 
+//Game class
+//holds the ids of the players, their status (ready/not ready), and the status of the game
 class Game {
 	constructor(hostID, visitorID) {
 		this.host = hostID;
