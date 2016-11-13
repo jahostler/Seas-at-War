@@ -371,30 +371,3 @@ class fleetPositionWindow {
 		return false;
 	}
 }
-
-//simple data structure for storing and comparing coordinate pairs
-class orderedPair{
-	constructor(x,y) {
-		this.posX = x;
-		this.posY = y;
-	}
-	getX(){
-		return this.posX;
-	}
-	getY(){
-		return this.posY;
-	}
-	move(x,y){
-		this.posX = x;
-		this.posY = y;
-	}
-	equals(inputPair){
-		if(inputPair.getX() != this.posX){
-			return false;
-		}
-		if(inputPair.getY() != this.posY){
-			return false;
-		}
-		return true;
-	}
-}

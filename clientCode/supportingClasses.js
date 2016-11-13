@@ -28,10 +28,34 @@ class Player {
 }
 
 /*
+Grid class
+---------------------
+Holds the tiles in a player's grid
+
+*/
+class Grid {
+	constructor() {
+		this.field = new Array(9);
+		for (var i = 0; i < 9; i++) {
+			this.field[i] = new Array(9);
+		}
+	}
+	
+	loadGrid(topLeftCorner, tileSize) {
+		var x = topLeftCorner.posX;
+		var y = topLeftCorner.posY;
+		for (var i = 0; i < 9; i++) {
+			for (var j = 0; j < 9; j++) {
+				this.field[i][j] = new Tile(new orderedPair(i*tileSize + x, j*tileSize + y));
+			}
+		}
+	}
+}
+
+/*
 Tile class
 ---------------------
 Stores the information for a single Tile in a Grid
-
 
 */
 class Tile {
@@ -61,26 +85,33 @@ class Tile {
 }
 
 /*
-Grid class
+orderedPair class
 ---------------------
-Holds the tiles in a player's grid
+Representation of a basic (x, y) coordinate pair
 
 */
-class Grid {
-	constructor() {
-		this.field = new Array(9);
-		for (var i = 0; i < 9; i++) {
-			this.field[i] = new Array(9);
-		}
+class orderedPair{
+	constructor(x,y) {
+		this.posX = x;
+		this.posY = y;
 	}
-	
-	loadGrid(topLeftCorner, tileSize) {
-		var x = topLeftCorner.posX;
-		var y = topLeftCorner.posY;
-		for (var i = 0; i < 9; i++) {
-			for (var j = 0; j < 9; j++) {
-				this.field[i][j] = new Tile(new orderedPair(i*tileSize + x, j*tileSize + y));
-			}
+	getX(){
+		return this.posX;
+	}
+	getY(){
+		return this.posY;
+	}
+	move(x,y){
+		this.posX = x;
+		this.posY = y;
+	}
+	equals(inputPair){
+		if(inputPair.getX() != this.posX){
+			return false;
 		}
+		if(inputPair.getY() != this.posY){
+			return false;
+		}
+		return true;
 	}
 }
