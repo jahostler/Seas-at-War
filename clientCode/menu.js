@@ -4,28 +4,6 @@ menu.js
 Handles what should happen when clients interact with the main menu buttons before the game begins
 
 */
-function newGame() {
-	socket.emit('new game', client.id);
-	socket.on(client.id + ' gameID created', function(data) {
-		gameID = data;
-		document.getElementById('sessionID').innerHTML = 'Your session ID: ' + gameID;
-		document.getElementById('sessionID').innerHTML += '<p font-size="16px"> Waiting for player to join... </p>';
-	});
-	socket.on(client.id + ' join success' , function(data) {
-		document.getElementById('hostGame').style.display = 'none';
-		document.getElementById('buildAFleet').style.display = 'block';
-		document.getElementById('buildAFleet').addEventListener('load', loadGame(), false);
-	});
-}
-function removeGame() {
-	socket.emit('delete game', gameID);
-	client.fleet = ["Scrambler", "Submarine", "Cruiser", "Executioner"];
-	var buttons = document.getElementById('positionFleet').querySelectorAll('button');
-	[].forEach.call(buttons, function(element) {
-		element.disabled = false;
-	});
-	gameID = -1;
-}
 function hostGame() {
 	document.getElementById('mainMenu').style.display = 'none';
 	document.getElementById('hostGame').style.display = 'block';
@@ -122,5 +100,5 @@ function backToMain(displayedScreen) {
 
 
 function resizeGame() {
-	
+	//todo
 }
