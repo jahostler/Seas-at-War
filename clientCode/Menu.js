@@ -1,3 +1,9 @@
+/*
+Menu
+--
+Handles what should happen when clients interact with the menus before the game begins
+
+*/
 function newGame() {
 	socket.emit('new game', client.id);
 	socket.on(client.id + ' gameID created', function(data) {

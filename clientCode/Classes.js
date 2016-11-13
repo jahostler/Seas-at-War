@@ -1,3 +1,26 @@
+/*
+Classes.js
+---------------------
+Contains data structures needed for the client's graphic user interface, game information, and server interaction
+
+*/
+
+
+
+
+
+/*
+Player class
+---------------------
+Holds information on player's ships, grids, whether or not it is their turn, etc.
+
+-homeGrid: stores the hit/miss status of own player's ships
+-targetGrid: stores hit/miss status of what tiles the player has fired on
+-id: the player's playerID, used by the server
+-fleet: array of strings, contains what ships the player chose on the Ship Select screen
+-hasTurn: whether or not it is currently the player's turn
+*/
+
 class Player {
     constructor() {
         this.homeGrid = new Grid();
@@ -7,6 +30,25 @@ class Player {
 		this.hasTurn = false;
     }
 }
+
+/*
+gameWindow class
+---------------------
+Holds the player's game canvas, and the visuals/logic to represent the player's graphic interface
+
+
+canvas- the canvas object, holds the visuals shown to the player on the game window
+	scale- scale of canvas
+	canvas.width- width of canvas
+	canvas.height- height of canvas
+	canvas.context- 2d or 3d canvas? 2d for our purposes
+	background- background of canvas
+	canvas.addEventListener- TODO
+selectedShip- id of currently selected ship
+selectedTile- (x,y) position of currently selected tile
+numOfImagesLoaded- number of images currently loaded
+-
+*/
 
 class gameWindow {
 	//constructor needs a player
@@ -42,10 +84,12 @@ class gameWindow {
 		}
 	}
 	
+	//adjusts size of window
 	adjust(dimension) {
 		return dimension * this.scale;
 	}
 	
+	//adds a "Waiting for other player" message to screen when it is not the player's turn
 	drawTurnMessage() {
 		this.context.font = 'bold 45px Times New Roman';
 		this.context.fillStyle = 'red';
@@ -63,7 +107,7 @@ class gameWindow {
 		}
 	}
 	
-	
+	//adds the buttons to the player window
 	drawButtons() {
 		var norm = document.getElementById('normalAttack');
 		var spec = document.getElementById('specialAttack');
@@ -86,13 +130,15 @@ class gameWindow {
 	targetGridStart() {
 		return new orderedPair(playWindow.adjust(710), playWindow.adjust(30));
 	}
+	//stores the player's attack, and sends the data to the server
+	//afterwards, waits for a server update, then updates the gameWindow with the results of the attack
 	moveMade(attackType) {
 		//executes turn
 		var currentShip = client.fleet[playWindow.selectedShip];
 		if (currentShip != -1) {
 			var currentTiles = [playWindow.selectedTile];
 			if (attackType == 'special') {
-				//todo:  implement special attacks
+				//TODO:  implement special attacks
 			}
 			var attackData = {
 				playerID: client.id,
@@ -119,6 +165,7 @@ class gameWindow {
 		}
 	}
 	
+	//TODO: add comments
 	getMousePos(evt) {
 		if (client.hasTurn) {
 			var rect = playWindow.canvas.getBoundingClientRect();
@@ -129,6 +176,7 @@ class gameWindow {
 		}
 	}
 	
+	//loads the game window, hiding the fleet positioning window
 	loadPage() {
 		playWindow.numOfImagesLoaded++;
 		if (playWindow.numOfImagesLoaded == 4) {
@@ -139,6 +187,10 @@ class gameWindow {
 		}
 	}
 	
+	//check what tile the player has clicked on, based on the mouse's pixel position on the canvas
+	//if the player clicks on a ship on their home grid, select that ship
+	//if the player clicks on a tile on their target grid, select that tile
+	//if both a ship and a tile have been selected, enable the ability to fire
 	processClick(posPair){
 		var xPair = posPair.posX;
 		var yPair = posPair.posY;
@@ -309,16 +361,19 @@ class gameWindow {
 		}
 	}
 	
+	//prevents player from firing until appropriate conditions have been met
 	disableButtons() {
 		document.getElementById('normalAttack').disabled = true;
 		document.getElementById('specialAttack').disabled = true;
 	}
 	
+	//enable firing
 	enableButtons() {
 		document.getElementById('normalAttack').disabled = false;
 		//document.getElementById('specialAttack').disabled = false;	//todo:  implement special attacks
 	}
 	
+	//update the grids with the result of the turn
 	drawGrids() {
 		for(var i = 0; i < client.homeGrid.field.length; i++) {
 			for(var j = 0; j < client.homeGrid.field[i].length; j++) {
@@ -352,6 +407,7 @@ class gameWindow {
 //		}
 	}
 	
+	//TODO: add comments to draw functions
 	drawShipSelector(shipIndex) {
 		var currentShip = client.fleet[shipIndex];
 		var drawPoint = client.homeGrid.field[currentShip.mainX][currentShip.mainY].corner;
@@ -388,6 +444,13 @@ class gameWindow {
 		this.drawGrids();
 	}
 }
+
+/*
+buildAFleetWindow class
+---------------------
+Holds the canvas for the fleet selection window
+
+*/
 
 class buildAFleetWindow {
 	constructor(canvas, scale) {
@@ -447,6 +510,13 @@ class buildAFleetWindow {
 		
 	}
 }
+
+/*
+buildAFleetWindow class
+---------------------
+Holds the canvas for the fleet positioning window
+
+*/
 
 class fleetPositionWindow {
 	constructor(canvas, scale) {
@@ -594,6 +664,8 @@ class fleetPositionWindow {
 		this.context.drawImage(this.selectRectangle, this.adjust(xPos), this.adjust(yPos), this.adjust(this.selectRectangle.width), this.adjust(this.selectRectangle.height));
 	}
 	
+	//determine if the attempted move in position for the current ship is valid (in the game window and does not overlap with other ships)
+	//if valid return true, false otherwise
 	checkPosition(desiredMove) {
 		this.draw();
 		var shipID = this.selectedShip;
@@ -635,6 +707,10 @@ class fleetPositionWindow {
 		}//desiredMove loop end; 
 		return true;
 	}
+	
+	//attempt to move or rotate the currently selected ship
+	//actionString determines whether to move the ship up, down, left, right, or to rotate the ship 90 degrees
+	//returns true if successful, false otherwise
 	moveAction(actionString){
 		var shipID = this.selectedShip;
 		
@@ -736,6 +812,7 @@ class fleetPositionWindow {
 	}
 }
 
+//simple data structure for storing and comparing coordinate pairs
 class orderedPair{
 	constructor(x,y) {
 		this.posX = x;
@@ -763,7 +840,13 @@ class orderedPair{
 }
 
 
+/*
+Tile class
+---------------------
+Stores the information for a single Tile in a Grid
 
+
+*/
 class Tile {
 	constructor(pair) {
 		this.corner = pair;			//top left corner pixel coordinates
@@ -790,6 +873,12 @@ class Tile {
 	
 }
 
+/*
+Grid class
+---------------------
+Holds the tiles in a player's grid
+
+*/
 class Grid {
 	constructor() {
 		this.field = new Array(9);
@@ -829,7 +918,7 @@ class generalShip {
 	
 }
 
-
+//TODO: add comments
 class moveableShip {
 	constructor(name,shipSize,mainX,mainY) {
 		this.shipName = name;
