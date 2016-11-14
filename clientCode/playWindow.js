@@ -394,7 +394,7 @@ class gameWindow {
 				this.context.closePath();
 			}
 		}
-		//Draw lines through sunk enemy ships on the target grid
+		//Draw lines through sunk enemy ships on the target grid to let player know they sunk a ship
 		for (var c = 0; c < enemyFleet.length; c++) {
 			if (enemyFleet[c] != null) {
 				this.context.beginPath();
