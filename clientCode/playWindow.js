@@ -122,6 +122,7 @@ class gameWindow {
 			socket.emit('turn done', attackData);
 			socket.on(client.id + ' make update', function(data){
 				var updatedTiles = data.tiles;
+				enemyFleet = data.enemyShips;
 				console.log(updatedTiles);
 				for (var i = 0; i < updatedTiles.length; i++) {
 					var x = updatedTiles[i].corner.posX;
@@ -371,14 +372,50 @@ class gameWindow {
 				}
 			}
 		}
-//		for (var i = 0; i < client.fleet.length; i++) {
-//			if (!client.fleet[i].alive) {
-//				if (client.fleet.vert) {
-//					this.context.moveTo(client.fleet[i].mainX + this.adjust(35), client.fleet[i].mainY);
-//					this.context.lineTo()
-//				}
-//			}
-//		}
+		//Draw lines through your sunk ships on the home grid
+		for (var k = 0; k < client.fleet.length; k++) {
+			if (!client.fleet[k].alive) {
+				this.context.beginPath();
+				var point = client.homeGrid.field[client.fleet[k].mainX][client.fleet[k].mainY];
+				var x = point.corner.posX;
+				var y = point.corner.posY;
+				var length = client.fleet[k].length;
+				if (client.fleet[k].vert) {
+					this.context.moveTo(x + this.adjust(35), y);
+					this.context.lineTo(x + this.adjust(35), y + (this.adjust(70) * length));
+				}
+				else {
+					this.context.moveTo(x, y + this.adjust(35));
+					this.context.lineTo(x + (this.adjust(70) * length), y + this.adjust(35));
+				}
+				this.context.lineWidth = '5';
+				this.context.strokeStyle = 'red';
+				this.context.stroke();
+				this.context.closePath();
+			}
+		}
+		//Draw lines through sunk enemy ships on the target grid to let player know they sunk a ship
+		for (var c = 0; c < enemyFleet.length; c++) {
+			if (enemyFleet[c] != null) {
+				this.context.beginPath();
+				var point = client.targetGrid.field[enemyFleet[c].mainX][enemyFleet[c].mainY];
+				var x = point.corner.posX;
+				var y = point.corner.posY;
+				var length = enemyFleet[c].length;
+				if (enemyFleet[c].vert) {
+					this.context.moveTo(x + this.adjust(35), y);
+					this.context.lineTo(x + this.adjust(35), y + (this.adjust(70) * length));
+				}
+				else {
+					this.context.moveTo(x, y + this.adjust(35));
+					this.context.lineTo(x + (this.adjust(70) * length), y + this.adjust(35));
+				}
+				this.context.lineWidth = '5';
+				this.context.strokeStyle = 'lime';
+				this.context.stroke();
+				this.context.closePath();
+			}
+		}
 	}
 	
 	//TODO: add comments to draw functions
