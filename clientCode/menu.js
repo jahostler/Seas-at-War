@@ -4,17 +4,26 @@ menu.js
 Handles what should happen when clients interact with the main menu buttons before the game begins
 
 */
+
+//hide main menu
+//display host game menu
 function hostGame() {
 	document.getElementById('mainMenu').style.display = 'none';
 	document.getElementById('hostGame').style.display = 'block';
 	newGame();
 }
 
+//hide main menu
+//display join game menu
 function joinGame() {
 	document.getElementById('mainMenu').style.display = 'none';
 	document.getElementById('joinGame').style.display = 'block';
 }
 
+//attempt to join a game being hosted
+//if the game id is valid and the game is not full, server will add player to game
+//otherwise, server will emit 'join error' or 'join full' and the player will not be added to the game
+//if successfully added to the game, hide the join game menu and load in the fleet selection window
 function joinID() {
 	var input = parseInt(document.getElementById('joinIDVar').value);
 	socket.emit('join game', {gameID : input, clientID : client.id});
@@ -34,6 +43,8 @@ function joinID() {
 	});
 }
 
+//hide main menu
+//display instructions
 function instructions() {
 	document.getElementById('mainMenu').style.display = 'none';
 	document.getElementById('instructions').style.display = 'block';
@@ -42,6 +53,7 @@ function instructions() {
 	document.getElementById('previousInstruction').style.display = 'none';
 }
 
+//attempt to move to next page of instructions
 function nextInstruction(){
 	var instructions = document.getElementsByClassName('instructImg');
 	for (var i = 0; i < instructions.length - 1; ++i) {
@@ -59,6 +71,7 @@ function nextInstruction(){
 	}
 }
 
+//attempt to move to previous page of instructions
 function prevInstruction() {
 	var instructions = document.getElementsByClassName('instructImg');
 	for (var i = 1; i < instructions.length; ++i) {
@@ -76,11 +89,16 @@ function prevInstruction() {
 	}
 }
 
+//hide main menu
+//display credits
 function credits() {
 	document.getElementById('mainMenu').style.display = 'none';
 	document.getElementById('credits').style.display = 'block';
 }
 
+//hide current menu
+//display main menu
+//if current menu is main menu, exit game
 function backToMain(displayedScreen) {
 	if (displayedScreen == 'hostGame') {
 		removeGame();
