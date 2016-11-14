@@ -105,7 +105,7 @@ class fleetPositionWindow {
 		this.class5Hor.src = 'images/Ships/ship5' + client.fleet[3] + 'Hor.png';
 		this.selectRectangle.src = 'images/selectRec.png';
 		this.moveableShips = new Array(4);
-		this.moveableShips[0] = new moveableShip(client.fleet[0], 2, 2, 3); //TODO
+		this.moveableShips[0] = new moveableShip(client.fleet[0], 2, 2, 3);
 		this.moveableShips[1] = new moveableShip(client.fleet[1], 3, 3, 3);
 		this.moveableShips[2] = new moveableShip(client.fleet[2], 4, 4, 3);
 		this.moveableShips[3] = new moveableShip(client.fleet[3], 5, 5, 3);

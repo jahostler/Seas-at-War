@@ -16,7 +16,8 @@ canvas- the canvas object, holds the visuals shown to the player on the game win
 	canvas.height- height of canvas
 	canvas.context- 2d or 3d canvas? 2d for our purposes
 	background- background of canvas
-	canvas.addEventListener- TODO
+	canvas.addEventListener- add function that handles when the user clicks on the game screen
+							to determine whether they are clicking on a tile or ship
 selectedShip- id of currently selected ship
 selectedTile- (x,y) position of currently selected tile
 numOfImagesLoaded- number of images currently loaded
@@ -418,7 +419,7 @@ class gameWindow {
 		}
 	}
 	
-	//TODO: add comments to draw functions
+	//draw red rectangle around selected ship
 	drawShipSelector(shipIndex) {
 		var currentShip = client.fleet[shipIndex];
 		var drawPoint = client.homeGrid.field[currentShip.mainX][currentShip.mainY].corner;
@@ -430,6 +431,7 @@ class gameWindow {
 		playWindow.context.strokeRect(drawPoint.posX, drawPoint.posY, selectorW, selectorH);
 	}
 	
+	//draw red rectangle around selected tile
 	drawTileSelector(gridCoordinate) {
 		var drawPoint = client.targetGrid.field[gridCoordinate.posX][gridCoordinate.posY].corner;
 		var dimension = playWindow.adjust(70);
