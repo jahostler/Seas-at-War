@@ -5,7 +5,8 @@ Responsible for creating client's game, receiving events from the server
 
 */
 
-var client;
+var client = new Player();
+var enemyFleet = new Array(4);
 var gameID;
 var prepWindow;
 var positionWindow;
@@ -24,7 +25,6 @@ var moveButtonDims;
 
 //creates the game interface, and initializes client-side data
 function initialize() {
-    client = new Player();
 	gameID = -1;
 	var instructImages = document.getElementsByClassName('instructImg');
 	var instructImgDims = [instructImages[0].width * 0.9, instructImages[0].height * 0.9];
@@ -306,11 +306,16 @@ function initializeGame() {
 			client.homeGrid.field[x][y].updateTile();
 			updatedTiles[i] = client.homeGrid.field[x][y];
 		}
+		var sunkShips = new Array(4);
 		for (var i = 0; i < client.fleet.length; i++) {
 			client.fleet[i].updateAlive();
+			if (!client.fleet[i].alive) {
+				sunkShips[i] = client.fleet[i];
+			}
 		}
 		var returnData = {
 			tiles: updatedTiles,
+			enemyShips: sunkShips,
 			gID: gameID,
 			playerID: client.id
 		};
