@@ -8,28 +8,19 @@ class moveableShip {
 		this.vert = true;
 		this.length = shipSize;
 		this.alive = true;
+		this.posArray = this.currentPosArray();
+		this.shotCounter = 0;  //if counter reaches ship's length, it sank
 	}
 	updateAlive() {
-		var posArray = this.currentPosArray();
-		var counter = 0;
-		for (var i = 0; i < posArray.length; i++) {
-			if (client.homeGrid.field[posArray[i].posX][posArray[i].posY].shipHit)
-				counter++;
-		}
-		if (counter == this.length) {
-			this.alive = false;
-		}
-			
-	}
-	
-	containsPoint(point) {
-		var posArray = this.currentPosArray();
-		for (var i = 0; i < posArray.length; i++) {
-			if (posArray[i].equals(point))
+		if (this.alive) {
+			if (this.shotCounter == this.length) {
+				this.alive = false;
 				return true;
+			}
 		}
 		return false;
 	}
+
 	currentPosArray(){
 		var pos = [this.mainPoint];
 		for (var i = 0; i < this.length-1; i++){
@@ -115,6 +106,7 @@ class moveableShip {
 		this.mainX = this.mainX + xChange;
 		this.mainY = this.mainY + yChange;
 		this.mainPoint.move(this.mainX,this.mainY);
+		this.posArray = this.currentPosArray();
 	}
 }
 

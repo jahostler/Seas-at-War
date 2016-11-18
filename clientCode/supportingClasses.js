@@ -76,6 +76,7 @@ class Tile {
 	updateTile() {
 		if(this.shipPresent()) {
 			this.shipHit = true;
+			client.fleet[this.shipIndex].shotCounter++;
 		}
 		else {
 			this.shipHit = false;

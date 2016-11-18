@@ -123,28 +123,28 @@
 		<div id="buildAFleet">
 			<canvas id="buildCanvas"> Canvas is not supported by your browser.  </canvas>
 		
-				<button id="scramblerDes" class="buildButton" onClick="shipDetails('Scrambler')">
+				<button id="scramblerDes" class="gameButton buildButton" onClick="shipDetails('Scrambler')">
 					<span> 1 </span> 
 				</button>
-				<button id="scannerDes"  class="buildButton" onClick="shipDetails('Scanner')">
+				<button id="scannerDes"  class="gameButton buildButton" onClick="shipDetails('Scanner')">
 					<span> 2 </span> 
 				</button>
-				<button id="submarineDes"  class="buildButton" onClick="shipDetails('Submarine')">
+				<button id="submarineDes"  class="gameButton buildButton" onClick="shipDetails('Submarine')">
 					<span> 3 </span> 
 				</button>
-				<button id="destroyerDes"  class="buildButton" onClick="shipDetails('Destroyer')">
+				<button id="destroyerDes"  class="gameButton buildButton" onClick="shipDetails('Destroyer')">
 					<span> 4 </span> 
 				</button>
-				<button id="cruiserDes"  class="buildButton" onClick="shipDetails('Cruiser')">
+				<button id="cruiserDes"  class="gameButton buildButton" onClick="shipDetails('Cruiser')">
 					<span> 5 </span> 
 				</button>
-				<button id="carrierDes"  class="buildButton" onClick="shipDetails('Carrier')">
+				<button id="carrierDes"  class="gameButton buildButton" onClick="shipDetails('Carrier')">
 					<span> 6 </span> 
 				</button>
-				<button id="executionerDes"  class="buildButton" onClick="shipDetails('Executioner')">
+				<button id="executionerDes"  class="gameButton buildButton" onClick="shipDetails('Executioner')">
 					<span> 7 </span> 
 				</button>
-				<button id="artilleryDes"  class="buildButton" onClick="shipDetails('Artillery')">
+				<button id="artilleryDes"  class="gameButton buildButton" onClick="shipDetails('Artillery')">
 					<span> 8 </span> 
 				</button>
 				
@@ -178,32 +178,32 @@
 			</button>
 
 			
-			<button id="up" class="shipMoveButton" onclick="console.log(positionWindow.moveAction('Up'))">
+			<button id="up" class="gameButton shipMoveButton" onclick="console.log(positionWindow.moveAction('Up'))">
 				<span> &#8679; </span>
 			</button>
-			<button id="down" class="shipMoveButton" onclick="console.log(positionWindow.moveAction('Down'))">
+			<button id="down" class="gameButton shipMoveButton" onclick="console.log(positionWindow.moveAction('Down'))">
 				<span> &#8681; </span>
 			</button>
-			<button id="left" class="shipMoveButton" onclick="console.log(positionWindow.moveAction('Left'))">
+			<button id="left" class="gameButton shipMoveButton" onclick="console.log(positionWindow.moveAction('Left'))">
 				<span> &#8678; </span>
 			</button>
-			<button id="right" class="shipMoveButton" onclick="console.log(positionWindow.moveAction('Right'))">
+			<button id="right" class="gameButton shipMoveButton" onclick="console.log(positionWindow.moveAction('Right'))">
 				<span> &#8680; </span>
 			</button>
-			<button id="rotate" class="shipMoveButton" onclick="console.log(positionWindow.moveAction('Rotate'))">
+			<button id="rotate" class="gameButton shipMoveButton" onclick="console.log(positionWindow.moveAction('Rotate'))">
 				<span> Rotate </span>
 			</button>
 			
-			<button id="move2" class="shipSelectButton" onclick="positionWindow.selectShip(0)">
+			<button id="move2" class="gameButton shipSelectButton" onclick="positionWindow.selectShip(0)">
 				<span> Class 2 </span>
 			</button>
-			<button id="move3" class="shipSelectButton" onclick="positionWindow.selectShip(1)">
+			<button id="move3" class="gameButton shipSelectButton" onclick="positionWindow.selectShip(1)">
 				<span> Class 3 </span>
 			</button>
-			<button id="move4" class="shipSelectButton" onclick="positionWindow.selectShip(2)">
+			<button id="move4" class="gameButton shipSelectButton" onclick="positionWindow.selectShip(2)">
 				<span> Class 4 </span>
 			</button>
-			<button id="move5" class="shipSelectButton" onclick="positionWindow.selectShip(3)">
+			<button id="move5" class="gameButton shipSelectButton" onclick="positionWindow.selectShip(3)">
 				<span> Class 5 </span>
 			</button>
 			
@@ -212,10 +212,10 @@
 		<div id="gameWindow">
 			<canvas id="gameCanvas" tabindex="1"></canvas>
 			
-			<button id="normalAttack" class="fireButton">
+			<button id="normalAttack" class="gameButton fireButton">
 				<span> Normal Attack </span>
 			</button>
-			<button id="specialAttack" class="fireButton">
+			<button id="specialAttack" class="gameButton fireButton">
 				<span> Special Attack </span>
 			</button>
 			

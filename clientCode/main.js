@@ -7,11 +7,11 @@ Responsible for creating client's game, receiving events from the server
 
 var client = new Player();
 var enemyFleet = new Array(4);
-var gameID;
+var gameID = -1;
 var prepWindow;
 var positionWindow;
-var socket = io.connect();
 var playWindow;
+var socket = io.connect();
 var scaling = .8;
 var backgrounds;
 var tempImages;
@@ -25,22 +25,28 @@ var moveButtonDims;
 
 //creates the game interface, and initializes client-side data
 function initialize() {
-	gameID = -1;
+	//scale instruction images
 	var instructImages = document.getElementsByClassName('instructImg');
 	var instructImgDims = [instructImages[0].width * 0.9, instructImages[0].height * 0.9];
 	for (var i = 0; i < instructImages.length; i++) {
 		instructImages[i].style.width = instructImgDims[0] + 'px';
 		instructImages[i].style.height = instructImgDims[1] + 'px';
 	}
+	
+	//load in background images
 	backgrounds = [new Image(), new Image(), new Image()];
 	backgrounds[0].src = 'images/Ships/shipSelect.png';
 	backgrounds[1].src = 'images/Ships/shipSelect.png';
 	backgrounds[2].src = 'images/gameBoard.png';
+	
+	//load in Temporary Ship Images
 	tempImages = [new Image(), new Image(), new Image(), new Image()];
 	tempImages[0].src = 'images/Ships/ship2temp.png';
 	tempImages[1].src = 'images/Ships/ship3temp.png';
 	tempImages[2].src = 'images/Ships/ship4temp.png';
 	tempImages[3].src = 'images/Ships/ship5temp.png';
+	
+	//get initial placement of buttons and save positions, so they can be scaled later
 	finishFleetDims = [document.getElementById('finishFleet').offsetLeft, document.getElementById('finishFleet').offsetTop];
 	finishShipSelectDims = [document.getElementById('finishShipSelect').offsetLeft, document.getElementById('finishShipSelect').offsetTop];
 	normalAttackDims = [document.getElementById('normalAttack').offsetLeft, document.getElementById('normalAttack').offsetTop];
@@ -66,6 +72,8 @@ function initialize() {
 		moveButtonDims[i][0] = tempMoveBut[i].offsetLeft;
 		moveButtonDims[i][1] = tempMoveBut[i].offsetTop;
 	}
+	
+	//Hide all screens except main menu screen
 	var divs = document.getElementsByTagName('div');
 	for(var i = 0; i < divs.length; i++) {
 		divs[i].style.display = 'none';
@@ -300,15 +308,22 @@ function initializeGame() {
 	}
 	socket.on(client.id + ' attack made', function(attackData){
 		var updatedTiles = new Array(attackData.coordinates.length);
+		var str = "";
 		for (var i = 0; i < updatedTiles.length ; i++) {
 			var x = attackData.coordinates[i].posX;
 			var y = attackData.coordinates[i].posY;
 			client.homeGrid.field[x][y].updateTile();
 			updatedTiles[i] = client.homeGrid.field[x][y];
+			if (updatedTiles[i].shipHit)
+				str = "hit";
+			else if (str != "hit") {
+				str = "miss";
+			}
 		}
 		var sunkShips = new Array(4);
 		for (var i = 0; i < client.fleet.length; i++) {
-			client.fleet[i].updateAlive();
+			if (client.fleet[i].updateAlive())
+				str = client.fleet[i].shipName;
 			if (!client.fleet[i].alive) {
 				sunkShips[i] = client.fleet[i];
 			}
@@ -317,11 +332,13 @@ function initializeGame() {
 			tiles: updatedTiles,
 			enemyShips: sunkShips,
 			gID: gameID,
-			playerID: client.id
+			playerID: client.id,
+			result: str
 		};
 		socket.emit('game updated', returnData);
 		client.hasTurn = true;
 		playWindow.draw();
+		playWindow.enableButton("normal");
 		playWindow.selectedTile = new orderedPair(-1, -1);
 		if (isGameOver()) {
 			//todo:  display game over screen
