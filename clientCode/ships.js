@@ -1,4 +1,11 @@
-//TODO: add comments
+/*
+moveableShip class
+---------------------
+Battleship representation in our game.
+Stores important data such as current position, alive status and ship type
+Also handles moving and special attacks for each battleship.
+
+*/
 class moveableShip {
 	constructor(name,shipSize,mainX,mainY) {
 		this.shipName = name;
@@ -10,6 +17,9 @@ class moveableShip {
 		this.alive = true;
 		this.posArray = this.currentPosArray();
 		this.shotCounter = 0;  //if counter reaches ship's length, it sank
+		this.specialAttacksLeft = 1;
+		if (this.shipName == 'Scanner')
+			this.specialAttacksLeft = 2;
 	}
 	updateAlive() {
 		if (this.alive) {
@@ -107,6 +117,43 @@ class moveableShip {
 		this.mainY = this.mainY + yChange;
 		this.mainPoint.move(this.mainX,this.mainY);
 		this.posArray = this.currentPosArray();
+	}
+	specialAttack(attackedCoordinate) {
+		if (this.shipName == 'Scrambler') {
+			return [attackedTile];
+		}
+		else if (this.shipName == 'Scanner') {
+			return [attackedTile];
+		}
+		else if (this.shipName == 'Submarine') {
+			return [attackedTile];
+		}
+		else if (this.shipName == 'Destroyer') {
+			return [attackedTile];
+		}
+		else if (this.shipName == 'Cruiser') {
+			return [attackedTile];
+		}
+		else if (this.shipName == 'Carrier') {
+			return [attackedTile];
+		}
+		else if (this.shipName == 'Executioner') {
+			return [attackedTile];
+		}
+		else if (this.shipName == 'Artillery') {
+			var x = attackedCoordinate.posX;
+			var y = attackedCoordinate.posY;
+			var result = new Array(5);
+			result[0] = new orderedPair(x, y);
+			result[1] = new orderedPair(x+1, y);
+			result[2] = new orderedPair(x, y+1);
+			result[3] = new orderedPair(x-1, y);
+			result[4] = new orderedPair(x, y-1);
+			return result;
+		}
+		else {
+			console.log("invalid ship name");
+		}
 	}
 }
 

@@ -135,7 +135,7 @@ class gameWindow {
 		if (currentShip != -1) {
 			var currentTiles = [playWindow.selectedTile];
 			if (attackType == 'special') {
-				//TODO:  implement special attacks
+				currentTiles = currentShip.specialAttack(playWindow.selectedTile);
 			}
 			var attackData = {
 				playerID: client.id,
