@@ -22,6 +22,7 @@ var specialAttackDims;
 var buildButtonDims;
 var selectButtonDims;
 var moveButtonDims;
+var deflect;
 
 //creates the game interface, and initializes client-side data
 function initialize() {
@@ -295,6 +296,24 @@ function isGameOver() {
 	return true;
 }
 
+function getRandomInt(min, max) {  
+	//http://stackoverflow.com/questions/1527803/generating-random-whole-numbers-in-javascript-in-a-specific-range
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function repositionAttack(){
+	var defX = getRandomInt(0,8);
+	var defY = getRandomInt(0,8);
+	console.log("Reposition Idea: ("+defX+","+defY+")");
+	while(client.homeGrid.field[defX][defY].shipPresent()){
+		var defX = getRandomInt(0,8);
+		var defY = getRandomInt(0,8);
+		console.log("Reposition Idea: ("+defX+","+defY+")");
+	}
+	console.log("Reposition Final: ("+defX+","+defY+")");
+	return new orderedPair(defX, defY);
+}
+
 //loads graphics for playing the game, and listens for game updates (such as a tile being attacked or the game ending)
 function initializeGame() {
 	client.homeGrid.loadGrid(playWindow.homeGridStart(), playWindow.adjust(70));
@@ -308,20 +327,38 @@ function initializeGame() {
 			client.homeGrid.field[xCor][yCor].shipIndex = i;
 		}
 	}
+	deflect = false;
+	
+	
 	socket.on(client.id + ' attack made', function(attackData){
 		var str = '';
 		var scanStr = '';
 		var returnData;
 		var attackCoordinate = attackData.coordinates[0];
+		if (typeof attackCoordinate === "number")
+			attackCoordinate = attackData.coordinates[1];
+		if (deflect == true) {
+			var tempPlace = repositionAttack();
+			attackCoordinate = tempPlace;
+			if (typeof attackData.coordinates[0] === "number"){
+				attackData.coordinates[1] = tempPlace;
+			}
+			else{
+				attackData.coordinates[0] = tempPlace;
+			}
+			
+			deflect = false;
+			
+		}
 		var specialResult = new Array();
+		console.log("Deflect Count: " + deflect);
 		//Scrambler Special 
-		if (attackCoordinate == 1){ 
+		if (attackData.coordinates[0] == 1){ 
 			
 		}
 		
 		//Scanner Special
-		else if (attackCoordinate == 2) {	
-			attackCoordinate = attackData.coordinates[1];
+		else if (attackData.coordinates[0] == 2) {	
 			var scanArray = processSpecialAttack('Scanner', attackCoordinate);
 			var scanCount = 0;
 			for (var i = 0; i < scanArray.length; i++) {
@@ -342,39 +379,41 @@ function initializeGame() {
 		}
 		
 		//Submarine Special
-		else if (attackCoordinate == 3){ 
+		else if (attackData.coordinates[0] == 3){ 
 			
 		}
 		
 		//Defender Special 
-		else if (attackCoordinate == 4){ 
-			
+		else if (attackData.coordinates[0] == 4){ 
+			specialResult = ["deflect"];
+			attackData.coordinates = [attackCoordinate];
+			console.log(attackData.coordinates);
 		}
 		
 		//Cruiser Special 
-		else if (attackCoordinate == 5) { 
-			attackCoordinate = attackData.coordinates[1];
+		else if (attackData.coordinates[0] == 5) { 
 		}
 		
 		//Carrier Special 
-		else if (attackCoordinate == 6){ 
+		else if (attackData.coordinates[0] == 6){ 
 			
 		}
 		
 		//Executioner Special
-		else if (attackCoordinate == 7){ 
+		else if (attackData.coordinates[0] == 7){ 
 			
 		}
 		
 		// Artillery Special 
-		else if (attackCoordinate == 8) { 
-			attackCoordinate = attackData.coordinates[1];
+		else if (attackData.coordinates[0] == 8) { 
+			console.log("Artillery Attack Center: ("+attackCoordinate.posX+","+attackCoordinate.posY+")")
 			attackData.coordinates = processSpecialAttack("Artillery", attackCoordinate);
 		}
 		var updatedTiles = new Array(attackData.coordinates.length);
 		for (var i = 0; i < updatedTiles.length; i++) {
 			var x = attackData.coordinates[i].posX;
 			var y = attackData.coordinates[i].posY;
+			console.log("("+x+","+y+")");
 			client.homeGrid.field[x][y].updateTile();
 			updatedTiles[i] = client.homeGrid.field[x][y];
 			if (updatedTiles[i].shipHit)
@@ -401,9 +440,7 @@ function initializeGame() {
 		if (scanStr != '') {
 			returnData.scanData = scanStr;
 		}
-		if (specialResult.length > 0) {
-			returnData.specialData = specialResult;
-		}
+		returnData.specialData = specialResult;
 		socket.emit('game updated', returnData);
 		client.hasTurn = true;
 		playWindow.draw();

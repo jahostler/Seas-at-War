@@ -30,12 +30,12 @@ class moveableShip {
 	}
 	
 	updateSpecialAttacksLeft() {
-		if (this.shipName == 'Scanner' /*|| this.shipName == 'Defender'*/)
+		if (this.shipName == 'Scanner' || this.shipName == 'Defender')
 			this.specialAttacksLeft = 2;
 		if (this.shipName == 'Cruiser') {
 			this.firstHit = false;
 		}
-		else if (this.shipName == 'Scrambler' || this.shipName == 'Defender' || this.shipName == 'Submarine' || 
+		else if (this.shipName == 'Scrambler'|| this.shipName == 'Submarine' || 
 				 this.shipName == 'Cruiser' || this.shipName == 'Carrier' || this.shipName == 'Executioner')
 			this.specialAttacksLeft = 0;
 	}
