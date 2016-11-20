@@ -53,6 +53,8 @@ class gameWindow {
 		this.specialMessage = '';
 		this.turnResult = '';
 		this.selectedButton = '';
+		this.timerFunction;
+		this.timerCount = 30;
 		
 		this.images = [new Image(), new Image(), new Image(), new Image()];
 		for (var i = 0; i < this.images.length; i++) {
@@ -73,6 +75,7 @@ class gameWindow {
 			document.getElementById('positionFleet').style.display = 'none';
 			document.getElementById('gameWindow').style.display = 'block';
 			playWindow.drawButtons();
+			playWindow.timerFunction = setInterval(playWindow.drawTimer, 1000);
 			socket.on(client.id + ' make update', function(data){
 				var updatedTiles = data.tiles;
 				var currentTiles = new Array();
@@ -138,6 +141,21 @@ class gameWindow {
 		this.context.textAlign = 'start';
 	}
 	
+	drawTimer() {
+ 		if (client.hasTurn) {
+			playWindow.timerCount--;
+			document.getElementById("timer").innerHTML = playWindow.timerCount + " secs"; 
+			if (playWindow.timerCount <= 0) {
+				
+				return;
+			}
+		}
+		else {
+			playWindow.timerCount--;
+			document.getElementById("timer").innerHTML = playWindow.timerCount + " secs"; 
+		}
+	}
+	
 	//adds the buttons to the player window
 	drawButtons() {
 		var norm = document.getElementById('normalAttack');
@@ -182,6 +200,7 @@ class gameWindow {
 				gID: gameID
 			};
 			socket.emit('turn done', attackData);
+			playWindow.timerCount = 30;
 		}
 	}
 	

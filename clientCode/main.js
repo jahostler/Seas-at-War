@@ -360,7 +360,6 @@ function initializeGame() {
 		playWindow.draw();
 		playWindow.selectedTile = new orderedPair(-1, -1);
 		if (isGameOver()) {
-			//todo:  display game over screen
 			client.hasTurn = false;
 			playWindow.disableButtons();
 			socket.emit('game over', {gID: gameID, playerID: client.id});
@@ -379,6 +378,7 @@ function initializeGame() {
 					playWindow.selectedShip = -1;
 				}
 			}
+			playWindow.timerCount = 30;
 		}
 	});
 	socket.on(client.id + 'end game', function(data){

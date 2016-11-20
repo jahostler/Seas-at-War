@@ -35,19 +35,6 @@
     </head>
 	<body>
 		<h1> Game Window </h1>
-		<script>
-			var count = 30;
-			var counter = setInterval(timer, 1000); // run it every 1 second
-			document.write("Timer:  ");
-			function timer() {
-				count = count-1;
-				if (count <= 0) {
-					clearInterval(counter);
-					return;
-				}
-				document.getElementById("timer").innerHTML=count + " secs"; //watch for spelling
-			}
-		</script>
 		<span id="timer"></span>
 		<!-- 
 		<ul id="messages"></ul>
