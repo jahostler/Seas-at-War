@@ -334,6 +334,9 @@ function initializeGame() {
 			else
 				scanStr = 'There are ' + scanCount + ' enemy tiles in the area.'
 		}
+		else if (attackCoordinate == 5) {
+			attackCoordinate = attackData.coordinates[1];
+		}
 		else if (attackCoordinate == 8) {
 			attackCoordinate = attackData.coordinates[1];
 			attackData.coordinates = processSpecialAttack("Artillery", attackCoordinate);

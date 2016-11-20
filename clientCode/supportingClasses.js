@@ -86,11 +86,6 @@ class Tile {
 		}
 	}
 	
-	scanTile() {
-		this.partialVision = true;
-		
-	}
-	
 }
 
 /*

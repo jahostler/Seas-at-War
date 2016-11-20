@@ -48,9 +48,12 @@ class gameWindow {
 		this.homeHitIcon.src = 'images/homeHitIcon.png';
 		this.homeMissIcon = new Image();
 		this.homeMissIcon.src = 'images/homeMissIcon.png';
+		this.partialVisionIcon = new Image();
+		this.partialVisionIcon.src = 'images/highlight.png';
 		this.attackType = 'normal';
 		this.promptNeeded = false;
 		this.specialMessage = '';
+		this.specialData = new Array();
 		this.turnResult = '';
 		this.selectedButton = '';
 		this.timerFunction;
@@ -98,8 +101,24 @@ class gameWindow {
 				else {
 					playWindow.turnResult = "You sunk the enemy's " + data.result + "!";
 				}
+				if (playWindow.specialData.length > 0) {
+					if (playWindow.specialData[0] = 'Scan') {
+						playWindow.specialData.splice(0, 1);
+						for (var i = 0; i < playWindow.specialData.length; i++)
+							playWindow.specialData.partialVision = false;
+						playWindow.specialData = new Array();
+					}
+				}
 				if (data.scanData != undefined) {
 					playWindow.specialMessage = data.scanData;
+					playWindow.specialData = new Array();
+					playWindow.specialData.push('Scan');
+					for (var i = 0; i < data.specialData.length; i++) {
+						var x = data.specialData[i].coordinate.posX;
+						var y = data.specialData[i].coordinate.posY;
+						client.targetGrid.field[x][y].partialVision = true;
+						playWindow.specialData.push(client.targetGrid.field[x][y]);
+					}
 				}
 				else {
 					playWindow.specialMessage = '';
@@ -195,7 +214,6 @@ class gameWindow {
 			var currentTiles = [playWindow.selectedTile];
 			if (attackType == 'special') {
 				currentTiles = currentShip.specialAttack(playWindow.selectedTile);
-				console.log(currentShip.specialAttacksLeft);
 			}
 			var attackData = {
 				playerID: client.id,
@@ -506,6 +524,9 @@ class gameWindow {
 					else if (targetTile.shipHit == false) {
 						this.context.drawImage(this.targetMissIcon, targetTile.corner.posX, targetTile.corner.posY, this.adjust(70), this.adjust(70));
 					}
+				}
+				if (targetTile.partialVision) {
+					this.context.drawImage(this.partialVisionIcon, targetTile.corner.posX, targetTile.corner.posY, this.adjust(70), this.adjust(70));
 				}
 			}
 		}
