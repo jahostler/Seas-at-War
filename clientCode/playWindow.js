@@ -104,8 +104,11 @@ class gameWindow {
 				if (playWindow.specialData.length > 0) {
 					if (playWindow.specialData[0] = 'Scan') {
 						playWindow.specialData.splice(0, 1);
-						for (var i = 0; i < playWindow.specialData.length; i++)
-							playWindow.specialData.partialVision = false;
+						for (var i = 0; i < playWindow.specialData.length; i++) {
+							var x = playWindow.specialData[i].posX;
+							var y = playWindow.specialData[i].posY;
+							client.targetGrid.field[x][y].partialVision = false;
+						}
 						playWindow.specialData = new Array();
 					}
 				}
@@ -117,7 +120,7 @@ class gameWindow {
 						var x = data.specialData[i].coordinate.posX;
 						var y = data.specialData[i].coordinate.posY;
 						client.targetGrid.field[x][y].partialVision = true;
-						playWindow.specialData.push(client.targetGrid.field[x][y]);
+						playWindow.specialData.push(new orderedPair(x, y));
 					}
 				}
 				else {
