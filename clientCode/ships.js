@@ -153,8 +153,9 @@ class moveableShip {
 			return result;
 		}
 		else if (this.shipName == 'Cruiser') {
-			result.push(5); //5 error code
-			this.specialAttacksLeft--;
+			result.push(5); //5 attack code
+			result.push(attackedCoordinate); //ship index of attacking ship
+			this.firstHit = false;
 			return result;
 		}
 		else if (this.shipName == 'Carrier') {
@@ -180,8 +181,12 @@ class moveableShip {
 //executed when player gets attacked, called in main
 function processSpecialAttack(name, attackedCoordinate) {
 	var result = new Array();
-	var x = attackedCoordinate.posX;
-	var y = attackedCoordinate.posY;
+	var x;
+	var y;
+	if (typeof attackedCoordinate != "number") {
+		x = attackedCoordinate.posX;
+		y = attackedCoordinate.posY;
+	}
 	if (name == "Scrambler") {
 		return result;
 	}

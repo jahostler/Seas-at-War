@@ -313,6 +313,9 @@ function initializeGame() {
 		var scanStr = '';
 		var returnData;
 		var attackCoordinate = attackData.coordinates[0];
+		if (typeof attackCoordinate == 'number') {
+			attackCoordinate = attackData.coordinates[1];
+		}
 		var specialResult = new Array();
 		//Scrambler Special 
 		if (attackCoordinate == 1){ 
@@ -320,8 +323,7 @@ function initializeGame() {
 		}
 		
 		//Scanner Special
-		else if (attackCoordinate == 2) {	
-			attackCoordinate = attackData.coordinates[1];
+		else if (attackData.coordinates[0] == 2) {	
 			var scanArray = processSpecialAttack('Scanner', attackCoordinate);
 			var scanCount = 0;
 			for (var i = 0; i < scanArray.length; i++) {
@@ -341,33 +343,35 @@ function initializeGame() {
 				scanStr = 'There are ' + scanCount + ' enemy tiles in the area.'
 		}
 		//Submarine Special
-		else if (attackCoordinate == 3){ 
+		else if (attackData.coordinates[0] == 3){ 
 			
 		}
 		
 		//Defender Special 
-		else if (attackCoordinate == 4){ 
+		else if (attackData.coordinates[0] == 4){ 
 			
 		}
 		
 		//Cruiser Special 
-		else if (attackCoordinate == 5) { 
-			attackCoordinate = attackData.coordinates[1];
+		else if (attackData.coordinates[0] == 5) { 
+			client.targetGrid.field[attackCoordinate.posX][attackCoordinate.posY].hasShip = true;
+			client.targetGrid.field[attackCoordinate.posX][attackCoordinate.posY].shipHit = true;
+			console.log("Counter done")
+			return;
 		}
 		
 		//Carrier Special 
-		else if (attackCoordinate == 6){ 
+		else if (attackData.coordinates[0] == 6){ 
 			
 		}
 		
 		//Executioner Special
-		else if (attackCoordinate == 7){ 
+		else if (attackData.coordinates[0] == 7){ 
 			
 		}
 		
 		// Artillery Special 
-		else if (attackCoordinate == 8) { //Artillery Special
-			attackCoordinate = attackData.coordinates[1];
+		else if (attackData.coordinates[0] == 8) { //Artillery Special
 			attackData.coordinates = processSpecialAttack("Artillery", attackCoordinate);
 		}
 		var updatedTiles = new Array(attackData.coordinates.length);
@@ -376,18 +380,19 @@ function initializeGame() {
 			var y = attackData.coordinates[i].posY;
 			client.homeGrid.field[x][y].updateTile();
 			updatedTiles[i] = client.homeGrid.field[x][y];
-			if (updatedTiles[i].shipHit)
+			if (updatedTiles[i].shipHit) {
 				str = "hit";
-			else if (str != "hit") {
-				str = "miss";
-			}
-			var shipHit = client.fleet[updatedTiles[i].shipIndex];
-			if (shipHit.shipName == 'Cruiser') {
-				if (shipHit.firstHit) {
-					specialResult.push(processSpecialAttack('Cruiser', new orderedPair(-1, -1))); //hits cruiser 
-					currentShip.firstHit = false;
+				if (updatedTiles[i].shipIndex == 2) {
+					if (client.fleet[2].firstHit) {
+						specialResult = client.fleet[2].specialAttack(attackData.ship); //hits cruiser 
+						console.log("Cruiser Special");
+					}
 				}
 			}
+			else if (str != "hit")
+				str = "miss";
+			
+			
 		}
 		var sunkShips = new Array(4);
 		for (var i = 0; i < client.fleet.length; i++) {
@@ -407,9 +412,7 @@ function initializeGame() {
 		if (scanStr != '') {
 			returnData.scanData = scanStr;
 		}
-		if (specialResult.length > 0) {
-			returnData.specialData = specialResult;
-		}
+		returnData.specialData = specialResult;
 		socket.emit('game updated', returnData);
 		client.hasTurn = true;
 		playWindow.draw();
