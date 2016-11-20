@@ -168,36 +168,3 @@ class moveableShip {
 		}
 	}
 }
-
-/* //class 2
-class BattleShip {
-    
-}
-
-class BattleShip {
-    
-}
-//class 3
-class BattleShip {
-    
-}
-
-class BattleShip {
-    
-}
-//class 4
-class BattleShip {
-    
-}
-
-class BattleShip {
-    
-}
-//class 5
-class BattleShip {
-    
-}
-
-class BattleShip {
-    
-} */
