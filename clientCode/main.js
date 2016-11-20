@@ -314,7 +314,13 @@ function initializeGame() {
 		var returnData;
 		var attackCoordinate = attackData.coordinates[0];
 		var specialResult = new Array();
-		if (attackCoordinate == 2) {	//Scanner Special
+		//Scrambler Special 
+		if (attackCoordinate == 1){ 
+			
+		}
+		
+		//Scanner Special
+		else if (attackCoordinate == 2) {	
 			attackCoordinate = attackData.coordinates[1];
 			var scanArray = processSpecialAttack('Scanner', attackCoordinate);
 			var scanCount = 0;
@@ -334,10 +340,34 @@ function initializeGame() {
 			else
 				scanStr = 'There are ' + scanCount + ' enemy tiles in the area.'
 		}
-		else if (attackCoordinate == 5) {
+		
+		//Submarine Special
+		else if (attackCoordinate == 3){ 
+			
+		}
+		
+		//Defender Special 
+		else if (attackCoordinate == 4){ 
+			
+		}
+		
+		//Cruiser Special 
+		else if (attackCoordinate == 5) { 
 			attackCoordinate = attackData.coordinates[1];
 		}
-		else if (attackCoordinate == 8) {
+		
+		//Carrier Special 
+		else if (attackCoordinate == 6){ 
+			
+		}
+		
+		//Executioner Special
+		else if (attackCoordinate == 7){ 
+			
+		}
+		
+		// Artillery Special 
+		else if (attackCoordinate == 8) { 
 			attackCoordinate = attackData.coordinates[1];
 			attackData.coordinates = processSpecialAttack("Artillery", attackCoordinate);
 		}
