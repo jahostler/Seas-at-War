@@ -72,6 +72,33 @@ class gameWindow {
 			document.getElementById('positionFleet').style.display = 'none';
 			document.getElementById('gameWindow').style.display = 'block';
 			playWindow.drawButtons();
+			socket.on(client.id + ' make update', function(data){
+				var updatedTiles = data.tiles;
+				var currentTiles = new Array();
+				for (var i = 0; i < updatedTiles.length; i++) {
+					currentTiles.push(updatedTiles[i].coordinate);
+				}
+				enemyFleet = data.enemyShips;
+				console.log(updatedTiles);
+				for (var i = 0; i < updatedTiles.length; i++) {
+					var x = updatedTiles[i].corner.posX;
+					var y = updatedTiles[i].corner.posY;
+					client.targetGrid.field[currentTiles[i].posX][currentTiles[i].posY].hasShip = updatedTiles[i].hasShip;
+					client.targetGrid.field[currentTiles[i].posX][currentTiles[i].posY].shipHit = updatedTiles[i].shipHit;
+				}
+				if (data.result == "hit") {
+					playWindow.turnResult = "You damaged an enemy ship!";
+				}
+				else if (data.result == "miss") {
+					playWindow.turnResult = "Your shot landed in the ocean.";
+				}
+				else {
+					playWindow.turnResult = "You sunk the enemy's " + data.result + "!";
+				}
+				client.hasTurn = false;
+				playWindow.disableButtons();
+				playWindow.draw();
+			});
 		}
 	}
 	
@@ -149,32 +176,9 @@ class gameWindow {
 				gID: gameID
 			};
 			socket.emit('turn done', attackData);
-			socket.on(client.id + ' make update', function(data){
-				var updatedTiles = data.tiles;
-				enemyFleet = data.enemyShips;
-				console.log(updatedTiles);
-				for (var i = 0; i < updatedTiles.length; i++) {
-					var x = updatedTiles[i].corner.posX;
-					var y = updatedTiles[i].corner.posY;
-					client.targetGrid.field[currentTiles[i].posX][currentTiles[i].posY].hasShip = updatedTiles[i].hasShip;
-					client.targetGrid.field[currentTiles[i].posX][currentTiles[i].posY].shipHit = updatedTiles[i].shipHit;
-				}
-				if (data.result == "hit") {
-					playWindow.turnResult = "You damaged an enemy ship!";
-				}
-				else if (data.result == "miss") {
-					playWindow.turnResult = "Your shot landed in the ocean.";
-				}
-				else {
-					playWindow.turnResult = "You sunk the enemy's " + data.result + "!";
-				}
-				client.hasTurn = false;
-				playWindow.disableButtons();
-				playWindow.draw();
-				socket.off(client.id + ' make update');
-			});
 		}
 	}
+	
 	
 	//if the player hovers on a ship on their home grid, draw selector rectangle around that ship
 	//if the player hovers on a tile on their target grid, draw selector around that tile
@@ -415,11 +419,13 @@ class gameWindow {
 		if (attack == "normal") {
 			document.getElementById('specialAttack').disabled = false;
 			document.getElementById('normalAttack').disabled = true;
+			playWindow.attackType = 'normal';
 			playWindow.selectedButton = 'normalAttack';
 		}
 		else {
 			document.getElementById('normalAttack').disabled = false;
 			document.getElementById('specialAttack').disabled = true;
+			playWindow.attackType = 'special';
 			playWindow.selectedButton = 'specialAttack';
 		}
 	}

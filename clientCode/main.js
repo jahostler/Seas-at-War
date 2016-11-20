@@ -124,6 +124,7 @@ function removeGame() {
 		element.disabled = false;
 	});
 	gameID = -1;
+	socket.off(client.id + ' make update');
 }
 
 //create a new gameplay window
