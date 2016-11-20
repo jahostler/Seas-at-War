@@ -71,6 +71,7 @@ class Tile {
 	shipPresent() {
 		return this.hasShip;
 	}
+	
 	isShotAt() {
 		return this.shipHit != undefined;
 	}
@@ -83,7 +84,12 @@ class Tile {
 		else {
 			this.shipHit = false;
 		}
-	} 
+	}
+	
+	scanTile() {
+		this.partialVision = true;
+		
+	}
 	
 }
 

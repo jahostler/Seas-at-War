@@ -20,6 +20,8 @@ class moveableShip {
 		this.specialAttacksLeft = 1;
 		if (this.shipName == 'Scanner')
 			this.specialAttacksLeft = 2;
+		if (this.shipName == 'Defender')
+			this.specialAttacksLeft = 3;
 	}
 	updateAlive() {
 		if (this.alive) {
@@ -119,7 +121,7 @@ class moveableShip {
 		this.posArray = this.currentPosArray();
 	}
 	specialAttack(attackedCoordinate) {
-			var result = new Array();
+		var result = new Array();
 		if (this.shipName == 'Scrambler') {
 			result.push(new orderedPair(11, 11)); //11,11 attack code
 			return result;
@@ -161,7 +163,7 @@ class moveableShip {
 			result.push(new orderedPair(-1, -1)); //-1,-1 error code
 			return result;
 		}
-		else if (this.shipName == 'Destroyer') {
+		else if (this.shipName == 'Defender') {
 			result.push(new orderedPair(-1, -1)); //-1,-1 error code
 			return result;
 		}
@@ -202,9 +204,6 @@ class moveableShip {
 			}
 			return result;
 		}
-		else {
-			console.log("invalid ship name");
-		}
-			this.specialAttacksLeft--;
+		this.specialAttacksLeft--;
 	}
 }

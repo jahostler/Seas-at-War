@@ -59,7 +59,7 @@ class buildAFleetWindow {
 		this.context.fillText('Scrambler', this.adjust(850), this.adjust(225));
 		this.context.fillText('Scanner', this.adjust(850), this.adjust(315));
 		this.context.fillText('Submarine', this.adjust(850), this.adjust(435));
-		this.context.fillText('Destroyer', this.adjust(850), this.adjust(525));
+		this.context.fillText('Defender', this.adjust(850), this.adjust(525));
 		this.context.fillText('Cruiser', this.adjust(850), this.adjust(645));
 		this.context.fillText('Carrier', this.adjust(850), this.adjust(735));
 		this.context.fillText('Executioner', this.adjust(850), this.adjust(855));
@@ -67,7 +67,7 @@ class buildAFleetWindow {
 		this.context.strokeText('Scrambler', this.adjust(850), this.adjust(225));
 		this.context.strokeText('Scanner', this.adjust(850), this.adjust(315));
 		this.context.strokeText('Submarine', this.adjust(850), this.adjust(435));
-		this.context.strokeText('Destroyer', this.adjust(850), this.adjust(525));
+		this.context.strokeText('Defender', this.adjust(850), this.adjust(525));
 		this.context.strokeText('Cruiser', this.adjust(850), this.adjust(645));
 		this.context.strokeText('Carrier', this.adjust(850), this.adjust(735));
 		this.context.strokeText('Executioner', this.adjust(850), this.adjust(855));

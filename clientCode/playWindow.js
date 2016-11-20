@@ -50,6 +50,7 @@ class gameWindow {
 		this.homeMissIcon.src = 'images/homeMissIcon.png';
 		this.attackType = 'normal';
 		this.promptNeeded = false;
+		this.specialMessage = '';
 		this.turnResult = '';
 		this.selectedButton = '';
 		
@@ -79,7 +80,6 @@ class gameWindow {
 					currentTiles.push(updatedTiles[i].coordinate);
 				}
 				enemyFleet = data.enemyShips;
-				console.log(updatedTiles);
 				for (var i = 0; i < updatedTiles.length; i++) {
 					var x = updatedTiles[i].corner.posX;
 					var y = updatedTiles[i].corner.posY;
@@ -94,6 +94,9 @@ class gameWindow {
 				}
 				else {
 					playWindow.turnResult = "You sunk the enemy's " + data.result + "!";
+				}
+				if (data.scanData != undefined) {
+					playWindow.specialMessage = data.scanData;
 				}
 				client.hasTurn = false;
 				playWindow.disableButtons();
@@ -126,7 +129,12 @@ class gameWindow {
 		this.context.fillStyle = 'white';
 		this.context.font = '20px Times Arial';
 		this.context.textAlign = 'center';
-		this.context.fillText(this.turnResult, this.adjust(1620), this.adjust(290));
+		this.context.fillText(this.turnResult, this.adjust(1625), this.adjust(290));
+		if (this.specialMessage != '') {
+			this.context.fillStyle = 'red';
+			this.context.font = '20px bold Times Arial';
+			this.context.fillText(this.specialMessage, this.adjust(1625), this.adjust(265));
+		}
 		this.context.textAlign = 'start';
 	}
 	
@@ -140,12 +148,12 @@ class gameWindow {
 		spec.style.left = this.adjust(specialAttackDims[0])+'px';
 		spec.style.top = this.adjust(specialAttackDims[1])+'px';
 		norm.addEventListener('click', function(data){
-			playWindow.enableButton(playWindow.attackType);
+			playWindow.enableButton('normal');
 			playWindow.draw();
 			playWindow.drawShipSelector(playWindow.selectedShip);
 		}, false);
 		spec.addEventListener('click', function(data){
-			playWindow.enableButton(playWindow.attackType);
+			playWindow.enableButton('special');
 			playWindow.draw();
 			playWindow.drawShipSelector(playWindow.selectedShip);
 		}, false);
@@ -162,9 +170,9 @@ class gameWindow {
 	moveMade(attackType) {
 		//executes turn
 		var currentShip = client.fleet[playWindow.selectedShip];
-		if (currentShip != -1) {
+		if (currentShip != undefined) {
 			var currentTiles = [playWindow.selectedTile];
-			if (attackType == 'special' && client.fleet[currentShip].specialAttacksLeft > 0) {
+			if (attackType == 'special' && currentShip.specialAttacksLeft > 0) {
 				currentTiles = currentShip.specialAttack(playWindow.selectedTile);
 			}
 			var attackData = {
