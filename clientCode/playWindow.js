@@ -140,13 +140,11 @@ class gameWindow {
 		spec.style.left = this.adjust(specialAttackDims[0])+'px';
 		spec.style.top = this.adjust(specialAttackDims[1])+'px';
 		norm.addEventListener('click', function(data){
-			playWindow.attackType = "normal";
 			playWindow.enableButton(playWindow.attackType);
 			playWindow.draw();
 			playWindow.drawShipSelector(playWindow.selectedShip);
 		}, false);
 		spec.addEventListener('click', function(data){
-			playWindow.attackType = "special";
 			playWindow.enableButton(playWindow.attackType);
 			playWindow.draw();
 			playWindow.drawShipSelector(playWindow.selectedShip);
@@ -166,7 +164,7 @@ class gameWindow {
 		var currentShip = client.fleet[playWindow.selectedShip];
 		if (currentShip != -1) {
 			var currentTiles = [playWindow.selectedTile];
-			if (attackType == 'special') {
+			if (attackType == 'special' && client.fleet[currentShip].specialAttacksLeft > 0) {
 				currentTiles = currentShip.specialAttack(playWindow.selectedTile);
 			}
 			var attackData = {

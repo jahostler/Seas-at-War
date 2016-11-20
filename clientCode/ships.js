@@ -119,31 +119,70 @@ class moveableShip {
 		this.posArray = this.currentPosArray();
 	}
 	specialAttack(attackedCoordinate) {
+			var result = new Array();
 		if (this.shipName == 'Scrambler') {
-			return [attackedTile];
+			result.push(new orderedPair(11, 11)); //11,11 attack code
+			return result;
 		}
 		else if (this.shipName == 'Scanner') {
-			return [attackedTile];
+			var x = attackedCoordinate.posX;
+			var y = attackedCoordinate.posY;
+			result.push(new orderedPair(12, 12)); //12,12 attack code
+			result.push(new orderedPair(x, y)); //center (attack point)
+			//this section only selects the location that are in bounds
+			if(x-1 > -1 && y-1 > -1){
+				result.push(new orderedPair(x-1, y-1)); //top left
+			}
+			if(y-1 > -1){
+				result.push(new orderedPair(x, y-1)); //top mid
+			}
+			if(x+1 < 9 && y-1 > -1){
+				result.push(new orderedPair(x+1, y-1)); //top right
+			}
+			if(x-1 > -1){
+				result.push(new orderedPair(x-1, y)); // mid left
+			}
+			if(x+1 < 9){
+				result.push(new orderedPair(x+1, y)); //mid right
+			}
+			if(x-1 > -1 && y+1 < 9){
+				result.push(new orderedPair(x-1, y+1)); //top left
+			}
+			if(y+1 < 9){
+				result.push(new orderedPair(x, y+1)); //top mid
+			}
+			if(x+1 < 9 && y+1 < 9){
+				result.push(new orderedPair(x+1, y+1)); //top right
+			}
+			
+			return result;
 		}
 		else if (this.shipName == 'Submarine') {
-			return [attackedTile];
+			result.push(new orderedPair(-1, -1)); //-1,-1 error code
+			return result;
 		}
 		else if (this.shipName == 'Destroyer') {
-			return [attackedTile];
+			result.push(new orderedPair(-1, -1)); //-1,-1 error code
+			return result;
 		}
 		else if (this.shipName == 'Cruiser') {
-			return [attackedTile];
+			result.push(new orderedPair(-1, -1)); //-1,-1 error code
+			return result;
 		}
 		else if (this.shipName == 'Carrier') {
-			return [attackedTile];
+			result.push(new orderedPair(13, 13)); //13,13 attack code
+			return result;
 		}
 		else if (this.shipName == 'Executioner') {
-			return [attackedTile];
+			var x = attackedCoordinate.posX;
+			var y = attackedCoordinate.posY;
+			result.push(new orderedPair(14, 14)); //14,14 attack code
+			result.push(new orderedPair(x, y)); //attack point
+			return result;
 		}
 		else if (this.shipName == 'Artillery') {
 			var x = attackedCoordinate.posX;
 			var y = attackedCoordinate.posY;
-			var result = new Array();
 			result.push(new orderedPair(x, y));
 			if (x+1 < 9) {
 				if (!client.targetGrid.field[x+1][y].isShotAt())
@@ -166,5 +205,6 @@ class moveableShip {
 		else {
 			console.log("invalid ship name");
 		}
+			this.specialAttacksLeft--;
 	}
 }
