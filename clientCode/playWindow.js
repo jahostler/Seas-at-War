@@ -80,6 +80,7 @@ class gameWindow {
 			playWindow.drawButtons();
 			playWindow.timerFunction = setInterval(playWindow.drawTimer, 1000);
 			socket.on(client.id + ' make update', function(data){
+				console.log("Special Data at 0: " + playWindow.specialData[0]);
 				var updatedTiles = data.tiles;
 				var currentTiles = new Array();
 				for (var i = 0; i < updatedTiles.length; i++) {
@@ -102,7 +103,7 @@ class gameWindow {
 					playWindow.turnResult = "You sunk the enemy's " + data.result + "!";
 				}
 				if (playWindow.specialData.length > 0) {
-					if (playWindow.specialData[0] = 'Scan') {
+					if (playWindow.specialData[0] = 'Scan') { //Erase highlighted areas
 						playWindow.specialData.splice(0, 1);
 						for (var i = 0; i < playWindow.specialData.length; i++) {
 							var x = playWindow.specialData[i].posX;
@@ -112,6 +113,7 @@ class gameWindow {
 						playWindow.specialData = new Array();
 					}
 				}
+				console.log(data.specialData);
 				if (data.scanData != undefined) {
 					playWindow.specialMessage = data.scanData;
 					playWindow.specialData = new Array();
@@ -121,6 +123,33 @@ class gameWindow {
 						var y = data.specialData[i].coordinate.posY;
 						client.targetGrid.field[x][y].partialVision = true;
 						playWindow.specialData.push(new orderedPair(x, y));
+					}
+				}
+				else if (data.specialData.length > 0) {
+					if (data.specialData[0] == "deflect") {
+						deflect = true;
+					}
+					else if (data.specialData[0] == 5) { //Cruiser Special Attack
+						console.log(data.specialData);
+						var attackingShip = data.specialData[1];
+						var max = client.fleet[attackingShip].length;
+						var rand = Math.floor(Math.random() * (max));
+						var x = client.fleet[attackingShip].posArray[rand].posX;
+						var y = client.fleet[attackingShip].posArray[rand].posY;
+						while(client.homeGrid.field[x][y].isShotAt()) {
+							rand = Math.floor(Math.random() * (max));
+							x = client.fleet[attackingShip].posArray[rand].posX;
+							y = client.fleet[attackingShip].posArray[rand].posY;
+						}
+						client.homeGrid.field[x][y].updateTile();
+						playWindow.specialMessage = 'Enemy cruiser counter attacked.';
+						var attackData = {
+							playerID: client.id,
+							coordinates: [5, new orderedPair(x, y)],
+							gID: gameID
+						}
+						socket.emit('turn done', attackData);
+						console.log('drew counter attack');
 					}
 				}
 				else {
@@ -221,7 +250,7 @@ class gameWindow {
 			}
 			var attackData = {
 				playerID: client.id,
-				ship: currentShip,
+				ship: playWindow.selectedShip,
 				coordinates: currentTiles,
 				gID: gameID
 			};
