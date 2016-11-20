@@ -149,6 +149,7 @@ class moveableShip {
 		else if (this.shipName == 'Defender') {
 			result.push(4); //4 error code
 			this.specialAttacksLeft--;
+			result.push(attackedCoordinate); //attack point
 			return result;
 		}
 		else if (this.shipName == 'Cruiser') {
