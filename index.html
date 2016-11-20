@@ -4,6 +4,7 @@
 		<meta charset="UTF-8">
 		<title> Seas at War </title>
 		<script src="/socket.io/socket.io.js"></script>
+		<link rel="shortcut icon" href="images/logo.png" type="image/x-icon" />
 		<link rel="stylesheet" type="text/css" href="style.css" media="screen" /> 
 		<script type="text/javascript" src="clientCode/supportingClasses.js"></script>
 		<script type="text/javascript" src="clientCode/ships.js"></script>
@@ -123,28 +124,28 @@
 		<div id="buildAFleet">
 			<canvas id="buildCanvas"> Canvas is not supported by your browser.  </canvas>
 		
-				<button id="scramblerDes" class="buildButton" onClick="shipDetails('Scrambler')">
+				<button id="scramblerDes" class="gameButton buildButton" onClick="shipDetails('Scrambler')">
 					<span> 1 </span> 
 				</button>
-				<button id="scannerDes"  class="buildButton" onClick="shipDetails('Scanner')">
+				<button id="scannerDes"  class="gameButton buildButton" onClick="shipDetails('Scanner')">
 					<span> 2 </span> 
 				</button>
-				<button id="submarineDes"  class="buildButton" onClick="shipDetails('Submarine')">
+				<button id="submarineDes"  class="gameButton buildButton" onClick="shipDetails('Submarine')">
 					<span> 3 </span> 
 				</button>
-				<button id="destroyerDes"  class="buildButton" onClick="shipDetails('Destroyer')">
+				<button id="defenderDes"  class="gameButton buildButton" onClick="shipDetails('Defender')">
 					<span> 4 </span> 
 				</button>
-				<button id="cruiserDes"  class="buildButton" onClick="shipDetails('Cruiser')">
+				<button id="cruiserDes"  class="gameButton buildButton" onClick="shipDetails('Cruiser')">
 					<span> 5 </span> 
 				</button>
-				<button id="carrierDes"  class="buildButton" onClick="shipDetails('Carrier')">
+				<button id="carrierDes"  class="gameButton buildButton" onClick="shipDetails('Carrier')">
 					<span> 6 </span> 
 				</button>
-				<button id="executionerDes"  class="buildButton" onClick="shipDetails('Executioner')">
+				<button id="executionerDes"  class="gameButton buildButton" onClick="shipDetails('Executioner')">
 					<span> 7 </span> 
 				</button>
-				<button id="artilleryDes"  class="buildButton" onClick="shipDetails('Artillery')">
+				<button id="artilleryDes"  class="gameButton buildButton" onClick="shipDetails('Artillery')">
 					<span> 8 </span> 
 				</button>
 				
@@ -152,21 +153,73 @@
 					<span> Finish Ship Select! </span>
 				</button>
 				
-				<div class='shipDes'> Misleading Intelligence - When activated, for the next 4 turns all hits that the enemy makes on your ships show up as misses (single time use, no additional shots on turn user activates it)</div>
+				<div class='shipDes'> 
+					Misleading Intelligence 
+					<ul>
+						<li>Every shot that the enemy makes for the next 3 turns shows up as a miss on their radar.</li>
+						<li>Can only be used once per game.</li>
+					</ul>
+				</div>
 
-				<div class='shipDes'>  Tracer Rounds - Fires a shot to a target location and if there is a ship immediately adjacent to where the shot was fired, it alerts the player but doesn't tell them where in that area the ship was. (1x1 hit box, 3x3 scan radius, 3 uses) </div>
+				<div class='shipDes'> 
+					Tracer Rounds
+					<ul>
+						<li>Fires a normal shot to a target location. The area around it will be highlighted and a message will tell you how many ships are in that highlighted area. </li>
+						<li>Can be used twice per game.</li>
+					</ul>
+				</div>
 				
-				<div class='shipDes'> Dive! Dive! - When this ship takes damage for the first time, it is allowed to reposition itself on the board on the owner’s next turn (Passive effect)*. The ship may not move to a place that their opponent has already fired upon (black dot). </div>
+				<div class='shipDes'>
+					Dive! Dive!
+					<ul>
+						<li>The first time this ship is hit, the player will be prompted to pick a location to move it to.</li>
+						<li>This ship cannot be moved to a spot that has already been fired on.</li>
+						<li>PASSIVE EFFECT</li>
+					</ul>
+				</div>
 				
-				<div class='shipDes'>  Submarine Killer - If a Normal Attack from this ship hits a Submarine and causes it to dive, the Submarine is instantly killed (Passive Effect)* </div>
+				<div class='shipDes'>
+					Sabotage!
+					<ul>
+						<li>The next shot the enemy makes will be forced to miss.</li>
+						<li>Fires a normal attack to target location.</li>
+						<li>Can be used three times per game.</li>
+					</ul>
+				</div>
 				
-				<div class='shipDes'> Counter attack - When this ship takes damage for the first time, the ship that took the shot takes 1 peg of damage, but this peg is not revealed to the enemy. (Passive effect) </div>
+				<div class='shipDes'>
+					Counter Attack
+					<ul>
+						<li>The first time this ship is hit, the enemy ship that shot it takes a hit of damage and is revealed. </li>
+						<li>PASSIVE EFFECT</li>
+					</ul>
+				</div>
 				
-				<div class='shipDes'> UAV - Reveals the location of one peg of the enemy's smallest ship still on their board. (1x1 reveal area, single time use, no additional shots on turn user activates it) </div>
+				<div class='shipDes'>
+					UAV
+					<ul>
+						<li>Forces the enemy to reveal part of one of their ships. </li>
+						<li>Reveals a 1 x 1 area</li>
+						<li>Can only be used once per game. </li>
+					</ul>
+				</div>
 				
-				<div class='shipDes'> Killing blow - Fires a shot to a target location and if a hit is made, the whole ship is killed (1x1 hit box, 1 turn charge time, single time use) </div>
+				<div class='shipDes'>
+					Killing Blow
+					<ul>
+						<li>Can be fired to a target location and if it hits a ship, that ship is instantly killed</li>
+						<li>Can also be fired on the highlighted area after the Scanner’s ability and it will kill the smallest ship in that area.</li>
+						<li>Can only be used once per game and charges for one turn before firing. </li>
+					</ul>
+				</div>
 				
-				<div class='shipDes'> Barrage - Fires a shot to a wide target location (3x3 hit box, 1 turn charge time, single time use) </div>
+				<div class='shipDes'> 
+					Barrage
+					<ul>
+						<li>Fires an attack in the shape of a 3 x 3 cross </li>
+						<li>Can only be used once per game and charges for one turn before firing. </li>
+					</ul>
+				</div>
 		</div>
 		
 		<div id="positionFleet">
@@ -178,32 +231,32 @@
 			</button>
 
 			
-			<button id="up" class="shipMoveButton" onclick="console.log(positionWindow.moveAction('Up'))">
+			<button id="up" class="gameButton shipMoveButton" onclick="console.log(positionWindow.moveAction('Up'))">
 				<span> &#8679; </span>
 			</button>
-			<button id="down" class="shipMoveButton" onclick="console.log(positionWindow.moveAction('Down'))">
+			<button id="down" class="gameButton shipMoveButton" onclick="console.log(positionWindow.moveAction('Down'))">
 				<span> &#8681; </span>
 			</button>
-			<button id="left" class="shipMoveButton" onclick="console.log(positionWindow.moveAction('Left'))">
+			<button id="left" class="gameButton shipMoveButton" onclick="console.log(positionWindow.moveAction('Left'))">
 				<span> &#8678; </span>
 			</button>
-			<button id="right" class="shipMoveButton" onclick="console.log(positionWindow.moveAction('Right'))">
+			<button id="right" class="gameButton shipMoveButton" onclick="console.log(positionWindow.moveAction('Right'))">
 				<span> &#8680; </span>
 			</button>
-			<button id="rotate" class="shipMoveButton" onclick="console.log(positionWindow.moveAction('Rotate'))">
+			<button id="rotate" class="gameButton shipMoveButton" onclick="console.log(positionWindow.moveAction('Rotate'))">
 				<span> Rotate </span>
 			</button>
 			
-			<button id="move2" class="shipSelectButton" onclick="positionWindow.selectShip(0)">
+			<button id="move2" class="gameButton shipSelectButton" onclick="positionWindow.selectShip(0)">
 				<span> Class 2 </span>
 			</button>
-			<button id="move3" class="shipSelectButton" onclick="positionWindow.selectShip(1)">
+			<button id="move3" class="gameButton shipSelectButton" onclick="positionWindow.selectShip(1)">
 				<span> Class 3 </span>
 			</button>
-			<button id="move4" class="shipSelectButton" onclick="positionWindow.selectShip(2)">
+			<button id="move4" class="gameButton shipSelectButton" onclick="positionWindow.selectShip(2)">
 				<span> Class 4 </span>
 			</button>
-			<button id="move5" class="shipSelectButton" onclick="positionWindow.selectShip(3)">
+			<button id="move5" class="gameButton shipSelectButton" onclick="positionWindow.selectShip(3)">
 				<span> Class 5 </span>
 			</button>
 			
@@ -212,12 +265,13 @@
 		<div id="gameWindow">
 			<canvas id="gameCanvas" tabindex="1"></canvas>
 			
-			<button id="normalAttack" class="fireButton">
+			<button id="normalAttack" class="gameButton fireButton">
 				<span> Normal Attack </span>
 			</button>
-			<button id="specialAttack" class="fireButton">
+			<button id="specialAttack" class="gameButton fireButton">
 				<span> Special Attack </span>
 			</button>
+			<span id="timer"></span>
 			
 		</div>
 		

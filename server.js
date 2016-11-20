@@ -167,7 +167,8 @@ io.on('connection', function(socket){
 		io.sockets.emit(recipientID + ' attack made', attackData);
 	});
 	
-	//TODO: explain
+	//sends the updated Tile information from the attack back to the attacking player, so they
+	//redraw their screen appropriately
 	socket.on('game updated', function(updateData){
 		var gameID = updateData.gID;
 		var currentGame = games.get(gameID);

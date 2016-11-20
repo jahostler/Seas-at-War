@@ -16,7 +16,8 @@ canvas- the canvas object, holds the visuals shown to the player on the game win
 	canvas.height- height of canvas
 	canvas.context- 2d or 3d canvas? 2d for our purposes
 	background- background of canvas
-	canvas.addEventListener- TODO
+	canvas.addEventListener- add function that handles when the user clicks on the game screen
+							to determine whether they are clicking on a tile or ship
 selectedShip- id of currently selected ship
 selectedTile- (x,y) position of currently selected tile
 numOfImagesLoaded- number of images currently loaded
@@ -32,9 +33,12 @@ class gameWindow {
 		this.canvas.height = this.adjust(1080);
 		this.context = canvas.getContext('2d');
 		this.background = backgrounds[2];
-		this.canvas.addEventListener('click', this.getMousePos, false);
+		this.canvas.addEventListener('mousemove', this.getMousePos, false);
+		this.canvas.addEventListener('click', this.selectObject, false);
 		this.selectedShip = -1;
+		this.hoveredShip = -1;
 		this.selectedTile = new orderedPair(-1, -1);
+		this.hoveredTile = new orderedPair(-1, -1);
 		this.numOfImagesLoaded = 0;
 		this.targetHitIcon = new Image();
 		this.targetHitIcon.src = 'images/targetHitIcon.png';
@@ -44,7 +48,16 @@ class gameWindow {
 		this.homeHitIcon.src = 'images/homeHitIcon.png';
 		this.homeMissIcon = new Image();
 		this.homeMissIcon.src = 'images/homeMissIcon.png';
-		this.turnMessage;
+		this.partialVisionIcon = new Image();
+		this.partialVisionIcon.src = 'images/highlight.png';
+		this.attackType = 'normal';
+		this.promptNeeded = false;
+		this.specialMessage = '';
+		this.specialData = new Array();
+		this.turnResult = '';
+		this.selectedButton = '';
+		this.timerFunction;
+		this.timerCount = 30;
 		
 		this.images = [new Image(), new Image(), new Image(), new Image()];
 		for (var i = 0; i < this.images.length; i++) {
@@ -57,6 +70,68 @@ class gameWindow {
 		}
 	}
 	
+	//loads the game window, hiding the fleet positioning window
+	loadPage() {
+		playWindow.numOfImagesLoaded++;
+		if (playWindow.numOfImagesLoaded == 4) {
+			playWindow.draw();
+			document.getElementById('positionFleet').style.display = 'none';
+			document.getElementById('gameWindow').style.display = 'block';
+			playWindow.drawButtons();
+			playWindow.timerFunction = setInterval(playWindow.drawTimer, 1000);
+			socket.on(client.id + ' make update', function(data){
+				var updatedTiles = data.tiles;
+				var currentTiles = new Array();
+				for (var i = 0; i < updatedTiles.length; i++) {
+					currentTiles.push(updatedTiles[i].coordinate);
+				}
+				enemyFleet = data.enemyShips;
+				for (var i = 0; i < updatedTiles.length; i++) {
+					var x = updatedTiles[i].corner.posX;
+					var y = updatedTiles[i].corner.posY;
+					client.targetGrid.field[currentTiles[i].posX][currentTiles[i].posY].hasShip = updatedTiles[i].hasShip;
+					client.targetGrid.field[currentTiles[i].posX][currentTiles[i].posY].shipHit = updatedTiles[i].shipHit;
+				}
+				if (data.result == "hit") {
+					playWindow.turnResult = "You damaged an enemy ship!";
+				}
+				else if (data.result == "miss") {
+					playWindow.turnResult = "Your shot landed in the ocean.";
+				}
+				else {
+					playWindow.turnResult = "You sunk the enemy's " + data.result + "!";
+				}
+				if (playWindow.specialData.length > 0) {
+					if (playWindow.specialData[0] = 'Scan') {
+						playWindow.specialData.splice(0, 1);
+						for (var i = 0; i < playWindow.specialData.length; i++) {
+							var x = playWindow.specialData[i].posX;
+							var y = playWindow.specialData[i].posY;
+							client.targetGrid.field[x][y].partialVision = false;
+						}
+						playWindow.specialData = new Array();
+					}
+				}
+				if (data.scanData != undefined) {
+					playWindow.specialMessage = data.scanData;
+					playWindow.specialData = new Array();
+					playWindow.specialData.push('Scan');
+					for (var i = 0; i < data.specialData.length; i++) {
+						var x = data.specialData[i].coordinate.posX;
+						var y = data.specialData[i].coordinate.posY;
+						client.targetGrid.field[x][y].partialVision = true;
+						playWindow.specialData.push(new orderedPair(x, y));
+					}
+				}
+				else {
+					playWindow.specialMessage = '';
+				}
+				playWindow.disableButtons();
+				playWindow.draw();
+			});
+		}
+	}
+	
 	//adjusts size of window
 	adjust(dimension) {
 		return dimension * this.scale;
@@ -65,18 +140,44 @@ class gameWindow {
 	//adds a "Waiting for other player" message to screen when it is not the player's turn
 	drawTurnMessage() {
 		this.context.font = 'bold 45px Times New Roman';
+		this.context.shadowColor = 'transparent';
 		this.context.fillStyle = 'red';
 		if (client.hasTurn) {
-			this.context.fillText('Your Turn', this.adjust(1500), this.adjust(190));
-			this.context.font = '20px Times Arial';
+			this.context.fillText('Your Turn', this.adjust(1500), this.adjust(160));
+			this.context.font = '20px Times New Roman';
 			this.context.fillStyle = 'white';
-			this.context.fillText('Select Ship and Tile to attack', this.adjust(1480), this.adjust(235));
+			this.context.fillText('Select Ship and Tile to attack', this.adjust(1480), this.adjust(195));
 		}
 		else {
-			this.context.fillText('Enemy Turn', this.adjust(1470), this.adjust(190));
-			this.context.font = '22px Times Arial';
+			this.context.fillText('Enemy Turn', this.adjust(1470), this.adjust(160));
+			this.context.font = '22px Times New Roman';
 			this.context.fillStyle = 'white';
-			this.context.fillText('Waiting for other player...', this.adjust(1490), this.adjust(235));
+			this.context.fillText('Waiting for other player...', this.adjust(1490), this.adjust(195));
+		}
+		this.context.fillStyle = 'white';
+		this.context.font = '20px Times New Roman';
+		this.context.textAlign = 'center';
+		this.context.fillText(this.turnResult, this.adjust(1625), this.adjust(290));
+		if (this.specialMessage != '') {
+			this.context.fillStyle = 'red';
+			this.context.font = '20px bold Arial';
+			this.context.fillText(this.specialMessage, this.adjust(1625), this.adjust(265));
+		}
+		this.context.shadowColor = 'black';
+		this.context.textAlign = 'start';
+	}
+	
+	drawTimer() {
+		if (playWindow.timerCount <= 0) {
+			playWindow.timerCount = 1;
+		}
+ 		if (client.hasTurn) {
+			playWindow.timerCount--;
+			document.getElementById("timer").innerHTML = playWindow.timerCount + " secs"; 
+		}
+		else {
+			playWindow.timerCount--;
+			document.getElementById("timer").innerHTML = playWindow.timerCount + " secs"; 
 		}
 	}
 	
@@ -90,10 +191,14 @@ class gameWindow {
 		spec.style.left = this.adjust(specialAttackDims[0])+'px';
 		spec.style.top = this.adjust(specialAttackDims[1])+'px';
 		norm.addEventListener('click', function(data){
-			playWindow.moveMade('normal');
+			playWindow.enableButton('normal');
+			playWindow.draw();
+			playWindow.drawShipSelector(playWindow.selectedShip);
 		}, false);
 		spec.addEventListener('click', function(data){
-			playWindow.moveMade('special');
+			playWindow.enableButton('special');
+			playWindow.draw();
+			playWindow.drawShipSelector(playWindow.selectedShip);
 		}, false);
 		this.disableButtons();
 	}
@@ -108,10 +213,10 @@ class gameWindow {
 	moveMade(attackType) {
 		//executes turn
 		var currentShip = client.fleet[playWindow.selectedShip];
-		if (currentShip != -1) {
+		if (currentShip != undefined) {
 			var currentTiles = [playWindow.selectedTile];
 			if (attackType == 'special') {
-				//TODO:  implement special attacks
+				currentTiles = currentShip.specialAttack(playWindow.selectedTile);
 			}
 			var attackData = {
 				playerID: client.id,
@@ -120,26 +225,14 @@ class gameWindow {
 				gID: gameID
 			};
 			socket.emit('turn done', attackData);
-			socket.on(client.id + ' make update', function(data){
-				var updatedTiles = data.tiles;
-				enemyFleet = data.enemyShips;
-				console.log(updatedTiles);
-				for (var i = 0; i < updatedTiles.length; i++) {
-					var x = updatedTiles[i].corner.posX;
-					var y = updatedTiles[i].corner.posY;
-					console.log('Updated: (' + currentTiles[i].posX + ', ' + currentTiles[i].posY + ')');
-					client.targetGrid.field[currentTiles[i].posX][currentTiles[i].posY].hasShip = updatedTiles[i].hasShip;
-					client.targetGrid.field[currentTiles[i].posX][currentTiles[i].posY].shipHit = updatedTiles[i].shipHit;
-				}
-				client.hasTurn = false;
-				playWindow.disableButtons();
-				playWindow.draw();
-				socket.off(client.id + ' make update');
-			});
+			playWindow.timerCount = 30;
+			client.hasTurn = false;
 		}
 	}
 	
-	//TODO: add comments
+	
+	//if the player hovers on a ship on their home grid, draw selector rectangle around that ship
+	//if the player hovers on a tile on their target grid, draw selector around that tile
 	getMousePos(evt) {
 		if (client.hasTurn) {
 			//http://www.html5canvastutorials.com/advanced/html5-canvas-mouse-coordinates/
@@ -147,26 +240,55 @@ class gameWindow {
 			var mousePos = new orderedPair (
 											Math.round((evt.clientX-rect.left)/(rect.right-rect.left)*playWindow.canvas.width),
 											Math.round((evt.clientY-rect.top)/(rect.bottom-rect.top)*playWindow.canvas.height));
-			playWindow.processClick(mousePos);
+			var result = playWindow.processMousePos(mousePos);
+			var gridName = result.grid;
+			var gridCoordinate = result.point;
+			var x = gridCoordinate.posX;
+			var y = gridCoordinate.posY;
+			playWindow.hoveredShip = -1;
+			playWindow.hoveredTile = new orderedPair(-1, -1);
+			if (gridName == 'home') {
+				var i = client.homeGrid.field[x][y].shipIndex;
+				if (i == -1) {
+					playWindow.draw();
+				}
+				else if (client.fleet[i].alive) {
+					playWindow.draw();
+					if (i != playWindow.selectedShip) {
+						playWindow.hoveredShip = i;
+						if (playWindow.hoveredShip != playWindow.selectedShip) {
+							playWindow.drawShipSelector(i);
+						}
+					}
+				}
+				if (playWindow.selectedShip != -1) {
+					playWindow.drawShipSelector(playWindow.selectedShip);
+				}
+			}
+			else if (gridName == 'target') {
+				if (!client.targetGrid.field[x][y].isShotAt()) {
+					playWindow.draw();
+					if (playWindow.selectedShip != -1) {
+						playWindow.drawShipSelector(playWindow.selectedShip);
+					}
+					playWindow.hoveredTile = gridCoordinate;
+					playWindow.drawTileSelector(gridCoordinate);
+				}
+			}
+			else {
+				playWindow.draw();
+				if (playWindow.selectedShip != -1) {
+					playWindow.drawShipSelector(playWindow.selectedShip);	
+				}
+			}
+			if (playWindow.promptNeeded) {
+				playWindow.drawPrompt();
+			}
 		}
 	}
 	
-	//loads the game window, hiding the fleet positioning window
-	loadPage() {
-		playWindow.numOfImagesLoaded++;
-		if (playWindow.numOfImagesLoaded == 4) {
-			playWindow.draw();
-			document.getElementById('positionFleet').style.display = 'none';
-			document.getElementById('gameWindow').style.display = 'block';
-			playWindow.drawButtons();
-		}
-	}
-	
-	//check what tile the player has clicked on, based on the mouse's pixel position on the canvas
-	//if the player clicks on a ship on their home grid, select that ship
-	//if the player clicks on a tile on their target grid, select that tile
-	//if both a ship and a tile have been selected, enable the ability to fire
-	processClick(posPair){
+	//check what tile the player has hovered over, based on the mouse's pixel position on the canvas
+	processMousePos(posPair){
 		var xPair = posPair.posX;
 		var yPair = posPair.posY;
 		var gridName = 'none';
@@ -302,50 +424,86 @@ class gameWindow {
 			gridName = 'target';
 			//console.log(gridName + ': (' + xPair + ',' + yPair + ')');
 		}
-		if (gridName != 'none') {
-			var gridCoordinate = new orderedPair(xPair, yPair);
-			if (gridName == 'home') {
-				for(var i = 0; i < client.fleet.length; i++) {
-					var element = client.fleet[i];
-					if (element.containsPoint(gridCoordinate) && i != playWindow.selectedShip && element.alive) {
-						playWindow.draw();
-						playWindow.drawShipSelector(i);
-						playWindow.selectedTile = new orderedPair(-1,-1);
-						playWindow.disableButtons();
-						break;
-					}
-				}
+		var returnData = {
+			grid: gridName,
+			point: new orderedPair(xPair, yPair)
+		};
+		return returnData;
+	}
+	
+	selectObject(evt) {
+		if(client.hasTurn) {
+			//http://www.html5canvastutorials.com/advanced/html5-canvas-mouse-coordinates/
+			if (playWindow.hoveredShip == -1 && playWindow.selectedShip == -1) {
+				playWindow.promptNeeded = true;
+				playWindow.drawPrompt();
 			}
-			else {
-				if (!client.targetGrid.field[xPair][yPair].isShotAt()) {
-					if (playWindow.selectedShip != -1) {
-						playWindow.draw();
-						playWindow.drawShipSelector(playWindow.selectedShip);
-						playWindow.drawTileSelector(gridCoordinate);
-						playWindow.selectedTile = gridCoordinate;
-						playWindow.enableButtons();
-					}
-					else {
-						playWindow.draw();
-						this.context.font = '26px Arial';
-						playWindow.context.fillText('Must select Ship first!', this.adjust(90), this.adjust(810));
-
-					}
-				}
+			else if (playWindow.hoveredShip != -1) {	
+				playWindow.promptNeeded = false;
+				if (playWindow.selectedShip != playWindow.hoveredShip) {
+					playWindow.selectedShip = playWindow.hoveredShip;
+					playWindow.selectedTile = new orderedPair(-1, -1);
+				}				
+				playWindow.enableButton(playWindow.attackType);
+			}
+			else if (!playWindow.hoveredTile.equals(new orderedPair(-1, -1))) {
+				playWindow.selectedTile = playWindow.hoveredTile;
+				playWindow.moveMade(playWindow.attackType);
 			}
 		}
+	}
+	
+	drawPrompt() {
+		playWindow.context.font = '26px Arial';
+		playWindow.context.fillText('Must select Ship first!', playWindow.adjust(90), playWindow.adjust(810));
 	}
 	
 	//prevents player from firing until appropriate conditions have been met
 	disableButtons() {
 		document.getElementById('normalAttack').disabled = true;
 		document.getElementById('specialAttack').disabled = true;
+		playWindow.selectedButton = '';
 	}
 	
 	//enable firing
-	enableButtons() {
-		document.getElementById('normalAttack').disabled = false;
-		//document.getElementById('specialAttack').disabled = false;	//todo:  implement special attacks
+	enableButton(attack) {
+		var index = playWindow.selectedShip;
+		var hasSpecial = false;
+		if (index != -1) {
+			if (client.fleet[index].specialAttacksLeft > 0) {
+				hasSpecial = true;
+			}
+		}
+		if (attack == "normal" || !hasSpecial) {
+			document.getElementById('normalAttack').disabled = true;
+			if (hasSpecial) {
+				document.getElementById('specialAttack').disabled = false;
+			}
+			else {
+				document.getElementById('specialAttack').disabled = true;
+			}
+			playWindow.attackType = 'normal';
+			playWindow.selectedButton = 'normalAttack';
+		}
+		else {
+			document.getElementById('normalAttack').disabled = false;
+			document.getElementById('specialAttack').disabled = true;
+			playWindow.attackType = 'special';
+			playWindow.selectedButton = 'specialAttack';
+		}
+	}
+	
+	drawButtonSelector(buttonID) {
+		if (buttonID != '') {
+			var w = playWindow.adjust(document.getElementById(buttonID).offsetWidth + 70);
+			var h = playWindow.adjust(document.getElementById(buttonID).offsetHeight + 40);
+			playWindow.context.lineWidth='3';
+			playWindow.context.strokeStyle='red';
+			if (buttonID == 'normalAttack')
+				playWindow.context.strokeRect(playWindow.adjust(normalAttackDims[0] - 5), playWindow.adjust(normalAttackDims[1] - 5), w, h);
+			else
+				playWindow.context.strokeRect(playWindow.adjust(specialAttackDims[0] - 5), playWindow.adjust(specialAttackDims[1] - 5), w, h);
+		}
 	}
 	
 	//update the grids with the result of the turn
@@ -369,6 +527,9 @@ class gameWindow {
 					else if (targetTile.shipHit == false) {
 						this.context.drawImage(this.targetMissIcon, targetTile.corner.posX, targetTile.corner.posY, this.adjust(70), this.adjust(70));
 					}
+				}
+				if (targetTile.partialVision) {
+					this.context.drawImage(this.partialVisionIcon, targetTile.corner.posX, targetTile.corner.posY, this.adjust(70), this.adjust(70));
 				}
 			}
 		}
@@ -418,18 +579,18 @@ class gameWindow {
 		}
 	}
 	
-	//TODO: add comments to draw functions
+	//draw red rectangle around selected ship
 	drawShipSelector(shipIndex) {
 		var currentShip = client.fleet[shipIndex];
 		var drawPoint = client.homeGrid.field[currentShip.mainX][currentShip.mainY].corner;
 		var selectorW = playWindow.adjust(playWindow.images[shipIndex].width);
 		var selectorH = playWindow.adjust(playWindow.images[shipIndex].height);
-		playWindow.selectedShip = shipIndex;
 		playWindow.context.lineWidth='3';
 		playWindow.context.strokeStyle='red';
 		playWindow.context.strokeRect(drawPoint.posX, drawPoint.posY, selectorW, selectorH);
 	}
 	
+	//draw red rectangle around selected tile
 	drawTileSelector(gridCoordinate) {
 		var drawPoint = client.targetGrid.field[gridCoordinate.posX][gridCoordinate.posY].corner;
 		var dimension = playWindow.adjust(70);
@@ -451,7 +612,8 @@ class gameWindow {
 		this.context.fillText('Turn', this.adjust(1575), this.adjust(75));
 		this.context.fillText('Timer', this.adjust(1560), this.adjust(435));
 		this.context.fillText('Chat', this.adjust(1320), this.adjust(750));
-		this.drawTurnMessage();
 		this.drawGrids();
+		this.drawTurnMessage();
+		this.drawButtonSelector(this.selectedButton);
 	}
 }

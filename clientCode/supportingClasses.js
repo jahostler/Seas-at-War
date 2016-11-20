@@ -46,7 +46,7 @@ class Grid {
 		var y = topLeftCorner.posY;
 		for (var i = 0; i < 9; i++) {
 			for (var j = 0; j < 9; j++) {
-				this.field[i][j] = new Tile(new orderedPair(i*tileSize + x, j*tileSize + y));
+				this.field[i][j] = new Tile(new orderedPair(i*tileSize + x, j*tileSize + y), new orderedPair(i, j));
 			}
 		}
 	}
@@ -59,16 +59,19 @@ Stores the information for a single Tile in a Grid
 
 */
 class Tile {
-	constructor(pair) {
+	constructor(pair, gridPair) {
+		this.coordinate = gridPair	//x and y coordinate in relation to grid
 		this.corner = pair;			//top left corner pixel coordinates
 		this.hasShip = false; 		//whether or not a ship occupies this tile
 		this.shipHit = undefined; 	//true = 'hit', false = 'miss', undefined = 'not shot at'
 		this.shipIndex = -1;  		//contains index of ship in client fleet
+		this.partialVision = false; //Whether Tile is under the influence of Scanner's special attack.
 	}
 	
 	shipPresent() {
 		return this.hasShip;
 	}
+	
 	isShotAt() {
 		return this.shipHit != undefined;
 	}
@@ -76,12 +79,12 @@ class Tile {
 	updateTile() {
 		if(this.shipPresent()) {
 			this.shipHit = true;
+			client.fleet[this.shipIndex].shotCounter++;
 		}
 		else {
 			this.shipHit = false;
 		}
-	} 
-	
+	}
 }
 
 /*

@@ -41,8 +41,6 @@ class buildAFleetWindow {
 	}
 	draw() {
 		this.context.drawImage(this.background, 0, 0, this.adjust(this.background.width), this.adjust(this.background.height));
-		this.context.font = 'bold 32px Arial';
-		this.context.fillStyle = 'white';
 		this.context.shadowColor = 'black';
 		this.context.shadowOffsetX = 3;
 		this.context.shadowOffsetY = 3;
@@ -50,17 +48,19 @@ class buildAFleetWindow {
 		this.context.drawImage(this.class3, this.adjust(250), this.adjust(240), this.adjust(this.class3.width), this.adjust(this.class3.height));
 		this.context.drawImage(this.class4, this.adjust(320), this.adjust(240), this.adjust(this.class4.width), this.adjust(this.class4.height));
 		this.context.drawImage(this.class5, this.adjust(390), this.adjust(240), this.adjust(this.class5.width), this.adjust(this.class5.height));
+		this.context.fillStyle = 'white';
+		this.context.font = 'bold 32px Arial';
 		this.context.fillText('Build Fleet Menu', this.adjust(850), this.adjust(100));
-		this.context.font = '24px Arial';
+		this.context.font = 'bold 24px Arial';
 		this.context.fillText('Scrambler', this.adjust(850), this.adjust(225));
 		this.context.fillText('Scanner', this.adjust(850), this.adjust(315));
 		this.context.fillText('Submarine', this.adjust(850), this.adjust(435));
-		this.context.fillText('Destroyer', this.adjust(850), this.adjust(525));
+		this.context.fillText('Defender', this.adjust(850), this.adjust(525));
 		this.context.fillText('Cruiser', this.adjust(850), this.adjust(645));
 		this.context.fillText('Carrier', this.adjust(850), this.adjust(735));
 		this.context.fillText('Executioner', this.adjust(850), this.adjust(855));
 		this.context.fillText('Artillery', this.adjust(850), this.adjust(945));
-		this.context.font = '28px Arial';
+		this.context.font = 'bold 28px Arial';
 		this.context.fillText('Class 2', this.adjust(750), this.adjust(170));
 		this.context.fillText('Class 3', this.adjust(750), this.adjust(380));
 		this.context.fillText('Class 4', this.adjust(750), this.adjust(590));
@@ -105,7 +105,7 @@ class fleetPositionWindow {
 		this.class5Hor.src = 'images/Ships/ship5' + client.fleet[3] + 'Hor.png';
 		this.selectRectangle.src = 'images/selectRec.png';
 		this.moveableShips = new Array(4);
-		this.moveableShips[0] = new moveableShip(client.fleet[0], 2, 2, 3); //TODO
+		this.moveableShips[0] = new moveableShip(client.fleet[0], 2, 2, 3);
 		this.moveableShips[1] = new moveableShip(client.fleet[1], 3, 3, 3);
 		this.moveableShips[2] = new moveableShip(client.fleet[2], 4, 4, 3);
 		this.moveableShips[3] = new moveableShip(client.fleet[3], 5, 5, 3);
@@ -127,6 +127,7 @@ class fleetPositionWindow {
 		this.context.fillText('Waiting for other player...', this.adjust(177), this.adjust(950));
 		for (var i = 0; i < this.moveableShips.length; i++) {
 			this.moveableShips[i].shipName = client.fleet[i];
+			this.moveableShips[i].updateSpecialAttacksLeft();
 		}
 		client.fleet = this.moveableShips;
 		var buttons = document.getElementById('positionFleet').querySelectorAll('button');

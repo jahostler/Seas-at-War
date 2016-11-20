@@ -7,11 +7,11 @@ Responsible for creating client's game, receiving events from the server
 
 var client = new Player();
 var enemyFleet = new Array(4);
-var gameID;
+var gameID = -1;
 var prepWindow;
 var positionWindow;
-var socket = io.connect();
 var playWindow;
+var socket = io.connect();
 var scaling = .8;
 var backgrounds;
 var tempImages;
@@ -25,22 +25,28 @@ var moveButtonDims;
 
 //creates the game interface, and initializes client-side data
 function initialize() {
-	gameID = -1;
+	//scale instruction images
 	var instructImages = document.getElementsByClassName('instructImg');
 	var instructImgDims = [instructImages[0].width * 0.9, instructImages[0].height * 0.9];
 	for (var i = 0; i < instructImages.length; i++) {
 		instructImages[i].style.width = instructImgDims[0] + 'px';
 		instructImages[i].style.height = instructImgDims[1] + 'px';
 	}
+	
+	//load in background images
 	backgrounds = [new Image(), new Image(), new Image()];
-	backgrounds[0].src = 'images/Ships/shipSelect.png';
-	backgrounds[1].src = 'images/Ships/shipSelect.png';
+	backgrounds[0].src = 'images/shipSelect.png';
+	backgrounds[1].src = 'images/shipSelect.png';
 	backgrounds[2].src = 'images/gameBoard.png';
+	
+	//load in Temporary Ship Images
 	tempImages = [new Image(), new Image(), new Image(), new Image()];
 	tempImages[0].src = 'images/Ships/ship2temp.png';
 	tempImages[1].src = 'images/Ships/ship3temp.png';
 	tempImages[2].src = 'images/Ships/ship4temp.png';
 	tempImages[3].src = 'images/Ships/ship5temp.png';
+	
+	//get initial placement of buttons and save positions, so they can be scaled later
 	finishFleetDims = [document.getElementById('finishFleet').offsetLeft, document.getElementById('finishFleet').offsetTop];
 	finishShipSelectDims = [document.getElementById('finishShipSelect').offsetLeft, document.getElementById('finishShipSelect').offsetTop];
 	normalAttackDims = [document.getElementById('normalAttack').offsetLeft, document.getElementById('normalAttack').offsetTop];
@@ -66,6 +72,8 @@ function initialize() {
 		moveButtonDims[i][0] = tempMoveBut[i].offsetLeft;
 		moveButtonDims[i][1] = tempMoveBut[i].offsetTop;
 	}
+	
+	//Hide all screens except main menu screen
 	var divs = document.getElementsByTagName('div');
 	for(var i = 0; i < divs.length; i++) {
 		divs[i].style.display = 'none';
@@ -116,6 +124,7 @@ function removeGame() {
 		element.disabled = false;
 	});
 	gameID = -1;
+	socket.off(client.id + ' make update');
 }
 
 //create a new gameplay window
@@ -162,6 +171,7 @@ function shipDetails(shipname) {
 				positionWindow.class2Hor.src = 'images/Ships/ship2ScannerHor.png';
 				prepWindow.class2.addEventListener('load', prepWindow.draw.bind(prepWindow));
 				client.fleet[0] = "Scanner";
+				client.fleet[0].specialAttacksLeft = 2;
 				document.getElementById('scramblerDes').disabled = false;
 			}
 			break;	
@@ -173,17 +183,18 @@ function shipDetails(shipname) {
 				positionWindow.class3Hor.src = 'images/Ships/ship3SubmarineHor.png';				
 				prepWindow.class3.addEventListener('load', prepWindow.draw.bind(prepWindow));
 				client.fleet[1] = "Submarine";
-				document.getElementById('destroyerDes').disabled = false;
+				document.getElementById('defenderDes').disabled = false;
 			}
 			break;
-		case "Destroyer":
+		case "Defender":
 			index = 3;
-			if (prepWindow.class3.src != 'images/Ships/ship3Destroyer.png') {
-				prepWindow.class3.src = 'images/Ships/ship3Destroyer.png';
-				positionWindow.class3.src = 'images/Ships/ship3Destroyer.png';
-				positionWindow.class3Hor.src = 'images/Ships/ship3DestroyerHor.png';
+			if (prepWindow.class3.src != 'images/Ships/ship3Defender.png') {
+				prepWindow.class3.src = 'images/Ships/ship3Defender.png';
+				positionWindow.class3.src = 'images/Ships/ship3Defender.png';
+				positionWindow.class3Hor.src = 'images/Ships/ship3DefenderHor.png';
 				prepWindow.class3.addEventListener('load', prepWindow.draw.bind(prepWindow));
-				client.fleet[1] = "Destroyer";
+				client.fleet[1] = "Defender";
+				client.fleet[0].specialAttacksLeft = 3;
 				document.getElementById('submarineDes').disabled = false;
 			}
 			break;
@@ -236,7 +247,6 @@ function shipDetails(shipname) {
 	[].forEach.call(descriptions, function(element){
 			element.style.display = 'none';
 	});
-	console.log(descriptions[index]);
 	descriptions[index].style.display = 'block';
 	if (prepWindow.divX == -1) {
 		prepWindow.divX = prepWindow.adjust(document.getElementsByClassName('shipDes')[index].offsetLeft) + 'px';
@@ -299,32 +309,112 @@ function initializeGame() {
 		}
 	}
 	socket.on(client.id + ' attack made', function(attackData){
+		var str = '';
+		var scanStr = '';
+		var returnData;
+		var attackCoordinate = attackData.coordinates[0];
+		var specialResult = new Array();
+		//Scrambler Special 
+		if (attackCoordinate == 1){ 
+			
+		}
+		
+		//Scanner Special
+		else if (attackCoordinate == 2) {	
+			attackCoordinate = attackData.coordinates[1];
+			var scanArray = processSpecialAttack('Scanner', attackCoordinate);
+			var scanCount = 0;
+			for (var i = 0; i < scanArray.length; i++) {
+				var x = scanArray[i].posX;
+				var y = scanArray[i].posY;
+				if (client.homeGrid.field[x][y].shipPresent()) {
+					scanCount++;
+				}
+				specialResult.push(client.homeGrid.field[x][y]);
+			}
+			attackData.coordinates = [attackCoordinate];
+			if (scanCount == 0)
+				scanStr = 'There are no enemy tiles in the area.'
+			else if (scanCount == 1)
+				scanStr = 'There is 1 enemy tile in the area.'
+			else
+				scanStr = 'There are ' + scanCount + ' enemy tiles in the area.'
+		}
+		//Submarine Special
+		else if (attackCoordinate == 3){ 
+			
+		}
+		
+		//Defender Special 
+		else if (attackCoordinate == 4){ 
+			
+		}
+		
+		//Cruiser Special 
+		else if (attackCoordinate == 5) { 
+			attackCoordinate = attackData.coordinates[1];
+		}
+		
+		//Carrier Special 
+		else if (attackCoordinate == 6){ 
+			
+		}
+		
+		//Executioner Special
+		else if (attackCoordinate == 7){ 
+			
+		}
+		
+		// Artillery Special 
+		else if (attackCoordinate == 8) { //Artillery Special
+			attackCoordinate = attackData.coordinates[1];
+			attackData.coordinates = processSpecialAttack("Artillery", attackCoordinate);
+		}
 		var updatedTiles = new Array(attackData.coordinates.length);
-		for (var i = 0; i < updatedTiles.length ; i++) {
+		for (var i = 0; i < updatedTiles.length; i++) {
 			var x = attackData.coordinates[i].posX;
 			var y = attackData.coordinates[i].posY;
 			client.homeGrid.field[x][y].updateTile();
 			updatedTiles[i] = client.homeGrid.field[x][y];
+			if (updatedTiles[i].shipHit)
+				str = "hit";
+			else if (str != "hit") {
+				str = "miss";
+			}
+			var shipHit = client.fleet[updatedTiles[i].shipIndex];
+			if (shipHit.shipName == 'Cruiser') {
+				if (shipHit.firstHit) {
+					specialResult.push(processSpecialAttack('Cruiser', new orderedPair(-1, -1))); //hits cruiser 
+					currentShip.firstHit = false;
+				}
+			}
 		}
 		var sunkShips = new Array(4);
 		for (var i = 0; i < client.fleet.length; i++) {
-			client.fleet[i].updateAlive();
+			if (client.fleet[i].updateAlive())
+				str = client.fleet[i].shipName;
 			if (!client.fleet[i].alive) {
 				sunkShips[i] = client.fleet[i];
 			}
 		}
-		var returnData = {
+		returnData = {
 			tiles: updatedTiles,
 			enemyShips: sunkShips,
 			gID: gameID,
-			playerID: client.id
+			playerID: client.id,
+			result: str
 		};
+		if (scanStr != '') {
+			returnData.scanData = scanStr;
+		}
+		if (specialResult.length > 0) {
+			returnData.specialData = specialResult;
+		}
 		socket.emit('game updated', returnData);
 		client.hasTurn = true;
 		playWindow.draw();
-		playWindow.selectedTile = new orderedPair(-1, -1);
+		playWindow.hoveredTile = new orderedPair(-1, -1);
 		if (isGameOver()) {
-			//todo:  display game over screen
 			client.hasTurn = false;
 			playWindow.disableButtons();
 			socket.emit('game over', {gID: gameID, playerID: client.id});
@@ -335,12 +425,15 @@ function initializeGame() {
 		else {
 			if (playWindow.selectedShip != -1) {
 				if (client.fleet[playWindow.selectedShip].alive) {
+					playWindow.enableButton('normal');
+					playWindow.drawButtonSelector(playWindow.selectedButton);
 					playWindow.drawShipSelector(playWindow.selectedShip);
 				}
 				else {
 					playWindow.selectedShip = -1;
 				}
 			}
+			playWindow.timerCount = 30;
 		}
 	});
 	socket.on(client.id + 'end game', function(data){

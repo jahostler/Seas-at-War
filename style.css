@@ -33,16 +33,14 @@ h2:hover{
 	filter: sepia(60%) brightness(50%) !important;
 	border:3px solid #000000 !important;
 	cursor: default !important;
+	
 }
-
 *{
 	user-select: none;	
 }
-
 *:focus {
 	outline: none;
 }
-
 div {
 	position: absolute;
 	background-color: black;
@@ -54,7 +52,6 @@ div {
 	left: 0;
 	text-shadow: 2px 2px #000000;
 }
-
 button {
 	border:3px solid #830220;
 	box-shadow: #878787 0px 2px 2px ;
@@ -67,27 +64,34 @@ button {
 	text-shadow: 2px 2px 0 rgba(0,0,0,0.3);
 	font-weight:bold;
 	color: #FFFFFF;
-	background-color: #BA032D;
-	background-image: -webkit-linear-gradient(top, #BA032D, #87001F);
+	background: -webkit-linear-gradient(top, #BA032D, #87001F);
 	cursor: pointer;
 	position: absolute;
 }
+button:hover:enabled {
+	background: -webkit-linear-gradient(top, #C91508 0%, #470000 75%, #470000 100%);
+}
 
+.gameButton {
+	border:3px solid #000000;
+	background: -webkit-linear-gradient(top, #57606d, #000000);
+	
+}
+.gameButton:hover:enabled {
+	background: -webkit-linear-gradient(top, #B5B5B5 0%, #262526 75%, #262526 100%);
+}
 .button1 {
 	top: 20%;
 	left: 2%;	
 }
-
 .button2 {
 	top: 40%;
 	left: 2%;	
 }
-
 .button3 {
 	top: 60%;
 	left: 2%;	
 }
-
 .button4 {
 	top: 80%;
 	left: 2%;	
@@ -97,30 +101,28 @@ button {
 	left: 30%;
 }
 .buildButton {
-	border:3px solid #000000;
-	background-image: -webkit-linear-gradient(top, #57606d, #000000);
 	font-size: 24px;
 	padding:0px 20px 0px 20px;
 }
-
 #normalAttack {
-	border:3px solid #000000;
-	background-image: -webkit-linear-gradient(top, #57606d, #000000);
 	font-size: 24px;
 	padding: 30px 20px 30px 20px;
 	top: 840px;
 	left: 90px;
 }
-
 #specialAttack {
-	border:3px solid #000000;
-	background-image: -webkit-linear-gradient(top, #57606d, #000000);
 	font-size: 24px;
 	padding: 30px 20px 30px 20px;
 	top: 840px;
 	left: 550px;
 }
-
+#timer{
+	font-size: 60px;
+	top: 400px;
+	left: 1220px;
+	color: white;
+	position: absolute;
+}
 #scramblerDes {
 	top: 190px;
 	left: 750px;
@@ -133,7 +135,7 @@ button {
 	top: 400px;
 	left: 750px;
 }
-#destroyerDes {
+#defenderDes {
 	top: 490px;
 	left: 750px;
 }
@@ -251,15 +253,11 @@ button span {
 }
 
 .shipSelectButton {
-	border:3px solid #000000;
 	font-size: 24px;
-	background-image: -webkit-linear-gradient(top, #57606d, #000000);
 }
 
 .shipMoveButton {
-	border:3px solid #000000;
 	font-size: 30px;
-	background-image: -webkit-linear-gradient(top, #57606d, #000000);
 }
 
 #finishFleet {
