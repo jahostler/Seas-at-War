@@ -77,6 +77,7 @@ class gameWindow {
 			playWindow.drawButtons();
 			playWindow.timerFunction = setInterval(playWindow.drawTimer, 1000);
 			socket.on(client.id + ' make update', function(data){
+				console.log("made attack");
 				var updatedTiles = data.tiles;
 				var currentTiles = new Array();
 				for (var i = 0; i < updatedTiles.length; i++) {
@@ -101,7 +102,9 @@ class gameWindow {
 				if (data.scanData != undefined) {
 					playWindow.specialMessage = data.scanData;
 				}
-				client.hasTurn = false;
+				else {
+					playWindow.specialMessage = '';
+				}
 				playWindow.disableButtons();
 				playWindow.draw();
 			});
@@ -116,39 +119,40 @@ class gameWindow {
 	//adds a "Waiting for other player" message to screen when it is not the player's turn
 	drawTurnMessage() {
 		this.context.font = 'bold 45px Times New Roman';
+		this.context.shadowColor = 'transparent';
 		this.context.fillStyle = 'red';
 		if (client.hasTurn) {
 			this.context.fillText('Your Turn', this.adjust(1500), this.adjust(160));
-			this.context.font = '20px Times Arial';
+			this.context.font = '20px Times New Roman';
 			this.context.fillStyle = 'white';
 			this.context.fillText('Select Ship and Tile to attack', this.adjust(1480), this.adjust(195));
 		}
 		else {
 			this.context.fillText('Enemy Turn', this.adjust(1470), this.adjust(160));
-			this.context.font = '22px Times Arial';
+			this.context.font = '22px Times New Roman';
 			this.context.fillStyle = 'white';
 			this.context.fillText('Waiting for other player...', this.adjust(1490), this.adjust(195));
 		}
 		this.context.fillStyle = 'white';
-		this.context.font = '20px Times Arial';
+		this.context.font = '20px Times New Roman';
 		this.context.textAlign = 'center';
 		this.context.fillText(this.turnResult, this.adjust(1625), this.adjust(290));
 		if (this.specialMessage != '') {
 			this.context.fillStyle = 'red';
-			this.context.font = '20px bold Times Arial';
+			this.context.font = '22px bold Arial';
 			this.context.fillText(this.specialMessage, this.adjust(1625), this.adjust(265));
 		}
+		this.context.shadowColor = 'black';
 		this.context.textAlign = 'start';
 	}
 	
 	drawTimer() {
+		if (playWindow.timerCount <= 0) {
+			playWindow.timerCount = 1;
+		}
  		if (client.hasTurn) {
 			playWindow.timerCount--;
 			document.getElementById("timer").innerHTML = playWindow.timerCount + " secs"; 
-			if (playWindow.timerCount <= 0) {
-				
-				return;
-			}
 		}
 		else {
 			playWindow.timerCount--;
@@ -190,8 +194,9 @@ class gameWindow {
 		var currentShip = client.fleet[playWindow.selectedShip];
 		if (currentShip != undefined) {
 			var currentTiles = [playWindow.selectedTile];
-			if (attackType == 'special' && currentShip.specialAttacksLeft > 0) {
+			if (attackType == 'special') {
 				currentTiles = currentShip.specialAttack(playWindow.selectedTile);
+				console.log(currentShip.specialAttacksLeft);
 			}
 			var attackData = {
 				playerID: client.id,
@@ -201,6 +206,7 @@ class gameWindow {
 			};
 			socket.emit('turn done', attackData);
 			playWindow.timerCount = 30;
+			client.hasTurn = false;
 		}
 	}
 	
@@ -441,9 +447,21 @@ class gameWindow {
 	
 	//enable firing
 	enableButton(attack) {
-		if (attack == "normal") {
-			document.getElementById('specialAttack').disabled = false;
+		var index = playWindow.selectedShip;
+		var hasSpecial = false;
+		if (index != -1) {
+			if (client.fleet[index].specialAttacksLeft > 0) {
+				hasSpecial = true;
+			}
+		}
+		if (attack == "normal" || !hasSpecial) {
 			document.getElementById('normalAttack').disabled = true;
+			if (hasSpecial) {
+				document.getElementById('specialAttack').disabled = false;
+			}
+			else {
+				document.getElementById('specialAttack').disabled = true;
+			}
 			playWindow.attackType = 'normal';
 			playWindow.selectedButton = 'normalAttack';
 		}

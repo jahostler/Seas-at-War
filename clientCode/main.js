@@ -171,6 +171,7 @@ function shipDetails(shipname) {
 				positionWindow.class2Hor.src = 'images/Ships/ship2ScannerHor.png';
 				prepWindow.class2.addEventListener('load', prepWindow.draw.bind(prepWindow));
 				client.fleet[0] = "Scanner";
+				client.fleet[0].specialAttacksLeft = 2;
 				document.getElementById('scramblerDes').disabled = false;
 			}
 			break;	
@@ -193,6 +194,7 @@ function shipDetails(shipname) {
 				positionWindow.class3Hor.src = 'images/Ships/ship3DefenderHor.png';
 				prepWindow.class3.addEventListener('load', prepWindow.draw.bind(prepWindow));
 				client.fleet[1] = "Defender";
+				client.fleet[0].specialAttacksLeft = 3;
 				document.getElementById('submarineDes').disabled = false;
 			}
 			break;
@@ -307,10 +309,12 @@ function initializeGame() {
 		}
 	}
 	socket.on(client.id + ' attack made', function(attackData){
+		console.log("got attacked");
 		var str = "";
 		var scanStr = '';
 		var returnData;
-		if (attackData.coordinates[0].posX == 12) {
+		console.log(attackData);
+		if (attackData.coordinates[0] == 2) {	//Scanner Special
 			attackData.coordinates.splice(0, 1);
 			var attackCoordinate = attackData.coordinates[0];
 			attackData.coordinates.splice(0, 1);
@@ -325,6 +329,7 @@ function initializeGame() {
 			attackData.coordinates = [attackCoordinate];
 			scanStr = 'There are ' + scanCount + ' enemy tiles in the area.'
 		}
+		console.log(attackData);
 		var updatedTiles = new Array(attackData.coordinates.length);
 		for (var i = 0; i < updatedTiles.length; i++) {
 			var x = attackData.coordinates[i].posX;
@@ -358,7 +363,7 @@ function initializeGame() {
 		socket.emit('game updated', returnData);
 		client.hasTurn = true;
 		playWindow.draw();
-		playWindow.selectedTile = new orderedPair(-1, -1);
+		playWindow.hoveredTile = new orderedPair(-1, -1);
 		if (isGameOver()) {
 			client.hasTurn = false;
 			playWindow.disableButtons();

@@ -17,11 +17,7 @@ class moveableShip {
 		this.alive = true;
 		this.posArray = this.currentPosArray();
 		this.shotCounter = 0;  //if counter reaches ship's length, it sank
-		this.specialAttacksLeft = 1;
-		if (this.shipName == 'Scanner')
-			this.specialAttacksLeft = 2;
-		if (this.shipName == 'Defender')
-			this.specialAttacksLeft = 3;
+		this.specialAttacksLeft = 1;		
 	}
 	updateAlive() {
 		if (this.alive) {
@@ -31,6 +27,14 @@ class moveableShip {
 			}
 		}
 		return false;
+	}
+	
+	updateSpecialAttacksLeft() {
+		if (this.shipName == 'Scanner') {
+			this.specialAttacksLeft = 2;
+		}
+		else if (this.shipName == 'Defender')
+			this.specialAttacksLeft = 3;
 	}
 
 	currentPosArray(){
@@ -123,13 +127,14 @@ class moveableShip {
 	specialAttack(attackedCoordinate) {
 		var result = new Array();
 		if (this.shipName == 'Scrambler') {
-			result.push(new orderedPair(11, 11)); //11,11 attack code
+			result.push(1); //1 attack code
+			this.specialAttacksLeft--;
 			return result;
 		}
 		else if (this.shipName == 'Scanner') {
 			var x = attackedCoordinate.posX;
 			var y = attackedCoordinate.posY;
-			result.push(new orderedPair(12, 12)); //12,12 attack code
+			result.push(2); //2 attack code
 			result.push(new orderedPair(x, y)); //center (attack point)
 			//this section only selects the location that are in bounds
 			if(x-1 > -1 && y-1 > -1){
@@ -156,35 +161,41 @@ class moveableShip {
 			if(x+1 < 9 && y+1 < 9){
 				result.push(new orderedPair(x+1, y+1)); //top right
 			}
-			
+			this.specialAttacksLeft--;
 			return result;
 		}
 		else if (this.shipName == 'Submarine') {
-			result.push(new orderedPair(-1, -1)); //-1,-1 error code
+			result.push(3); //3 error code
+			this.specialAttacksLeft--;
 			return result;
 		}
 		else if (this.shipName == 'Defender') {
-			result.push(new orderedPair(-1, -1)); //-1,-1 error code
+			result.push(4); //4 error code
+			this.specialAttacksLeft--;
 			return result;
 		}
 		else if (this.shipName == 'Cruiser') {
-			result.push(new orderedPair(-1, -1)); //-1,-1 error code
+			result.push(5); //5 error code
+			this.specialAttacksLeft--;
 			return result;
 		}
 		else if (this.shipName == 'Carrier') {
-			result.push(new orderedPair(13, 13)); //13,13 attack code
+			result.push(6); //6 attack code
+			this.specialAttacksLeft--;
 			return result;
 		}
 		else if (this.shipName == 'Executioner') {
 			var x = attackedCoordinate.posX;
 			var y = attackedCoordinate.posY;
-			result.push(new orderedPair(14, 14)); //14,14 attack code
+			result.push(7); //7 attack code
 			result.push(new orderedPair(x, y)); //attack point
+			this.specialAttacksLeft--;
 			return result;
 		}
 		else if (this.shipName == 'Artillery') {
 			var x = attackedCoordinate.posX;
 			var y = attackedCoordinate.posY;
+			//result.push(8) //8 attack code
 			result.push(new orderedPair(x, y));
 			if (x+1 < 9) {
 				if (!client.targetGrid.field[x+1][y].isShotAt())
@@ -202,8 +213,8 @@ class moveableShip {
 				if (!client.targetGrid.field[x][y-1].isShotAt())
 					result.push(new orderedPair(x, y-1));
 			}
+			this.specialAttacksLeft--;
 			return result;
 		}
-		this.specialAttacksLeft--;
 	}
 }
