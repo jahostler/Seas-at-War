@@ -20,6 +20,7 @@ class buildAFleetWindow {
 		this.canvas.height = this.adjust(1080);
 		this.context = canvas.getContext('2d');
 		this.background = backgrounds[0];
+		
 		this.class2 = tempImages[0];
 		this.class3 = tempImages[1];
 		this.class4 = tempImages[2];
@@ -115,6 +116,81 @@ class fleetPositionWindow {
 		this.xAdj = [0,0,0,0];
 		this.yAdj = [0,0,0,0];
 		this.rotAdj = [false,false,false,false];
+		
+		//monitors keyboard input
+		this.canvas.addEventListener('keypress', document.onkeydown = function(e) {
+			console.log('key pressed');
+			console.log(e.keyCode);
+			switch (e.keyCode) {
+				case 50:
+					//select class 2 ship
+					console.log(positionWindow.selectShip(0));
+					break;
+				case 51:
+					//select class 3 ship
+					console.log(positionWindow.selectShip(1));
+					break;
+				case 52:
+					//select class 4 ship
+					console.log(positionWindow.selectShip(2));
+					break;
+				case 53:
+					//select class 5 ship
+					console.log(positionWindow.selectShip(3));
+					break;
+				
+				case 37:
+					//move selected ship left
+					console.log(positionWindow.moveAction('Left'));
+					break;
+				case 38:
+					//move selected ship up
+					console.log(positionWindow.moveAction('Up'));
+					break;
+				case 39:
+					//move selected ship right
+					console.log(positionWindow.moveAction('Right'));
+					break;
+				case 40:
+					//move selected ship down
+					console.log(positionWindow.moveAction('Down'));
+					break;
+				case 32:
+					//rotate selected ship
+					console.log(positionWindow.moveAction('Rotate'));
+					break;
+				case 13:
+					//finish
+					console.log(startGameScreen());
+					break;
+			}
+		});
+	}
+	
+	
+	
+	
+	
+	checkKey(e) {
+		e = e || window.event;
+		console.log('key pressed');
+		console.log(e.keyCode);
+		if (e.keyCode == '38') {
+			// up arrow
+			console.log(positionWindow.moveAction('Up'));
+		}
+		else if (e.keyCode == '40') {
+			// down arrow
+			console.log(positionWindow.moveAction('Down'));
+		}
+		else if (e.keyCode == '37') {
+		   // left arrow
+		   console.log(positionWindow.moveAction('Left'));
+		}
+		else if (e.keyCode == '39') {
+		   // right arrow
+		   console.log(positionWindow.moveAction('Right'))
+		}
 	}
 	
 	waitMessage() {
@@ -152,6 +228,7 @@ class fleetPositionWindow {
 			this.moveButtons[i].style.top = this.adjust(moveButtonDims[i][1])+'px';
 		}
 	}
+	
 	draw() {
 		this.context.drawImage(this.background, 0, 0, this.adjust(this.background.width), this.adjust(this.background.height));
 		this.context.font = 'bold 32px Arial';
@@ -194,6 +271,7 @@ class fleetPositionWindow {
 		this.context.fillText(client.fleet[2], this.adjust(950), this.adjust(485));
 		this.context.fillText(client.fleet[3], this.adjust(950), this.adjust(615));
 	}
+	
 	
 	selectShip(shipID) {
 		this.selectedShip = shipID;
