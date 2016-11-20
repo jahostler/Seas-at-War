@@ -334,10 +334,7 @@ function initializeGame() {
 			else
 				scanStr = 'There are ' + scanCount + ' enemy tiles in the area.'
 		}
-		else if (attackCoordinate == 5) {
-			attackCoordinate = attackData.coordinates[1];
-		}
-		else if (attackCoordinate == 8) {
+		else if (attackCoordinate == 8) { //Artillery Special
 			attackCoordinate = attackData.coordinates[1];
 			attackData.coordinates = processSpecialAttack("Artillery", attackCoordinate);
 		}
@@ -351,6 +348,13 @@ function initializeGame() {
 				str = "hit";
 			else if (str != "hit") {
 				str = "miss";
+			}
+			var shipHit = client.fleet[updatedTiles[i].shipIndex];
+			if (shipHit.shipName == 'Cruiser') {
+				if (shipHit.firstHit) {
+					specialResult.push(processSpecialAttack('Cruiser', new orderedPair(-1, -1))); //hits cruiser 
+					currentShip.firstHit = false;
+				}
 			}
 		}
 		var sunkShips = new Array(4);

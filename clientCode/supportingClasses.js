@@ -85,7 +85,6 @@ class Tile {
 			this.shipHit = false;
 		}
 	}
-	
 }
 
 /*
