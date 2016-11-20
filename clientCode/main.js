@@ -309,27 +309,35 @@ function initializeGame() {
 		}
 	}
 	socket.on(client.id + ' attack made', function(attackData){
-		console.log("got attacked");
-		var str = "";
+		var str = '';
 		var scanStr = '';
 		var returnData;
-		console.log(attackData);
-		if (attackData.coordinates[0] == 2) {	//Scanner Special
-			attackData.coordinates.splice(0, 1);
-			var attackCoordinate = attackData.coordinates[0];
-			attackData.coordinates.splice(0, 1);
+		var attackCoordinate = attackData.coordinates[0];
+		var specialResult = new Array();
+		if (attackCoordinate == 2) {	//Scanner Special
+			attackCoordinate = attackData.coordinates[1];
+			var scanArray = processSpecialAttack('Scanner', attackCoordinate);
 			var scanCount = 0;
-			for (var i = 0; i < attackData.coordinates.length; i++) {
-				var x = attackData.coordinates[i].posX;
-				var y = attackData.coordinates[i].posY;
+			for (var i = 0; i < scanArray.length; i++) {
+				var x = scanArray[i].posX;
+				var y = scanArray[i].posY;
 				if (client.homeGrid.field[x][y].shipPresent()) {
 					scanCount++;
 				}
+				specialResult.push(client.homeGrid.field[x][y]);
 			}
 			attackData.coordinates = [attackCoordinate];
-			scanStr = 'There are ' + scanCount + ' enemy tiles in the area.'
+			if (scanCount == 0)
+				scanStr = 'There are no enemy tiles in the area.'
+			else if (scanCount == 1)
+				scanStr = 'There is 1 enemy tile in the area.'
+			else
+				scanStr = 'There are ' + scanCount + ' enemy tiles in the area.'
 		}
-		console.log(attackData);
+		else if (attackCoordinate == 8) {
+			attackCoordinate = attackData.coordinates[1];
+			attackData.coordinates = processSpecialAttack("Artillery", attackCoordinate);
+		}
 		var updatedTiles = new Array(attackData.coordinates.length);
 		for (var i = 0; i < updatedTiles.length; i++) {
 			var x = attackData.coordinates[i].posX;
@@ -359,6 +367,9 @@ function initializeGame() {
 		};
 		if (scanStr != '') {
 			returnData.scanData = scanStr;
+		}
+		if (specialResult.length > 0) {
+			returnData.specialData = specialResult;
 		}
 		socket.emit('game updated', returnData);
 		client.hasTurn = true;

@@ -77,7 +77,6 @@ class gameWindow {
 			playWindow.drawButtons();
 			playWindow.timerFunction = setInterval(playWindow.drawTimer, 1000);
 			socket.on(client.id + ' make update', function(data){
-				console.log("made attack");
 				var updatedTiles = data.tiles;
 				var currentTiles = new Array();
 				for (var i = 0; i < updatedTiles.length; i++) {
@@ -139,7 +138,7 @@ class gameWindow {
 		this.context.fillText(this.turnResult, this.adjust(1625), this.adjust(290));
 		if (this.specialMessage != '') {
 			this.context.fillStyle = 'red';
-			this.context.font = '22px bold Arial';
+			this.context.font = '20px bold Arial';
 			this.context.fillText(this.specialMessage, this.adjust(1625), this.adjust(265));
 		}
 		this.context.shadowColor = 'black';

@@ -30,11 +30,11 @@ class moveableShip {
 	}
 	
 	updateSpecialAttacksLeft() {
-		if (this.shipName == 'Scanner') {
+		if (this.shipName == 'Scanner' /*|| this.shipName == 'Defender'*/)
 			this.specialAttacksLeft = 2;
-		}
-		else if (this.shipName == 'Defender')
-			this.specialAttacksLeft = 3;
+		else if (this.shipName == 'Scrambler' || this.shipName == 'Defender' || this.shipName == 'Submarine' || 
+				 this.shipName == 'Cruiser' || this.shipName == 'Carrier' || this.shipName == 'Executioner')
+			this.specialAttacksLeft = 0;
 	}
 
 	currentPosArray(){
@@ -132,35 +132,8 @@ class moveableShip {
 			return result;
 		}
 		else if (this.shipName == 'Scanner') {
-			var x = attackedCoordinate.posX;
-			var y = attackedCoordinate.posY;
 			result.push(2); //2 attack code
-			result.push(new orderedPair(x, y)); //center (attack point)
-			//this section only selects the location that are in bounds
-			if(x-1 > -1 && y-1 > -1){
-				result.push(new orderedPair(x-1, y-1)); //top left
-			}
-			if(y-1 > -1){
-				result.push(new orderedPair(x, y-1)); //top mid
-			}
-			if(x+1 < 9 && y-1 > -1){
-				result.push(new orderedPair(x+1, y-1)); //top right
-			}
-			if(x-1 > -1){
-				result.push(new orderedPair(x-1, y)); // mid left
-			}
-			if(x+1 < 9){
-				result.push(new orderedPair(x+1, y)); //mid right
-			}
-			if(x-1 > -1 && y+1 < 9){
-				result.push(new orderedPair(x-1, y+1)); //top left
-			}
-			if(y+1 < 9){
-				result.push(new orderedPair(x, y+1)); //top mid
-			}
-			if(x+1 < 9 && y+1 < 9){
-				result.push(new orderedPair(x+1, y+1)); //top right
-			}
+			result.push(attackedCoordinate); //center (attack point)
 			this.specialAttacksLeft--;
 			return result;
 		}
@@ -185,36 +158,74 @@ class moveableShip {
 			return result;
 		}
 		else if (this.shipName == 'Executioner') {
-			var x = attackedCoordinate.posX;
-			var y = attackedCoordinate.posY;
 			result.push(7); //7 attack code
-			result.push(new orderedPair(x, y)); //attack point
+			result.push(attackedCoordinate); //attack point
 			this.specialAttacksLeft--;
 			return result;
 		}
 		else if (this.shipName == 'Artillery') {
-			var x = attackedCoordinate.posX;
-			var y = attackedCoordinate.posY;
-			//result.push(8) //8 attack code
-			result.push(new orderedPair(x, y));
-			if (x+1 < 9) {
-				if (!client.targetGrid.field[x+1][y].isShotAt())
-					result.push(new orderedPair(x+1, y));
-			}
-			if (y+1 < 9) {
-				if (!client.targetGrid.field[x][y+1].isShotAt())
-					result.push(new orderedPair(x, y+1));
-			}
-			if (x-1 > -1) {
-				if (!client.targetGrid.field[x-1][y].isShotAt())
-					result.push(new orderedPair(x-1, y));
-			}
-			if (y-1 > -1) {
-				if (!client.targetGrid.field[x][y-1].isShotAt())
-					result.push(new orderedPair(x, y-1));
-			}
+			result.push(8) //8 attack code
+			result.push(attackedCoordinate);
 			this.specialAttacksLeft--;
 			return result;
 		}
+	}
+}
+
+//executed when player gets attacked, called in main
+function processSpecialAttack(name, attackedCoordinate) {
+	var result = new Array();
+	var x = attackedCoordinate.posX;
+	var y = attackedCoordinate.posY;
+	if (name == "Scrambler") {
+		return result;
+	}
+	else if (name == "Scanner") {
+		//this section only selects the location that are in bounds
+		if(x-1 > -1 && y-1 > -1){
+			result.push(new orderedPair(x-1, y-1)); //top left
+		}
+		if(y-1 > -1){
+			result.push(new orderedPair(x, y-1)); //top mid
+		}
+		if(x+1 < 9 && y-1 > -1){
+			result.push(new orderedPair(x+1, y-1)); //top right
+		}
+		if(x-1 > -1){
+			result.push(new orderedPair(x-1, y)); // mid left
+		}
+		if(x+1 < 9){
+			result.push(new orderedPair(x+1, y)); //mid right
+		}
+		if(x-1 > -1 && y+1 < 9){
+			result.push(new orderedPair(x-1, y+1)); //top left
+		}
+		if(y+1 < 9){
+			result.push(new orderedPair(x, y+1)); //top mid
+		}
+		if(x+1 < 9 && y+1 < 9){
+			result.push(new orderedPair(x+1, y+1)); //top right
+		}
+		return result;
+	}
+	else if (name == "Artillery") {
+		result.push(attackedCoordinate);
+		if (x+1 < 9) {
+			if (!client.homeGrid.field[x+1][y].isShotAt())
+				result.push(new orderedPair(x+1, y));
+		}
+		if (y+1 < 9) {
+			if (!client.homeGrid.field[x][y+1].isShotAt())
+				result.push(new orderedPair(x, y+1));
+		}
+		if (x-1 > -1) {
+			if (!client.homeGrid.field[x-1][y].isShotAt())
+				result.push(new orderedPair(x-1, y));
+		}
+		if (y-1 > -1) {
+			if (!client.homeGrid.field[x][y-1].isShotAt())
+				result.push(new orderedPair(x, y-1));
+		}
+		return result;
 	}
 }
