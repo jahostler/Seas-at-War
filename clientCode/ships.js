@@ -143,12 +143,24 @@ class moveableShip {
 		else if (this.shipName == 'Artillery') {
 			var x = attackedCoordinate.posX;
 			var y = attackedCoordinate.posY;
-			var result = new Array(5);
-			result[0] = new orderedPair(x, y);
-			result[1] = new orderedPair(x+1, y);
-			result[2] = new orderedPair(x, y+1);
-			result[3] = new orderedPair(x-1, y);
-			result[4] = new orderedPair(x, y-1);
+			var result = new Array();
+			result.push(new orderedPair(x, y));
+			if (x+1 < 9) {
+				if (!client.targetGrid.field[x+1][y].isShotAt())
+					result.push(new orderedPair(x+1, y));
+			}
+			if (y+1 < 9) {
+				if (!client.targetGrid.field[x][y+1].isShotAt())
+					result.push(new orderedPair(x, y+1));
+			}
+			if (x-1 > -1) {
+				if (!client.targetGrid.field[x-1][y].isShotAt())
+					result.push(new orderedPair(x-1, y));
+			}
+			if (y-1 > -1) {
+				if (!client.targetGrid.field[x][y-1].isShotAt())
+					result.push(new orderedPair(x, y-1));
+			}
 			return result;
 		}
 		else {

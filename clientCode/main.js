@@ -35,8 +35,8 @@ function initialize() {
 	
 	//load in background images
 	backgrounds = [new Image(), new Image(), new Image()];
-	backgrounds[0].src = 'images/Ships/shipSelect.png';
-	backgrounds[1].src = 'images/Ships/shipSelect.png';
+	backgrounds[0].src = 'images/shipSelect.png';
+	backgrounds[1].src = 'images/shipSelect.png';
 	backgrounds[2].src = 'images/gameBoard.png';
 	
 	//load in Temporary Ship Images
@@ -338,7 +338,6 @@ function initializeGame() {
 		socket.emit('game updated', returnData);
 		client.hasTurn = true;
 		playWindow.draw();
-		playWindow.enableButton("normal");
 		playWindow.selectedTile = new orderedPair(-1, -1);
 		if (isGameOver()) {
 			//todo:  display game over screen
@@ -352,6 +351,8 @@ function initializeGame() {
 		else {
 			if (playWindow.selectedShip != -1) {
 				if (client.fleet[playWindow.selectedShip].alive) {
+					playWindow.enableButton('normal');
+					playWindow.drawButtonSelector(playWindow.selectedButton);
 					playWindow.drawShipSelector(playWindow.selectedShip);
 				}
 				else {

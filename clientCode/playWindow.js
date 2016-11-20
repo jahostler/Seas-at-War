@@ -51,6 +51,7 @@ class gameWindow {
 		this.attackType = 'normal';
 		this.promptNeeded = false;
 		this.turnResult = '';
+		this.selectedButton = '';
 		
 		this.images = [new Image(), new Image(), new Image(), new Image()];
 		for (var i = 0; i < this.images.length; i++) {
@@ -114,10 +115,14 @@ class gameWindow {
 		norm.addEventListener('click', function(data){
 			playWindow.attackType = "normal";
 			playWindow.enableButton(playWindow.attackType);
+			playWindow.draw();
+			playWindow.drawShipSelector(playWindow.selectedShip);
 		}, false);
 		spec.addEventListener('click', function(data){
 			playWindow.attackType = "special";
 			playWindow.enableButton(playWindow.attackType);
+			playWindow.draw();
+			playWindow.drawShipSelector(playWindow.selectedShip);
 		}, false);
 		this.disableButtons();
 	}
@@ -402,6 +407,7 @@ class gameWindow {
 	disableButtons() {
 		document.getElementById('normalAttack').disabled = true;
 		document.getElementById('specialAttack').disabled = true;
+		playWindow.selectedButton = '';
 	}
 	
 	//enable firing
@@ -409,10 +415,25 @@ class gameWindow {
 		if (attack == "normal") {
 			document.getElementById('specialAttack').disabled = false;
 			document.getElementById('normalAttack').disabled = true;
+			playWindow.selectedButton = 'normalAttack';
 		}
 		else {
 			document.getElementById('normalAttack').disabled = false;
 			document.getElementById('specialAttack').disabled = true;
+			playWindow.selectedButton = 'specialAttack';
+		}
+	}
+	
+	drawButtonSelector(buttonID) {
+		if (buttonID != '') {
+			var w = playWindow.adjust(document.getElementById(buttonID).offsetWidth + 70);
+			var h = playWindow.adjust(document.getElementById(buttonID).offsetHeight + 40);
+			playWindow.context.lineWidth='3';
+			playWindow.context.strokeStyle='red';
+			if (buttonID == 'normalAttack')
+				playWindow.context.strokeRect(playWindow.adjust(normalAttackDims[0] - 5), playWindow.adjust(normalAttackDims[1] - 5), w, h);
+			else
+				playWindow.context.strokeRect(playWindow.adjust(specialAttackDims[0] - 5), playWindow.adjust(specialAttackDims[1] - 5), w, h);
 		}
 	}
 	
@@ -521,5 +542,6 @@ class gameWindow {
 		this.context.fillText('Chat', this.adjust(1320), this.adjust(750));
 		this.drawGrids();
 		this.drawTurnMessage();
+		this.drawButtonSelector(this.selectedButton);
 	}
 }
