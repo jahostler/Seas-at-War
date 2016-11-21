@@ -495,8 +495,8 @@ function initializeGame() {
 			if (attackData.deadShips != undefined) {
 				enemyFleet = attackData.deadShips;
 				playWindow.turnResult = "You sunk the enemy's " + attackData.result + "!";
-				playWindow.draw();
 			}
+			playWindow.draw();
 			return;
 		}
 		

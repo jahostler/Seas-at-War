@@ -164,6 +164,12 @@ class moveableShip {
 		}
 		else if (this.shipName == 'Executioner') {
 			result.push(7); //7 attack code
+			if (attackedCoordinate.partialVision) {
+				result.push(1);		//find smallest ship in scanned area
+			}
+			else {
+				result.push(0);		//if spot has ship, kill whole ship
+			}
 			result.push(attackedCoordinate); //attack point
 			this.specialAttacksLeft--;
 			return result;
