@@ -127,10 +127,6 @@ class gameWindow {
 						}
 						playWindow.specialData = new Array();
 					}
-					else if (playWindow.specialData[0] == 'Counter') {
-						playWindow.specialMessage = '';
-						playWindow.specialData = new Array();
-					}
 				}
 				if (data.scanData != undefined) {
 					playWindow.specialMessage = data.scanData;
@@ -183,7 +179,6 @@ class gameWindow {
 							attackData.deadShips = sunkShips;
 						}						
 						socket.emit('turn done', attackData);
-						playWindow.specialData.push('Counter');
 						if (isGameOver()) {
 							client.hasTurn = false;
 							playWindow.disableButtons();
