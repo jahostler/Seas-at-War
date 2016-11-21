@@ -108,7 +108,7 @@ class gameWindow {
 					playWindow.turnResult = "You sunk the enemy's " + data.result + "!";
 				}
 				if (playWindow.specialData.length > 0) {
-					if (playWindow.specialData[0] = 'Scan') { //Erase highlighted areas
+					if (playWindow.specialData[0] == 'Scan') { //Erase highlighted areas
 						playWindow.specialData.splice(0, 1);
 						for (var i = 0; i < playWindow.specialData.length; i++) {
 							var x = playWindow.specialData[i].posX;
@@ -117,8 +117,11 @@ class gameWindow {
 						}
 						playWindow.specialData = new Array();
 					}
+					else if (playWindow.specialData[0] == 'Counter') {
+						playWindow.specialMessage = '';
+						playWindow.specialData = new Array();
+					}
 				}
-				console.log(data.specialData);
 				if (data.scanData != undefined) {
 					playWindow.specialMessage = data.scanData;
 					playWindow.specialData = new Array();
@@ -130,7 +133,10 @@ class gameWindow {
 						playWindow.specialData.push(new orderedPair(x, y));
 					}
 				}
-				else if (data.specialData.length > 0) {
+				if (data.defelectData != undefined) [
+					playWindow.specialMessage = data.defelectData;
+				]
+				if (data.specialData.length > 0) {
 					if (data.specialData[0] == "deflect") {
 						deflect = true;
 					}
@@ -157,7 +163,7 @@ class gameWindow {
 							gID: gameID
 						}
 						socket.emit('turn done', attackData);
-						console.log('drew counter attack');
+						playWindow.specialData.push('Counter');
 					}
 				}
 				else {
