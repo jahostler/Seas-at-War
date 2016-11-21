@@ -188,9 +188,8 @@ class gameWindow {
 							client.hasTurn = false;
 							playWindow.disableButtons();
 							socket.emit('game over', {gID: gameID, playerID: client.id});
-							document.getElementById('gameOverMessage').innerHTML = 'You Lose!';
-
-							document.getElementById('gameOver').style.display = 'block';
+							document.getElementById('gameOverMessageLose').innerHTML = 'You Lose!';
+							document.getElementById('gameOverLose').style.display = 'block';
 							document.getElementById('gameWindow').style.display = 'none';
 						}
 					}

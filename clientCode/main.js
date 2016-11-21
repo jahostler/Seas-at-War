@@ -518,7 +518,6 @@ function initializeGame() {
 		for (var i = 0; i < updatedTiles.length; i++) {
 			var x = attackData.coordinates[i].posX;
 			var y = attackData.coordinates[i].posY;
-			console.log("("+x+","+y+")");
 			client.homeGrid.field[x][y].updateTile();
 			updatedTiles[i] = client.homeGrid.field[x][y];
 			if (updatedTiles[i].shipHit) {
