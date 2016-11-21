@@ -67,7 +67,7 @@ class buildAFleetWindow {
 		this.context.fillText('Class 4', this.adjust(750), this.adjust(590));
 		this.context.fillText('Class 5', this.adjust(750), this.adjust(800));
 		this.context.font = 'bold 28px Arial';
-		this.context.fillText('Ship Ability', this.adjust(250), this.adjust(750));
+		this.context.fillText('Ship Ability', this.adjust(250), this.adjust(740));
 		
 	}
 }
