@@ -401,7 +401,6 @@ class gameWindow {
 			}
 			gridName = 'home';
 			//xPair and yPair are now values 0 through 8
-			//console.log(gridName + ': (' + xPair + ',' + yPair + ')');
 		}
 		else if(xPair >= playWindow.adjust(710) && xPair <= playWindow.adjust(1340) && yPair >= playWindow.adjust(30) && yPair <= playWindow.adjust(660)){
 			//Handle enemy grid
@@ -467,7 +466,6 @@ class gameWindow {
 			}
 			//xPair and yPair are now values 0 through 8
 			gridName = 'target';
-			//console.log(gridName + ': (' + xPair + ',' + yPair + ')');
 		}
 		var returnData = {
 			grid: gridName,
@@ -478,7 +476,6 @@ class gameWindow {
 	
 	selectObject(evt) {
 		if(client.hasTurn) {
-			//http://www.html5canvastutorials.com/advanced/html5-canvas-mouse-coordinates/
 			if (playWindow.hoveredShip == -1 && playWindow.selectedShip == -1) {
 				playWindow.promptNeeded = true;
 				playWindow.drawPrompt();
@@ -566,23 +563,23 @@ class gameWindow {
 					}
 				}
 				if (targetTile.isShotAt()) {
-					
 					if(targetTile.scrambled) {
-						//if(targetTile.shipIndex != -1){
-							//if(client.fleet[targetTile.shipIndex].alive){
+						if(targetTile.shipIndex != -1){
+							if(!client.fleet[targetTile.shipIndex].alive)
+								this.context.drawImage(this.targetHitIcon, targetTile.corner.posX, targetTile.corner.posY, this.adjust(70), this.adjust(70));
+							else
 								this.context.drawImage(this.targetScrambleIcon, targetTile.corner.posX, targetTile.corner.posY, this.adjust(70), this.adjust(70));
-							//}
-						//}
-					}
-					else{
-						if (targetTile.shipHit == true) {
-							this.context.drawImage(this.targetHitIcon, targetTile.corner.posX, targetTile.corner.posY, this.adjust(70), this.adjust(70));
 						}
-						else if (targetTile.shipHit == false) {
-							this.context.drawImage(this.targetMissIcon, targetTile.corner.posX, targetTile.corner.posY, this.adjust(70), this.adjust(70));
+						else {
+							this.context.drawImage(this.targetScrambleIcon, targetTile.corner.posX, targetTile.corner.posY, this.adjust(70), this.adjust(70));
 						}
 					}
-					
+					if (targetTile.shipHit == true) {
+						this.context.drawImage(this.targetHitIcon, targetTile.corner.posX, targetTile.corner.posY, this.adjust(70), this.adjust(70));
+					}
+					else if (targetTile.shipHit == false) {
+						this.context.drawImage(this.targetMissIcon, targetTile.corner.posX, targetTile.corner.posY, this.adjust(70), this.adjust(70));
+					}
 				}
 				if (targetTile.partialVision) {
 					this.context.drawImage(this.partialVisionIcon, targetTile.corner.posX, targetTile.corner.posY, this.adjust(70), this.adjust(70));
