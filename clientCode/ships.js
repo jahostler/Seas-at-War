@@ -166,12 +166,14 @@ class moveableShip {
 			result.push(7); //7 attack code
 			if (attackedCoordinate.partialVision) {
 				result.push(1);		//find smallest ship in scanned area
+				result.push(playWindow.specialData.slice(1));
 			}
 			else {
 				result.push(0);		//if spot has ship, kill whole ship
 			}
 			result.push(attackedCoordinate); //attack point
 			this.specialAttacksLeft--;
+			console.log(result);
 			return result;
 		}
 		else if (this.shipName == 'Artillery') {

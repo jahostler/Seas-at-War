@@ -468,6 +468,7 @@ function initializeGame() {
 				}
 				specialResult.push(client.homeGrid.field[x][y]);
 			}
+			console.log(specialResult);
 			attackData.coordinates = [attackCoordinate];
 			if (scanCount == 0)
 				scanStr = 'There are no enemy tiles in the area.'
