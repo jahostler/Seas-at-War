@@ -84,7 +84,6 @@ class gameWindow {
 			playWindow.drawButtons();
 			playWindow.timerFunction = setInterval(playWindow.drawTimer, 1000);
 			socket.on(client.id + ' make update', function(data){
-				console.log("Special Data at 0: " + playWindow.specialData[0]);
 				var updatedTiles = data.tiles;
 				var currentTiles = new Array();
 				for (var i = 0; i < updatedTiles.length; i++) {
@@ -130,10 +129,6 @@ class gameWindow {
 						}
 						playWindow.specialData = new Array();
 					}
-					else if (playWindow.specialData[0] == 'Counter') {
-						playWindow.specialMessage = '';
-						playWindow.specialData = new Array();
-					}
 				}
 				if (data.scanData != undefined) {
 					playWindow.specialMessage = data.scanData;
@@ -164,7 +159,6 @@ class gameWindow {
 						client.targetGrid.field[data.specialData[1].posX][data.specialData[1].posY].detected = true;
 					}
 					else if (data.specialData[0] == 5) { //Cruiser Special Attack
-						console.log(data.specialData);
 						var attackingShip = data.specialData[1];
 						var max = client.fleet[attackingShip].length;
 						var rand = Math.floor(Math.random() * (max));
@@ -176,14 +170,31 @@ class gameWindow {
 							y = client.fleet[attackingShip].posArray[rand].posY;
 						}
 						client.homeGrid.field[x][y].updateTile();
-						playWindow.specialMessage = 'Enemy cruiser counter attacked.';
+						var sunkShips = new Array(4);
+						for (var i = 0; i < client.fleet.length; i++) {
+							client.fleet[i].updateAlive();
+							if (!client.fleet[i].alive) {
+								sunkShips[i] = client.fleet[i];
+							}
+						}
 						var attackData = {
 							playerID: client.id,
 							coordinates: [5, new orderedPair(x, y)],
 							gID: gameID
 						}
+						if (!client.fleet[attackingShip].alive) {
+							attackData.result = client.fleet[attackingShip].shipName;
+							attackData.deadShips = sunkShips;
+						}						
 						socket.emit('turn done', attackData);
-						playWindow.specialData.push('Counter');
+						if (isGameOver()) {
+							client.hasTurn = false;
+							playWindow.disableButtons();
+							socket.emit('game over', {gID: gameID, playerID: client.id});
+							document.getElementById('gameOverMessageLose').innerHTML = 'You Lose!';
+							document.getElementById('gameOverLose').style.display = 'block';
+							document.getElementById('gameWindow').style.display = 'none';
+						}
 					}
 				}
 				else {

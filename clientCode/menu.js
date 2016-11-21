@@ -109,7 +109,7 @@ function backToMain(displayedScreen) {
 			element.style.display = 'none';
 		});
 	}
-	else if (displayedScreen == 'gameOver') {
+	else if (displayedScreen == 'gameOverWin') {
 		removeGame();
 	}
 	document.getElementById(displayedScreen).style.display = 'none';
