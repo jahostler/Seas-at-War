@@ -408,6 +408,20 @@ function repositionAttack(){
 	return new orderedPair(defX, defY);
 }
 
+function findRandomEnemy(){
+	var shipPositions = new Array();
+	for (var i = 0; i < 9; i++) {
+		for (var j = 0; j < 9; j++){
+			if(client.homeGrid.field[i][j].hasShip == true && client.homeGrid.field[i][j].shipHit == undefined){
+				shipPositions.push(new orderedPair(i,j));
+			}
+		}
+	}
+	console.log("shipPositions.length = " + shipPositions.length);
+	return shipPositions[getRandomInt(0,shipPositions.length-1)];
+	
+}
+
 //loads graphics for playing the game, and listens for game updates (such as a tile being attacked or the game ending)
 function initializeGame() {
 	client.homeGrid.loadGrid(playWindow.homeGridStart(), playWindow.adjust(70));
@@ -492,12 +506,18 @@ function initializeGame() {
 		else if (attackData.coordinates[0] == 5) { 
 			client.targetGrid.field[attackCoordinate.posX][attackCoordinate.posY].hasShip = true;
 			client.targetGrid.field[attackCoordinate.posX][attackCoordinate.posY].shipHit = true;
+			if (attackData.deadShips != undefined) {
+				enemyFleet = attackData.deadShips;
+				playWindow.turnResult = "You sunk the enemy's " + attackData.result + "!";
+			}
+			playWindow.draw();
 			return;
 		}
 		
 		//Carrier Special 
 		else if (attackData.coordinates[0] == 6){ 
-			
+			attackData.coordinates = new Array();
+			specialResult = ["detect", findRandomEnemy()];
 		}
 		
 		//Executioner Special
@@ -513,7 +533,6 @@ function initializeGame() {
 		for (var i = 0; i < updatedTiles.length; i++) {
 			var x = attackData.coordinates[i].posX;
 			var y = attackData.coordinates[i].posY;
-			console.log("("+x+","+y+")");
 			client.homeGrid.field[x][y].updateTile();
 			updatedTiles[i] = client.homeGrid.field[x][y];
 			if (updatedTiles[i].shipHit) {
@@ -521,7 +540,6 @@ function initializeGame() {
 				if (updatedTiles[i].shipIndex == 2) {
 					if (client.fleet[2].firstHit) {
 						specialResult = client.fleet[2].specialAttack(attackData.ship); //hits cruiser 
-						console.log("Cruiser Special");
 					}
 				}
 				else if(updatedTiles[i].shipIndex == 1) {
@@ -571,9 +589,8 @@ function initializeGame() {
 			client.hasTurn = false;
 			playWindow.disableButtons();
 			socket.emit('game over', {gID: gameID, playerID: client.id});
-			document.getElementById('gameOverMessage').innerHTML = 'You Lose!';
-
-			document.getElementById('gameOver').style.display = 'block';
+			document.getElementById('gameOverMessageLose').innerHTML = 'You Lose!';
+			document.getElementById('gameOverLose').style.display = 'block';
 			document.getElementById('gameWindow').style.display = 'none';
 		}
 		else {
@@ -593,9 +610,8 @@ function initializeGame() {
 	socket.on(client.id + 'end game', function(data){
 		client.hasTurn = false;
 		playWindow.disableButtons();
-		document.getElementById('gameOverMessage').innerHTML = 'You Win!';
-		
-		document.getElementById('gameOver').style.display = 'block';
+		document.getElementById('gameOverMessageWin').innerHTML = 'You Win!';
+		document.getElementById('gameOverWin').style.display = 'block';
 		document.getElementById('gameWindow').style.display = 'none';
 	});
 }
