@@ -357,12 +357,17 @@ function initializeGame() {
 		var counterStr = '';
 		var returnData;
 		var specialResult = new Array();
+		var scanResult = new Array();
 		var attackCoordinate = attackData.coordinates[0];
 		if (typeof attackCoordinate === "number")
 			attackCoordinate = attackData.coordinates[1];
 		if (deflect == true && attackData.coordinates[0] != 1) {
 			var tempPlace = repositionAttack();
+			console.log("original");
+			console.log(attackCoordinate);
 			attackCoordinate = tempPlace;
+			console.log("new");
+			console.log(attackCoordinate);
 			if (typeof attackData.coordinates[0] === "number"){
 				attackData.coordinates[1] = tempPlace;
 			}
@@ -372,7 +377,7 @@ function initializeGame() {
 			deflect = false;
 			deflectStr = 'Enemy defender deflected shot.';
 		}
-		var specialResult = new Array();
+		
 		//Scrambler Special 
 		if (attackData.coordinates[0] == 1){
 			scramble = 3;
@@ -391,9 +396,8 @@ function initializeGame() {
 				if (client.homeGrid.field[x][y].shipPresent()) {
 					scanCount++;
 				}
-				specialResult.push(client.homeGrid.field[x][y]);
+				scanResult.push(client.homeGrid.field[x][y]);
 			}
-			console.log(specialResult);
 			attackData.coordinates = [attackCoordinate];
 			if (scanCount == 0)
 				scanStr = 'There are no enemy tiles in the area.'
@@ -401,10 +405,6 @@ function initializeGame() {
 				scanStr = 'There is 1 enemy tile in the area.'
 			else
 				scanStr = 'There are ' + scanCount + ' enemy tiles in the area.'
-		}
-		//Submarine Special
-		else if (attackData.coordinates[0] == 3){ 
-			
 		}
 		
 		//Defender Special 
@@ -434,7 +434,41 @@ function initializeGame() {
 		
 		//Executioner Special
 		else if (attackData.coordinates[0] == 7){ 
-			
+			var attackInPartial = false;
+			var smallestLength = 6;
+			var smallestShip = -1;
+			if (attackData.coordinates.length == 4) {
+				var partialTiles = attackData.coordinates[3];
+				for (var i = 0; i < partialTiles.length; i++) {
+					var x = partialTiles[i].posX;
+					var y = partialTiles[i].posY;
+					var selectedShip = client.homeGrid.field[x][y].shipIndex;
+					if (selectedShip != -1) {
+						if (client.fleet[selectedShip].length < smallestLength) {
+							smallestLength = client.fleet[selectedShip].length;
+							smallestShip = selectedShip 
+						}
+					}
+					if (attackCoordinate.posX == x && attackCoordinate.posY == y) {
+						attackInPartial = true;
+					}
+				}
+			}
+			if (smallestShip == -1 || !attackInPartial) {
+				var x = attackCoordinate.posX;
+				var y = attackCoordinate.posY;
+				if (client.homeGrid.field[x][y].shipIndex != -1) {	//Destroy entire ship at the single point
+					smallestShip = client.homeGrid.field[x][y].shipIndex;
+					attackData.coordinates = client.fleet[smallestShip].posArray
+				}
+				else {
+					attackData.coordinates = [attackCoordinate]; //Missed shot
+				}
+			}
+			else if (attackInPartial) { //Destroy smallest ship in scanned area
+				attackData.coordinates = client.fleet[smallestShip].posArray;
+			}
+			playWindow.specialMessage = 'Enemy executioner fired killing blow.';
 		}
 		
 		// Artillery Special 
@@ -442,6 +476,8 @@ function initializeGame() {
 			attackData.coordinates = processSpecialAttack("Artillery", attackCoordinate);
 		}
 		var updatedTiles = new Array(attackData.coordinates.length);
+		var cruiserSpecial = false;
+		var subSpecial = false;
 		for (var i = 0; i < updatedTiles.length; i++) {
 			var x = attackData.coordinates[i].posX;
 			var y = attackData.coordinates[i].posY;
@@ -451,25 +487,17 @@ function initializeGame() {
 				str = "hit";
 				if (updatedTiles[i].shipIndex == 2) {
 					if (client.fleet[2].firstHit) {
-						specialResult = client.fleet[2].specialAttack(attackData.ship); //hits cruiser 
+						 cruiserSpecial = true;
 					}
 				}
 				else if(updatedTiles[i].shipIndex == 1) {
 					if(client.fleet[1].firstHit){
-						specialResult = client.fleet[1].specialAttack(attackData.ship); //hits submarine
-						submarineSpecial();
-						client.homeGrid.field[x][y].hasShip = true;
-						client.homeGrid.field[x][y].shipHit = true;
-						client.homeGrid.field[x][y].shipIndex = -1;
-						playWindow.draw();
-						console.log("Submarine Special");
+						subSpecial = true;
 					}
 				}
 			}
 			else if (str != "hit")
 				str = "miss";
-			
-			
 		}
 		var sunkShips = new Array(4);
 		for (var i = 0; i < client.fleet.length; i++) {
@@ -478,6 +506,17 @@ function initializeGame() {
 			if (!client.fleet[i].alive) {
 				sunkShips[i] = client.fleet[i];
 			}
+		}
+		if (cruiserSpecial && client.fleet[2].alive) {
+			specialResult = client.fleet[2].specialAttack(attackData.ship); //hits cruiser
+		}
+		if (subSpecial && client.fleet[1].alive) {
+			specialResult = client.fleet[1].specialAttack(attackData.ship); //hits submarine
+			submarineSpecial();
+			client.homeGrid.field[x][y].hasShip = true;
+			client.homeGrid.field[x][y].shipHit = true;
+			client.homeGrid.field[x][y].shipIndex = -1;
+			playWindow.draw();
 		}
 		returnData = {
 			tiles: updatedTiles,
@@ -488,6 +527,7 @@ function initializeGame() {
 		};
 		if (scanStr != '') {
 			returnData.scanData = scanStr;
+			returnData.scanArray = scanResult;
 		}
 		if (deflectStr != '') {
 			returnData.defelectData = deflectStr;

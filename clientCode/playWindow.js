@@ -57,6 +57,7 @@ class gameWindow {
 		this.attackType = 'normal';
 		this.promptNeeded = false;
 		this.specialMessage = '';
+		this.scanMessage = '';
 		this.specialData = new Array();
 		this.turnResult = '';
 		this.selectedButton = '';
@@ -128,6 +129,11 @@ class gameWindow {
 				else if (data.result != 'jammed') {
 					playWindow.turnResult = "You sunk the enemy's " + data.result + "!";
 				}
+				if (playWindow.specialMessage == 'Enemy cruisier counter attacked.' ||
+					playWindow.specialMessage == 'Enemy executioner fired killing blow.') 
+				{
+					playWindow.specialMessage = '';
+				}
 				if (playWindow.specialData.length > 0) {
 					if (playWindow.specialData[0] == 'Scan') { //Erase highlighted areas
 						playWindow.specialData.splice(0, 1);
@@ -137,15 +143,16 @@ class gameWindow {
 							client.targetGrid.field[x][y].partialVision = false;
 						}
 						playWindow.specialData = new Array();
+						playWindow.scanMessage = '';
 					}
 				}
 				if (data.scanData != undefined) {
-					playWindow.specialMessage = data.scanData;
+					playWindow.scanMessage = data.scanData;
 					playWindow.specialData = new Array();
 					playWindow.specialData.push('Scan');
-					for (var i = 0; i < data.specialData.length; i++) {
-						var x = data.specialData[i].coordinate.posX;
-						var y = data.specialData[i].coordinate.posY;
+					for (var i = 0; i < data.scanArray.length; i++) {
+						var x = data.scanArray[i].coordinate.posX;
+						var y = data.scanArray[i].coordinate.posY;
 						client.targetGrid.field[x][y].partialVision = true;
 						playWindow.specialData.push(new orderedPair(x, y));
 					}
@@ -186,6 +193,7 @@ class gameWindow {
 								sunkShips[i] = client.fleet[i];
 							}
 						}
+						playWindow.specialMessage = "Enemy cruisier counter attacked.";
 						var attackData = {
 							playerID: client.id,
 							coordinates: [5, new orderedPair(x, y)],
@@ -245,6 +253,11 @@ class gameWindow {
 			this.context.fillStyle = 'red';
 			this.context.font = '20px bold Arial';
 			this.context.fillText(this.specialMessage, this.adjust(700), this.adjust(950));
+		}
+		if (this.scanMessage != '') {
+			this.context.fillStyle = 'red';
+			this.context.font = '20px bold Arial';
+			this.context.fillText(this.scanMessage, this.adjust(700), this.adjust(900));
 		}
 		this.context.shadowColor = 'black';
 		this.context.textAlign = 'start';

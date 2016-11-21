@@ -13,11 +13,21 @@ function hostGame() {
 	newGame();
 }
 
+var joinKey = function(e) {
+	switch (e.keyCode) {
+		case 13:
+			//finish
+			joinID();
+			break;
+	}
+}
+
 //hide main menu
 //display join game menu
 function joinGame() {
 	document.getElementById('mainMenu').style.display = 'none';
 	document.getElementById('joinGame').style.display = 'block';
+	document.addEventListener('keydown', joinKey, false);
 }
 
 //attempt to join a game being hosted
@@ -36,6 +46,7 @@ function joinID() {
 		return;
 	});
 	socket.on(client.id + ' join success' , function(data) {
+		document.removeEventListener('keydown', joinKey, false);
 		gameID = input;
 		document.getElementById('joinGame').style.display = 'none';
 		document.getElementById('buildAFleet').style.display = 'block';

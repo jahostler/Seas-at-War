@@ -30,7 +30,6 @@ class buildAFleetWindow {
 		this.divY = -1;
 	}
 	selectShips(e) {
-		console.log(e.keyCode);
 		switch(e.keyCode) {
 			case 97:
 			case 49:
@@ -65,7 +64,6 @@ class buildAFleetWindow {
 				shipDetails('Artillery');
 				break;
 			case 13:
-				console.log('moving to position select');
 				toPositionSelect();
 				break;
 		}
@@ -244,43 +242,43 @@ class fleetPositionWindow {
 			case 98:
 			case 50:
 				//select class 2 ship
-				console.log(positionWindow.selectShip(0));
+				positionWindow.selectShip(0);
 				break;
 			case 99:
 			case 51:
 				//select class 3 ship
-				console.log(positionWindow.selectShip(1));
+				positionWindow.selectShip(1);
 				break;
 			case 100:
 			case 52:
 				//select class 4 ship
-				console.log(positionWindow.selectShip(2));
+				positionWindow.selectShip(2);
 				break;
 			case 101:
 			case 53:
 				//select class 5 ship
-				console.log(positionWindow.selectShip(3));
+				positionWindow.selectShip(3);
 				break;
 
 			case 37:
 				//move selected ship left
-				console.log(positionWindow.moveAction('Left'));
+				positionWindow.moveAction('Left');
 				break;
 			case 38:
 				//move selected ship up
-				console.log(positionWindow.moveAction('Up'));
+				positionWindow.moveAction('Up');
 				break;
 			case 39:
 				//move selected ship right
-				console.log(positionWindow.moveAction('Right'));
+				positionWindow.moveAction('Right');
 				break;
 			case 40:
 				//move selected ship down
-				console.log(positionWindow.moveAction('Down'));
+				positionWindow.moveAction('Down');
 				break;
 			case 32:
 				//rotate selected ship
-				console.log(positionWindow.moveAction('Rotate'));
+				positionWindow.moveAction('Rotate');
 				break;
 			case 13:
 				//finish

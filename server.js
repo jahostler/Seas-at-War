@@ -113,13 +113,16 @@ io.on('connection', function(socket){
 		else {
 			gameID = data.gameID;
 			if (games.get(gameID).gameFull) {
+				gameID = -1;
 				socket.emit(data.clientID + ' join full', {});
 				return;
 			}
-			games.set(gameID, new Game(games.get(gameID), data.clientID));
-			games.get(gameID).gameFull = true;
-			socket.emit(games.get(gameID).visitor + ' join success', gameID);
-			io.sockets.emit(games.get(gameID).host + ' join success', gameID);
+			else {
+				games.set(gameID, new Game(games.get(gameID), data.clientID));
+				games.get(gameID).gameFull = true;
+				socket.emit(games.get(gameID).visitor + ' join success', gameID);
+				io.sockets.emit(games.get(gameID).host + ' join success', gameID);
+			}
 		}
 	});
 	

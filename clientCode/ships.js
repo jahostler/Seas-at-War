@@ -164,15 +164,19 @@ class moveableShip {
 			return result;
 		}
 		else if (this.shipName == 'Executioner') {
+			var x = attackedCoordinate.posX;
+			var y = attackedCoordinate.posY;
 			result.push(7); //7 attack code
-			if (attackedCoordinate.partialVision) {
+			result.push(attackedCoordinate); //attack point
+			if (client.targetGrid.field[x][y].partialVision) {
 				result.push(1);		//find smallest ship in scanned area
-				result.push(playWindow.specialData.slice(1));
 			}
 			else {
 				result.push(0);		//if spot has ship, kill whole ship
 			}
-			result.push(attackedCoordinate); //attack point
+			if (playWindow.specialData.length > 0) {
+				result.push(playWindow.specialData.slice(1));
+			}
 			this.specialAttacksLeft--;
 			console.log(result);
 			return result;
@@ -298,8 +302,6 @@ function submarineSpecial() {
 			var validVertical = false;
 			
 			if(canRelocateHorizontally) {
-				console.log("horizontal");
-				console.log("Column: " + column + " Row: " + row);
 				if (column >= 7)
 					continue;
 				var tile0h = client.homeGrid.field[column][row];
@@ -312,8 +314,6 @@ function submarineSpecial() {
 				}
 			}
 			else if(canRelocateVertically) {
-				console.log("vertical");
-				console.log("Column: " + column + " Row: " + row);
 				if (row >= 7)
 					continue;
 				var tile0v = client.homeGrid.field[column][row];
@@ -362,7 +362,6 @@ function submarineSpecial() {
 					client.fleet[1].mainX = column;
 					client.fleet[1].mainY = row;
 					client.fleet[1].shotCounter = 0;
-					console.log(client.fleet[1].posArray);
 					for (var i = 0; i < client.fleet[1].posArray.length; i++) {
 						var x = client.fleet[1].posArray[i].posX;
 						var y = client.fleet[1].posArray[i].posY;
@@ -389,7 +388,6 @@ function submarineSpecial() {
 				client.fleet[1].mainX = column;
 				client.fleet[1].mainY = row;
 				client.fleet[1].shotCounter = 0;
-				console.log(client.fleet[1].posArray);
 				for (var i = 0; i < client.fleet[1].posArray.length; i++) {
 					var x = client.fleet[1].posArray[i].posX;
 					var y = client.fleet[1].posArray[i].posY;
@@ -416,7 +414,6 @@ function submarineSpecial() {
 				client.fleet[1].mainX = column;
 				client.fleet[1].mainY = row;
 				client.fleet[1].shotCounter = 0;
-				console.log(client.fleet[1].posArray);
 				for (var i = 0; i < client.fleet[1].posArray.length; i++) {
 					var x = client.fleet[1].posArray[i].posX;
 					var y = client.fleet[1].posArray[i].posY;
