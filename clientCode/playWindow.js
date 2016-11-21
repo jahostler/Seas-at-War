@@ -476,6 +476,20 @@ class gameWindow {
 		return returnData;
 	}
 	
+	//helper function for selectObject
+	//hides all ship descriptions
+	//TODO: fix
+	clearDes() {
+		document.getElementById('des1').style.display = 'none';
+		document.getElementById('des2').style.display = 'none';
+		document.getElementById('des3').style.display = 'none';
+		document.getElementById('des4').style.display = 'none';
+		document.getElementById('des5').style.display = 'none';
+		document.getElementById('des6').style.display = 'none';
+		document.getElementById('des7').style.display = 'none';
+		document.getElementById('des8').style.display = 'none';
+	}
+	
 	selectObject(evt) {
 		if(client.hasTurn) {
 			//http://www.html5canvastutorials.com/advanced/html5-canvas-mouse-coordinates/
@@ -494,6 +508,55 @@ class gameWindow {
 			else if (!playWindow.hoveredTile.equals(new orderedPair(-1, -1))) {
 				playWindow.selectedTile = playWindow.hoveredTile;
 				playWindow.moveMade(playWindow.attackType);
+			}
+			//display ship ability
+			//TODO: fix
+			if(playWindow.selectedShip != -1) {
+				switch(client.fleet[playWindow.selectedShip].shipName) {
+					case 'Scrambler':
+						playWindow.clearDes();
+						document.getElementById('des1').style.display = 'block';
+						playWindow.draw();
+						break;
+					case 'Scanner':
+						playWindow.clearDes();
+						document.getElementById('des2').style.display = 'block';
+						playWindow.draw();
+						break;
+					case 'Submarine':
+						playWindow.clearDes();
+						document.getElementById('des3').style.display = 'block';
+						playWindow.draw();
+						break;
+					case 'Defender':
+						playWindow.clearDes();
+						document.getElementById('des4').style.display = 'block';
+						playWindow.draw();
+						break;
+					case 'Cruiser':
+						playWindow.clearDes();
+						document.getElementById('des5').style.display = 'block';
+						playWindow.draw();
+						break;
+					case 'Carrier':
+						playWindow.clearDes();
+						document.getElementById('des6').style.display = 'block';
+						playWindow.draw();
+						break;
+					case 'Executioner':
+						playWindow.clearDes();
+						document.getElementById('des7').style.display = 'block';
+						playWindow.draw();
+						break;
+					case 'Artillery':
+						playWindow.clearDes();
+						document.getElementById('des8').style.display = 'block';
+						playWindow.draw();
+						break;
+						
+					default:
+						break;		
+				}
 			}
 		}
 	}

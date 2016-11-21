@@ -340,3 +340,14 @@ button span {
 	color: red;
 	font-size: 30px;
 }
+
+.inGameShipDes{
+	max-width:650px;
+	height:320px;
+	top: 625px;
+	left: 780px;
+	color: white;
+	font-size:25px;
+	word-wrap: break-word;
+	background-color: rgba(0,0,0,0);
+}
