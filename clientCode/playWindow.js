@@ -205,6 +205,7 @@ class gameWindow {
 	drawTimer() {
 		if (playWindow.timerCount <= 0) {
 			playWindow.timerCount = 1;
+			//TODO: end turn
 		}
  		if (client.hasTurn) {
 			playWindow.timerCount--;
