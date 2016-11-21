@@ -40,6 +40,8 @@ class gameWindow {
 		this.selectedTile = new orderedPair(-1, -1);
 		this.hoveredTile = new orderedPair(-1, -1);
 		this.numOfImagesLoaded = 0;
+		this.targetDetectIcon = new Image();
+		this.targetDetectIcon.src = 'images/targetDetectIcon.png';
 		this.targetScrambleIcon = new Image();
 		this.targetScrambleIcon.src = 'images/targetScrambleIcon.png';
 		this.targetHitIcon = new Image();
@@ -154,6 +156,12 @@ class gameWindow {
 					}
 					else if (data.specialData[0] == 'scramble') {
 						playWindow.specialMessage = "You have scrambled the enemy.";
+					}
+					else if(data.specialData[0] == 'detect'){
+						playWindow.specialMessage = "You have detected an enemy ship.";
+						console.log(data.specialData[1]);
+						console.log("Detected Location: (" + data.specialData[1].posX + "," + data.specialData[1].posY + ")")
+						client.targetGrid.field[data.specialData[1].posX][data.specialData[1].posY].detected = true;
 					}
 					else if (data.specialData[0] == 5) { //Cruiser Special Attack
 						console.log(data.specialData);
@@ -649,6 +657,9 @@ class gameWindow {
 				}
 				if (targetTile.partialVision) {
 					this.context.drawImage(this.partialVisionIcon, targetTile.corner.posX, targetTile.corner.posY, this.adjust(70), this.adjust(70));
+				}
+				if (targetTile.detected && targetTile.isShotAt() == false){
+					this.context.drawImage(this.targetDetectIcon, targetTile.corner.posX, targetTile.corner.posY, this.adjust(70), this.adjust(70));
 				}
 			}
 		}

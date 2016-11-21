@@ -408,6 +408,20 @@ function repositionAttack(){
 	return new orderedPair(defX, defY);
 }
 
+function findRandomEnemy(){
+	var shipPositions = new Array();
+	for (var i = 0; i < 9; i++) {
+		for (var j = 0; j < 9; j++){
+			if(client.homeGrid.field[i][j].hasShip == true && client.homeGrid.field[i][j].shipHit == undefined){
+				shipPositions.push(new orderedPair(i,j));
+			}
+		}
+	}
+	console.log("shipPositions.length = " + shipPositions.length);
+	return shipPositions[getRandomInt(0,shipPositions.length-1)];
+	
+}
+
 //loads graphics for playing the game, and listens for game updates (such as a tile being attacked or the game ending)
 function initializeGame() {
 	client.homeGrid.loadGrid(playWindow.homeGridStart(), playWindow.adjust(70));
@@ -497,7 +511,8 @@ function initializeGame() {
 		
 		//Carrier Special 
 		else if (attackData.coordinates[0] == 6){ 
-			
+			attackData.coordinates = new Array();
+			specialResult = ["detect", findRandomEnemy()];
 		}
 		
 		//Executioner Special
