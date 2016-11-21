@@ -243,12 +243,6 @@ button span {
 #buildAFleet {
 	color: white;
 }
-#winImg{
-	
-}
-#loseImg{
-	
-}
 #buildAFleet div{
 	width: 420px;
 	height: 210px;
@@ -342,7 +336,6 @@ button span {
 	color: red;
 	font-size: 30px;
 }
-
 #gameOverWin {
 	color: gold;
 	font-size: 65px;
@@ -352,4 +345,14 @@ button span {
 	color: red;
 	font-size: 65px;
 	text-align: center;
+}
+.inGameShipDes{
+	max-width:650px;
+	height:320px;
+	top: 625px;
+	left: 780px;
+	color: white;
+	font-size:25px;
+	word-wrap: break-word;
+	background-color: rgba(0,0,0,0);
 }
