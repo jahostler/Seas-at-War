@@ -524,6 +524,17 @@ function initializeGame() {
 						console.log("Cruiser Special");
 					}
 				}
+				else if(updatedTiles[i].shipIndex == 1) {
+					if(client.fleet[1].firstHit){
+						specialResult = client.fleet[1].specialAttack(attackData.ship); //hits submarine
+						submarineSpecial();
+						client.homeGrid.field[x][y].hasShip = true;
+						client.homeGrid.field[x][y].shipHit = true;
+						client.homeGrid.field[x][y].shipIndex = -1;
+						playWindow.draw();
+						console.log("Submarine Special");
+					}
+				}
 			}
 			else if (str != "hit")
 				str = "miss";

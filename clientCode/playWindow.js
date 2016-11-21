@@ -60,6 +60,7 @@ class gameWindow {
 		this.selectedButton = '';
 		this.timerFunction;
 		this.timerCount = 30;
+		this.alternateSubmarine = new Image();
 		
 		this.images = [new Image(), new Image(), new Image(), new Image()];
 		for (var i = 0; i < this.images.length; i++) {
@@ -69,6 +70,14 @@ class gameWindow {
 			}
 			this.images[i].src = 'images/Ships/ship' + imageName + '.png';
 			this.images[i].addEventListener('load', this.loadPage, false);
+			if (imageName.substring(0,4) == "3Sub") {
+				if (client.fleet[i].vert) {
+					this.alternateSubmarine.src = 'images/Ships/ship3SubmarineHor.png';
+				}
+				else {
+					this.alternateSubmarine.src = 'images/Ships/ship3Submarine.png';
+				}
+			}
 		}
 	}
 	
