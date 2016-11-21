@@ -92,19 +92,30 @@ class gameWindow {
 				for (var i = 0; i < updatedTiles.length; i++) {
 					var x = updatedTiles[i].corner.posX;
 					var y = updatedTiles[i].corner.posY;
-					client.targetGrid.field[currentTiles[i].posX][currentTiles[i].posY].hasShip = updatedTiles[i].hasShip;
-					client.targetGrid.field[currentTiles[i].posX][currentTiles[i].posY].shipHit = updatedTiles[i].shipHit;
 					if(scramble > 0){
 						client.targetGrid.field[currentTiles[i].posX][currentTiles[i].posY].scrambled = true;
+						client.targetGrid.field[currentTiles[i].posX][currentTiles[i].posY].shipHit = false;
+					}
+					else {
+						client.targetGrid.field[currentTiles[i].posX][currentTiles[i].posY].hasShip = updatedTiles[i].hasShip;
+						client.targetGrid.field[currentTiles[i].posX][currentTiles[i].posY].shipHit = updatedTiles[i].shipHit;
 					}
 				}
-				if (data.result == "hit") {
+				if(scramble > 0 && (data.result == "hit" || data.result == "miss")) {
+					scramble--;
+					if (scramble != 1)
+						playWindow.turnResult = "Radar jammed for " + scramble + " more turns.";
+					else
+						playWindow.turnResult = "Radar jammed for " + scramble + " more turn.";
+					
+				}
+				else if (data.result == "hit") {
 					playWindow.turnResult = "You damaged an enemy ship!";
 				}
 				else if (data.result == "miss") {
 					playWindow.turnResult = "Your shot landed in the ocean.";
 				}
-				else {
+				else if (data.result != 'jammed') {
 					playWindow.turnResult = "You sunk the enemy's " + data.result + "!";
 				}
 				if (playWindow.specialData.length > 0) {
@@ -141,8 +152,8 @@ class gameWindow {
 					if (data.specialData[0] == "deflect") {
 						deflect = true;
 					}
-					else if(data.specialData[0] == "scramble") {
-						scramble = 3; 
+					else if (data.specialData[0] == 'scramble') {
+						playWindow.specialMessage = "You have scrambled the enemy.";
 					}
 					else if (data.specialData[0] == 5) { //Cruiser Special Attack
 						console.log(data.specialData);
@@ -564,17 +575,9 @@ class gameWindow {
 				}
 				if (targetTile.isShotAt()) {
 					if(targetTile.scrambled) {
-						if(targetTile.shipIndex != -1){
-							if(client.fleet[targetTile.shipIndex].alive)
-								this.context.drawImage(this.targetHitIcon, targetTile.corner.posX, targetTile.corner.posY, this.adjust(70), this.adjust(70));
-							else
-								this.context.drawImage(this.targetScrambleIcon, targetTile.corner.posX, targetTile.corner.posY, this.adjust(70), this.adjust(70));
-						}
-						else {
-							this.context.drawImage(this.targetScrambleIcon, targetTile.corner.posX, targetTile.corner.posY, this.adjust(70), this.adjust(70));
-						}
+						this.context.drawImage(this.targetScrambleIcon, targetTile.corner.posX, targetTile.corner.posY, this.adjust(70), this.adjust(70));
 					}
-					if (targetTile.shipHit == true) {
+					else if (targetTile.shipHit == true) {
 						this.context.drawImage(this.targetHitIcon, targetTile.corner.posX, targetTile.corner.posY, this.adjust(70), this.adjust(70));
 					}
 					else if (targetTile.shipHit == false) {

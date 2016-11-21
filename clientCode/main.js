@@ -401,13 +401,10 @@ function getRandomInt(min, max) {
 function repositionAttack(){
 	var defX = getRandomInt(0,8);
 	var defY = getRandomInt(0,8);
-	console.log("Reposition Idea: ("+defX+","+defY+")");
 	while(client.homeGrid.field[defX][defY].shipPresent()){
 		var defX = getRandomInt(0,8);
 		var defY = getRandomInt(0,8);
-		console.log("Reposition Idea: ("+defX+","+defY+")");
 	}
-	console.log("Reposition Final: ("+defX+","+defY+")");
 	return new orderedPair(defX, defY);
 }
 
@@ -438,7 +435,7 @@ function initializeGame() {
 		var attackCoordinate = attackData.coordinates[0];
 		if (typeof attackCoordinate === "number")
 			attackCoordinate = attackData.coordinates[1];
-		if (deflect == true) {
+		if (deflect == true && attackData.coordinates[0] != 1) {
 			var tempPlace = repositionAttack();
 			attackCoordinate = tempPlace;
 			if (typeof attackData.coordinates[0] === "number"){
@@ -451,11 +448,12 @@ function initializeGame() {
 			deflectStr = 'Enemy defender deflected shot.';
 		}
 		var specialResult = new Array();
-		console.log("Deflect Count: " + deflect);
 		//Scrambler Special 
-		if (attackData.coordinates[0] == 1){ 
-			specialResult = ["scramble"];
+		if (attackData.coordinates[0] == 1){
+			scramble = 3;
 			attackData.coordinates = new Array();
+			specialResult = ["scramble"];
+			str = 'jammed';
 		}
 		
 		//Scanner Special
@@ -554,9 +552,6 @@ function initializeGame() {
 			returnData.defelectData = deflectStr;
 		}
 		returnData.specialData = specialResult;
-		if(scramble > 0){
-			scramble--;
-		}
 		socket.emit('game updated', returnData);
 		client.hasTurn = true;
 		playWindow.draw();
