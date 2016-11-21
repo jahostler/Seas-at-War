@@ -40,6 +40,8 @@ class gameWindow {
 		this.selectedTile = new orderedPair(-1, -1);
 		this.hoveredTile = new orderedPair(-1, -1);
 		this.numOfImagesLoaded = 0;
+		this.targetScrambleIcon = new Image();
+		this.targetScrambleIcon.src = 'images/targetScrambleIcon.png';
 		this.targetHitIcon = new Image();
 		this.targetHitIcon.src = 'images/targetHitIcon.png';
 		this.targetMissIcon = new Image();
@@ -92,6 +94,9 @@ class gameWindow {
 					var y = updatedTiles[i].corner.posY;
 					client.targetGrid.field[currentTiles[i].posX][currentTiles[i].posY].hasShip = updatedTiles[i].hasShip;
 					client.targetGrid.field[currentTiles[i].posX][currentTiles[i].posY].shipHit = updatedTiles[i].shipHit;
+					if(scramble > 0){
+						client.targetGrid.field[currentTiles[i].posX][currentTiles[i].posY].scrambled = true;
+					}
 				}
 				if (data.result == "hit") {
 					playWindow.turnResult = "You damaged an enemy ship!";
@@ -128,6 +133,9 @@ class gameWindow {
 				else if (data.specialData.length > 0) {
 					if (data.specialData[0] == "deflect") {
 						deflect = true;
+					}
+					else if(data.specialData[0] == "scramble") {
+						scramble = 3; 
 					}
 					else if (data.specialData[0] == 5) { //Cruiser Special Attack
 						console.log(data.specialData);
@@ -551,12 +559,18 @@ class gameWindow {
 					}
 				}
 				if (targetTile.isShotAt()) {
-					if (targetTile.shipHit == true) {
-						this.context.drawImage(this.targetHitIcon, targetTile.corner.posX, targetTile.corner.posY, this.adjust(70), this.adjust(70));
+					if(targetTile.scrambled && client.fleet[targetTile.shipIndex].alive){
+						this.context.drawImage(this.targetScrambleIcon, targetTile.corner.posX, targetTile.corner.posY, this.adjust(70), this.adjust(70));
 					}
-					else if (targetTile.shipHit == false) {
-						this.context.drawImage(this.targetMissIcon, targetTile.corner.posX, targetTile.corner.posY, this.adjust(70), this.adjust(70));
+					else{
+						if (targetTile.shipHit == true) {
+							this.context.drawImage(this.targetHitIcon, targetTile.corner.posX, targetTile.corner.posY, this.adjust(70), this.adjust(70));
+						}
+						else if (targetTile.shipHit == false) {
+							this.context.drawImage(this.targetMissIcon, targetTile.corner.posX, targetTile.corner.posY, this.adjust(70), this.adjust(70));
+						}
 					}
+					
 				}
 				if (targetTile.partialVision) {
 					this.context.drawImage(this.partialVisionIcon, targetTile.corner.posX, targetTile.corner.posY, this.adjust(70), this.adjust(70));

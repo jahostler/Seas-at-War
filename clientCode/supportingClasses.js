@@ -66,6 +66,7 @@ class Tile {
 		this.shipHit = undefined; 	//true = 'hit', false = 'miss', undefined = 'not shot at'
 		this.shipIndex = -1;  		//contains index of ship in client fleet
 		this.partialVision = false; //Whether Tile is under the influence of Scanner's special attack.
+		this.scrambled = false;
 	}
 	
 	shipPresent() {

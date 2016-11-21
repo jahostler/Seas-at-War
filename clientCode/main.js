@@ -23,6 +23,7 @@ var buildButtonDims;
 var selectButtonDims;
 var moveButtonDims;
 var deflect;
+var scramble;
 
 //creates the game interface, and initializes client-side data
 function initialize() {
@@ -328,6 +329,7 @@ function initializeGame() {
 		}
 	}
 	deflect = false;
+	scramble = 0;
 	
 	
 	socket.on(client.id + ' attack made', function(attackData){
@@ -348,11 +350,12 @@ function initializeGame() {
 			}
 			deflect = false;
 		}
+		
 		var specialResult = new Array();
 		console.log("Deflect Count: " + deflect);
 		//Scrambler Special 
 		if (attackData.coordinates[0] == 1){ 
-			
+			specialResult = ["scramble"];
 		}
 		
 		//Scanner Special
@@ -449,6 +452,9 @@ function initializeGame() {
 			returnData.scanData = scanStr;
 		}
 		returnData.specialData = specialResult;
+		if(scramble > 0){
+			scramble-;
+		}
 		socket.emit('game updated', returnData);
 		client.hasTurn = true;
 		playWindow.draw();
