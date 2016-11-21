@@ -566,6 +566,7 @@ function initializeGame() {
 			playWindow.disableButtons();
 			socket.emit('game over', {gID: gameID, playerID: client.id});
 			document.getElementById('gameOverMessage').innerHTML = 'You Lose!';
+
 			document.getElementById('gameOver').style.display = 'block';
 			document.getElementById('gameWindow').style.display = 'none';
 		}
@@ -587,6 +588,7 @@ function initializeGame() {
 		client.hasTurn = false;
 		playWindow.disableButtons();
 		document.getElementById('gameOverMessage').innerHTML = 'You Win!';
+		
 		document.getElementById('gameOver').style.display = 'block';
 		document.getElementById('gameWindow').style.display = 'none';
 	});

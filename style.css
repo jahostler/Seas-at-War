@@ -241,7 +241,12 @@ button span {
 #buildAFleet {
 	color: white;
 }
-
+#winImg{
+	
+}
+#loseImg{
+	
+}
 #buildAFleet div{
 	width: 420px;
 	height: 210px;
@@ -338,5 +343,6 @@ button span {
 
 #gameOver {
 	color: red;
-	font-size: 30px;
+	font-size: 65px;
+	text-align: center;
 }

@@ -201,11 +201,11 @@ class gameWindow {
 		this.context.fillStyle = 'white';
 		this.context.font = '20px Times New Roman';
 		this.context.textAlign = 'center';
-		this.context.fillText(this.turnResult, this.adjust(1625), this.adjust(290));
+		this.context.fillText(this.turnResult, this.adjust(700), this.adjust(850));
 		if (this.specialMessage != '') {
 			this.context.fillStyle = 'red';
 			this.context.font = '20px bold Arial';
-			this.context.fillText(this.specialMessage, this.adjust(1625), this.adjust(265));
+			this.context.fillText(this.specialMessage, this.adjust(700), this.adjust(950));
 		}
 		this.context.shadowColor = 'black';
 		this.context.textAlign = 'start';
