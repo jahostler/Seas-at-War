@@ -359,6 +359,7 @@ function initializeGame() {
 		//Scrambler Special 
 		if (attackData.coordinates[0] == 1){ 
 			specialResult = ["scramble"];
+			attackData.coordinates = new Array();
 		}
 		
 		//Scanner Special
@@ -458,7 +459,7 @@ function initializeGame() {
 		}
 		returnData.specialData = specialResult;
 		if(scramble > 0){
-			scramble-;
+			scramble--;
 		}
 		socket.emit('game updated', returnData);
 		client.hasTurn = true;

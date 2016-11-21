@@ -133,9 +133,10 @@ class gameWindow {
 						playWindow.specialData.push(new orderedPair(x, y));
 					}
 				}
-				if (data.defelectData != undefined) [
+				if (data.defelectData != undefined) {
 					playWindow.specialMessage = data.defelectData;
-				]
+				}
+					
 				if (data.specialData.length > 0) {
 					if (data.specialData[0] == "deflect") {
 						deflect = true;
@@ -565,8 +566,13 @@ class gameWindow {
 					}
 				}
 				if (targetTile.isShotAt()) {
-					if(targetTile.scrambled && client.fleet[targetTile.shipIndex].alive){
-						this.context.drawImage(this.targetScrambleIcon, targetTile.corner.posX, targetTile.corner.posY, this.adjust(70), this.adjust(70));
+					
+					if(targetTile.scrambled) {
+						//if(targetTile.shipIndex != -1){
+							//if(client.fleet[targetTile.shipIndex].alive){
+								this.context.drawImage(this.targetScrambleIcon, targetTile.corner.posX, targetTile.corner.posY, this.adjust(70), this.adjust(70));
+							//}
+						//}
 					}
 					else{
 						if (targetTile.shipHit == true) {
