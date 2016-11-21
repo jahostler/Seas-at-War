@@ -126,7 +126,7 @@ class gameWindow {
 				else if (data.result == "miss") {
 					playWindow.turnResult = "Your shot landed in the ocean.";
 				}
-				else if (data.result != 'jammed') {
+				else if (data.result != 'jammed' && data.result != 'detected') {
 					playWindow.turnResult = "You sunk the enemy's " + data.result + "!";
 				}
 				if (playWindow.specialMessage == 'Enemy cruisier counter attacked.' ||
@@ -202,7 +202,16 @@ class gameWindow {
 						if (!client.fleet[attackingShip].alive) {
 							attackData.result = client.fleet[attackingShip].shipName;
 							attackData.deadShips = sunkShips;
-						}						
+						}
+						if (client.fleet[attackingShip].shipName == "Submarine") {
+							if (client.fleet[attackingShip].firstHit && client.fleet[1].alive) {
+								attackData.specialResult = client.fleet[1].specialAttack(attackData.ship); //hits submarine
+								client.homeGrid.field[x][y].hasShip = true;
+								client.homeGrid.field[x][y].shipHit = true;
+								client.homeGrid.field[x][y].shipIndex = -1;
+								playWindow.draw();
+							}						
+						}
 						socket.emit('turn done', attackData);
 						if (isGameOver()) {
 							client.hasTurn = false;

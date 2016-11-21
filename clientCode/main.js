@@ -430,6 +430,7 @@ function initializeGame() {
 		else if (attackData.coordinates[0] == 6){ 
 			attackData.coordinates = new Array();
 			specialResult = ["detect", findRandomEnemy()];
+			str = "detected";
 		}
 		
 		//Executioner Special
@@ -512,7 +513,6 @@ function initializeGame() {
 		}
 		if (subSpecial && client.fleet[1].alive) {
 			specialResult = client.fleet[1].specialAttack(attackData.ship); //hits submarine
-			submarineSpecial();
 			client.homeGrid.field[x][y].hasShip = true;
 			client.homeGrid.field[x][y].shipHit = true;
 			client.homeGrid.field[x][y].shipIndex = -1;

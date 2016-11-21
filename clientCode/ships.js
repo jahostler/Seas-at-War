@@ -21,7 +21,8 @@ class moveableShip {
 	}
 	updateAlive() {
 		if (this.alive) {
-			if (this.shotCounter == this.length) {
+			if (this.shotCounter >= this.length) {
+				this.shotCounter = this.length;
 				this.alive = false;
 				return true;
 			}
