@@ -492,6 +492,11 @@ function initializeGame() {
 		else if (attackData.coordinates[0] == 5) { 
 			client.targetGrid.field[attackCoordinate.posX][attackCoordinate.posY].hasShip = true;
 			client.targetGrid.field[attackCoordinate.posX][attackCoordinate.posY].shipHit = true;
+			if (attackData.deadShips != undefined) {
+				enemyFleet = attackData.deadShips;
+				playWindow.turnResult = "You sunk the enemy's " + attackData.result + "!";
+				playWindow.draw();
+			}
 			return;
 		}
 		
@@ -521,7 +526,6 @@ function initializeGame() {
 				if (updatedTiles[i].shipIndex == 2) {
 					if (client.fleet[2].firstHit) {
 						specialResult = client.fleet[2].specialAttack(attackData.ship); //hits cruiser 
-						console.log("Cruiser Special");
 					}
 				}
 			}

@@ -32,7 +32,7 @@ class moveableShip {
 	updateSpecialAttacksLeft() {
 		if (this.shipName == 'Scanner' || this.shipName == 'Defender')
 			this.specialAttacksLeft = 2;
-		else if (this.shipName == 'Submarine' || this.shipName == 'Cruiser' || this.shipName == 'Carrier' || this.shipName == 'Executioner') {
+		else if (this.shipName == 'Submarine' || this.shipName == 'Cruiser' || this.shipName == 'Carrier') {
 			this.specialAttacksLeft = 0;
 			if (this.shipName == 'Cruiser') {
 				this.firstHit = true;
