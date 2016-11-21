@@ -565,7 +565,7 @@ class gameWindow {
 				if (targetTile.isShotAt()) {
 					if(targetTile.scrambled) {
 						if(targetTile.shipIndex != -1){
-							if(!client.fleet[targetTile.shipIndex].alive)
+							if(client.fleet[targetTile.shipIndex].alive)
 								this.context.drawImage(this.targetHitIcon, targetTile.corner.posX, targetTile.corner.posY, this.adjust(70), this.adjust(70));
 							else
 								this.context.drawImage(this.targetScrambleIcon, targetTile.corner.posX, targetTile.corner.posY, this.adjust(70), this.adjust(70));
