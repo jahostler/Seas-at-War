@@ -333,7 +333,10 @@ function initializeGame() {
 	socket.on(client.id + ' attack made', function(attackData){
 		var str = '';
 		var scanStr = '';
+		var deflectStr = '';
+		var counterStr = '';
 		var returnData;
+		var specialResult = new Array();
 		var attackCoordinate = attackData.coordinates[0];
 		if (typeof attackCoordinate === "number")
 			attackCoordinate = attackData.coordinates[1];
@@ -347,9 +350,8 @@ function initializeGame() {
 				attackData.coordinates[0] = tempPlace;
 			}
 			deflect = false;
+			deflectStr = 'Enemy defender deflected shot.';
 		}
-		var specialResult = new Array();
-		console.log("Deflect Count: " + deflect);
 		//Scrambler Special 
 		if (attackData.coordinates[0] == 1){ 
 			
@@ -391,7 +393,6 @@ function initializeGame() {
 		else if (attackData.coordinates[0] == 5) { 
 			client.targetGrid.field[attackCoordinate.posX][attackCoordinate.posY].hasShip = true;
 			client.targetGrid.field[attackCoordinate.posX][attackCoordinate.posY].shipHit = true;
-			console.log("Counter done")
 			return;
 		}
 		
@@ -447,6 +448,9 @@ function initializeGame() {
 		};
 		if (scanStr != '') {
 			returnData.scanData = scanStr;
+		}
+		if (deflectStr != '') {
+			returnData.defelectData = deflectStr;
 		}
 		returnData.specialData = specialResult;
 		socket.emit('game updated', returnData);
