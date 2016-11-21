@@ -182,14 +182,11 @@ function processSpecialAttack(name, attackedCoordinate) {
 	var result = new Array();
 	var x;
 	var y;
-	if (typeof attackedCoordinate != "number") {
+	if (typeof attackedCoordinate !== "number") {
 		x = attackedCoordinate.posX;
 		y = attackedCoordinate.posY;
 	}
-	if (name == "Scrambler") {
-		return result;
-	}
-	else if (name == "Scanner") {
+	if (name == "Scanner") {
 		//this section only selects the location that are in bounds
 		if(x-1 > -1 && y-1 > -1){
 			result.push(new orderedPair(x-1, y-1)); //top left

@@ -241,7 +241,12 @@ button span {
 #buildAFleet {
 	color: white;
 }
-
+#winImg{
+	
+}
+#loseImg{
+	
+}
 #buildAFleet div{
 	width: 420px;
 	height: 210px;
