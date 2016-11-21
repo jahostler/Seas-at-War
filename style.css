@@ -71,7 +71,16 @@ button {
 button:hover:enabled {
 	background: -webkit-linear-gradient(top, #C91508 0%, #470000 75%, #470000 100%);
 }
-
+h5{
+	color: white;
+	font-family: Times New Roman;
+	font-size: 22px;
+	font-weight: bold;
+	margin: 0px;
+	padding: 0px;
+	text-align: center;
+	
+}
 .gameButton {
 	border:3px solid #000000;
 	background: -webkit-linear-gradient(top, #57606d, #000000);
@@ -105,16 +114,16 @@ button:hover:enabled {
 	padding:0px 20px 0px 20px;
 }
 #normalAttack {
-	font-size: 24px;
-	padding: 30px 20px 30px 20px;
-	top: 840px;
-	left: 90px;
+	font-size: 20px;
+	padding: 22px 12px 22px 12px;
+	top: 785px;
+	left: 125px;
 }
 #specialAttack {
-	font-size: 24px;
-	padding: 30px 20px 30px 20px;
-	top: 840px;
-	left: 550px;
+	font-size: 20px;
+	padding: 22px 12px 22px 12px;
+	top: 910px;
+	left: 125px;
 }
 #timer{
 	font-size: 60px;
@@ -235,13 +244,13 @@ button span {
 
 #buildAFleet div{
 	width: 420px;
-	height: 200px;
+	height: 210px;
 	word-wrap: break-word;
 	display: none;
 	background-color: rgba(0,0,0,0);
-	top: 780px;
-	left: 100px;
-	font-size: 22px;
+	top: 760px;
+	left: 80px;
+	font-size: 18px;
 	color: white;
 }
 

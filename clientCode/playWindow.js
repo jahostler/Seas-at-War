@@ -485,7 +485,7 @@ class gameWindow {
 	
 	drawPrompt() {
 		playWindow.context.font = '26px Arial';
-		playWindow.context.fillText('Must select Ship first!', playWindow.adjust(90), playWindow.adjust(810));
+		playWindow.context.fillText('Must select Ship first!', playWindow.adjust(90), playWindow.adjust(740));
 	}
 	
 	//prevents player from firing until appropriate conditions have been met
@@ -525,8 +525,8 @@ class gameWindow {
 	
 	drawButtonSelector(buttonID) {
 		if (buttonID != '') {
-			var w = playWindow.adjust(document.getElementById(buttonID).offsetWidth + 70);
-			var h = playWindow.adjust(document.getElementById(buttonID).offsetHeight + 40);
+			var w = playWindow.adjust(document.getElementById(buttonID).offsetWidth + 60);
+			var h = playWindow.adjust(document.getElementById(buttonID).offsetHeight + 35);
 			playWindow.context.lineWidth='3';
 			playWindow.context.strokeStyle='red';
 			if (buttonID == 'normalAttack')
@@ -639,9 +639,10 @@ class gameWindow {
 		for (var i = 0; i < this.images.length; i++) {
 			this.context.drawImage(this.images[i], this.adjust(client.fleet[i].mainX * 70 + 40), this.adjust(client.fleet[i].mainY * 70 + 30), this.adjust(this.images[i].width), this.adjust(this.images[i].height));				
 		}
+		this.context.fillText('Recent Activity', this.adjust(557), this.adjust(740));
 		this.context.fillText('Turn', this.adjust(1575), this.adjust(75));
 		this.context.fillText('Timer', this.adjust(1560), this.adjust(435));
-		this.context.fillText('Chat', this.adjust(1320), this.adjust(750));
+		this.context.fillText('Ship Special Ability', this.adjust(1200), this.adjust(750));
 		this.drawGrids();
 		this.drawTurnMessage();
 		this.drawButtonSelector(this.selectedButton);
