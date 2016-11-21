@@ -23,6 +23,7 @@ var buildButtonDims;
 var selectButtonDims;
 var moveButtonDims;
 var deflect;
+var scramble;
 
 //creates the game interface, and initializes client-side data
 function initialize() {
@@ -142,6 +143,49 @@ function loadGame() {
 		document.getElementById('playerDisconnectMessage').style.display = 'block';
 		removeGame();
 	});
+	
+	prepWindow.canvas.addEventListener('keypress', onkeydown = function(e) {
+		console.log('key pressed: ' + e.keyCode);
+		switch(e.keyCode) {
+			case 97:
+			case 49:
+				shipDetails('Scrambler');
+				break;
+			case 98:
+			case 50:
+				shipDetails('Scanner');
+				break;
+			case 99:
+			case 51:
+				shipDetails('Submarine');
+				break;
+			case 100:
+			case 52:
+				shipDetails('Defender');
+				break;
+			case 101:
+			case 53:
+				shipDetails('Cruiser');
+				break;
+			case 102:
+			case 54:
+				shipDetails('Carrier');
+				break;
+			case 103:
+			case 55:
+				shipDetails('Executioner');
+				break;
+			case 104:
+			case 56:
+				shipDetails('Artillery');
+				break;
+			case 13:
+				console.log('moving to position select');
+				toPositionSelect();
+				break;
+		}
+	});
+	
 	prepWindow.draw();
 	prepWindow.drawButtons();
 }
@@ -268,6 +312,59 @@ function loadPositionSelect() {
 function toPositionSelect() {
 	document.getElementById('buildAFleet').style.display = 'none';
 	document.getElementById('positionFleet').style.display = 'block';
+	//monitors keyboard input
+	positionWindow.canvas.addEventListener('keypress', onkeydown = function(e) {
+		console.log('key pressed');
+		console.log(e.keyCode);
+		switch (e.keyCode) {
+			case 98:
+			case 50:
+				//select class 2 ship
+				console.log(positionWindow.selectShip(0));
+				break;
+			case 99:
+			case 51:
+				//select class 3 ship
+				console.log(positionWindow.selectShip(1));
+				break;
+			case 100:
+			case 52:
+				//select class 4 ship
+				console.log(positionWindow.selectShip(2));
+				break;
+			case 101:
+			case 53:
+				//select class 5 ship
+				console.log(positionWindow.selectShip(3));
+				break;
+			
+			case 37:
+				//move selected ship left
+				console.log(positionWindow.moveAction('Left'));
+				break;
+			case 38:
+				//move selected ship up
+				console.log(positionWindow.moveAction('Up'));
+				break;
+			case 39:
+				//move selected ship right
+				console.log(positionWindow.moveAction('Right'));
+				break;
+			case 40:
+				//move selected ship down
+				console.log(positionWindow.moveAction('Down'));
+				break;
+			case 32:
+				//rotate selected ship
+				console.log(positionWindow.moveAction('Rotate'));
+				break;
+			case 13:
+				//finish
+				console.log("ready to start");
+				startGameScreen();
+				break;
+		}
+	});
 	loadPositionSelect();
 }
 
@@ -328,12 +425,16 @@ function initializeGame() {
 		}
 	}
 	deflect = false;
+	scramble = 0;
 	
 	
 	socket.on(client.id + ' attack made', function(attackData){
 		var str = '';
 		var scanStr = '';
+		var deflectStr = '';
+		var counterStr = '';
 		var returnData;
+		var specialResult = new Array();
 		var attackCoordinate = attackData.coordinates[0];
 		if (typeof attackCoordinate === "number")
 			attackCoordinate = attackData.coordinates[1];
@@ -347,12 +448,14 @@ function initializeGame() {
 				attackData.coordinates[0] = tempPlace;
 			}
 			deflect = false;
+			deflectStr = 'Enemy defender deflected shot.';
 		}
 		var specialResult = new Array();
 		console.log("Deflect Count: " + deflect);
 		//Scrambler Special 
 		if (attackData.coordinates[0] == 1){ 
-			
+			specialResult = ["scramble"];
+			attackData.coordinates = new Array();
 		}
 		
 		//Scanner Special
@@ -391,7 +494,6 @@ function initializeGame() {
 		else if (attackData.coordinates[0] == 5) { 
 			client.targetGrid.field[attackCoordinate.posX][attackCoordinate.posY].hasShip = true;
 			client.targetGrid.field[attackCoordinate.posX][attackCoordinate.posY].shipHit = true;
-			console.log("Counter done")
 			return;
 		}
 		
@@ -448,7 +550,13 @@ function initializeGame() {
 		if (scanStr != '') {
 			returnData.scanData = scanStr;
 		}
+		if (deflectStr != '') {
+			returnData.defelectData = deflectStr;
+		}
 		returnData.specialData = specialResult;
+		if(scramble > 0){
+			scramble--;
+		}
 		socket.emit('game updated', returnData);
 		client.hasTurn = true;
 		playWindow.draw();
