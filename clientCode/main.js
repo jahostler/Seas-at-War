@@ -560,9 +560,8 @@ function initializeGame() {
 			client.hasTurn = false;
 			playWindow.disableButtons();
 			socket.emit('game over', {gID: gameID, playerID: client.id});
-			document.getElementById('gameOverMessage').innerHTML = 'You Lose!';
-
-			document.getElementById('gameOver').style.display = 'block';
+			document.getElementById('gameOverMessageLose').innerHTML = 'You Lose!';
+			document.getElementById('gameOverLose').style.display = 'block';
 			document.getElementById('gameWindow').style.display = 'none';
 		}
 		else {
@@ -582,9 +581,8 @@ function initializeGame() {
 	socket.on(client.id + 'end game', function(data){
 		client.hasTurn = false;
 		playWindow.disableButtons();
-		document.getElementById('gameOverMessage').innerHTML = 'You Win!';
-		
-		document.getElementById('gameOver').style.display = 'block';
+		document.getElementById('gameOverMessageWin').innerHTML = 'You Win!';
+		document.getElementById('gameOverWin').style.display = 'block';
 		document.getElementById('gameWindow').style.display = 'none';
 	});
 }
