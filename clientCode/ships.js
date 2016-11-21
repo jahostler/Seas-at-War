@@ -32,9 +32,9 @@ class moveableShip {
 	updateSpecialAttacksLeft() {
 		if (this.shipName == 'Scanner' || this.shipName == 'Defender')
 			this.specialAttacksLeft = 2;
-		else if (this.shipName == 'Submarine' || this.shipName == 'Cruiser' || this.shipName == 'Carrier') {
+		else if (this.shipName == 'Submarine' || this.shipName == 'Cruiser') {
 			this.specialAttacksLeft = 0;
-			if (this.shipName == 'Cruiser') {
+			if (this.shipName == 'Cruiser' || this.shipName == 'Submarine') {
 				this.firstHit = true;
 			}
 		}
@@ -142,7 +142,8 @@ class moveableShip {
 		}
 		else if (this.shipName == 'Submarine') {
 			result.push(3); //3 error code
-			this.specialAttacksLeft--;
+			this.firstHit = false
+			submarineSpecial()
 			return result;
 		}
 		else if (this.shipName == 'Defender') {
@@ -242,4 +243,196 @@ function processSpecialAttack(name, attackedCoordinate) {
 		}
 		return result;
 	}
+}
+
+function submarineSpecial() {
+	var canRelocateHorizontally = false;
+	var canRelocateVertically = false;
+	//check if possible to relocate vertically
+	for(var i=0; i < client.homeGrid.field.length; i++) {
+		var row = client.homeGrid.field[i];
+		for(var j=0; j < row.length-2; j++) {
+			var tile0 = client.homeGrid.field[i][j];
+			var tile1 = client.homeGrid.field[i][j+1];
+			var tile2 = client.homeGrid.field[i][j+2];
+			if(tile0.hasShip == false && tile0.shipHit == undefined &&
+			   tile1.hasShip == false && tile1.shipHit == undefined &&
+			   tile2.hasShip == false && tile2.shipHit == undefined) {
+				canRelocateVertically = true;
+			}
+		}
+	}
+	//check horizontally
+	if(canRelocateHorizontally == false) {
+		for(var i=0; i < client.homeGrid.field.length-2; i++) {
+			var row = client.homeGrid.field[i];
+			for(var j=0; j < row.length; j++) {
+				var tile0 = client.homeGrid.field[i][j];
+				var tile1 = client.homeGrid.field[i+1][j];
+				var tile2 = client.homeGrid.field[i+2][j];
+				if(tile0.hasShip == false && tile0.shipHit == undefined &&
+				   tile1.hasShip == false && tile1.shipHit == undefined &&
+				   tile2.hasShip == false && tile2.shipHit == undefined) {
+					canRelocateHorizontally = true;
+				}
+			}
+		}
+	}
+	
+	if(canRelocateHorizontally || canRelocateVertically) {
+		var relocated = false;
+		while(relocated == false) {
+			var row = getRandomInt(0,8);
+			var column = getRandomInt(0,8);
+			//[7,7], [7,8], [8,7], and [8,8] are invalid positions
+			if(row == 7 && column == 7)
+				continue;
+			else if(row == 7 && column == 8)
+				continue;
+			else if(row == 8 && column == 7)
+				continue;
+			else if(row == 8 && column == 8)
+				continue;
+			
+			var validHorizontal = false;
+			var validVertical = false;
+			
+			if(canRelocateHorizontally) {
+				console.log("horizontal");
+				console.log("Column: " + column + " Row: " + row);
+				if (column >= 7)
+					continue;
+				var tile0h = client.homeGrid.field[column][row];
+				var tile1h = client.homeGrid.field[column+1][row];
+				var tile2h = client.homeGrid.field[column+2][row];
+				if(tile0h.hasShip == false && tile0h.shipHit == undefined &&
+				   tile1h.hasShip == false && tile1h.shipHit == undefined &&
+				   tile2h.hasShip == false && tile2h.shipHit == undefined) {
+					validHorizontal = true;
+				}
+			}
+			else if(canRelocateVertically) {
+				console.log("vertical");
+				console.log("Column: " + column + " Row: " + row);
+				if (row >= 7)
+					continue;
+				var tile0v = client.homeGrid.field[column][row];
+				var tile1v = client.homeGrid.field[column][row+1];
+				var tile2v = client.homeGrid.field[column][row+2];
+				if(tile0v.hasShip == false && tile0v.shipHit == undefined &&
+				   tile1v.hasShip == false && tile1v.shipHit == undefined &&
+				   tile2v.hasShip == false && tile2v.shipHit == undefined) {
+					validVertical = true;
+				}
+			}
+			
+			if(validVertical && validHorizontal) {
+				//choose orientation at random if both are valid
+				if(getRandomInt(0,1) == 0){
+					//choose vertical
+					if (!client.fleet[1].vert) {
+						playWindow.images[1] = playWindow.alternateSubmarine;
+						client.fleet[1].vert = !client.fleet[1].vert;
+					}
+					client.fleet[1].mainPoint = new orderedPair(column, row);
+					client.fleet[1].mainX = column;
+					client.fleet[1].mainY = row;
+					client.fleet[1].shotCounter = 0;
+					for (var i = 0; i < client.fleet[1].posArray.length; i++) {
+						var x = client.fleet[1].posArray[i].posX;
+						var y = client.fleet[1].posArray[i].posY;
+						client.homeGrid.field[x][y].hasShip = false;
+						client.homeGrid.field[x][y].shipIndex = -1;
+					}
+					client.fleet[1].posArray = client.fleet[1].currentPosArray();
+					for (var i = 0; i < client.fleet[1].posArray.length; i++) {
+						var x = client.fleet[1].posArray[i].posX;
+						var y = client.fleet[1].posArray[i].posY;
+						client.homeGrid.field[x][y].hasShip = true;
+						client.homeGrid.field[x][y].shipIndex = 1;
+					}
+				}
+				else {
+					//choose horizontal
+					if (client.fleet[1].vert) {
+						playWindow.images[1] = playWindow.alternateSubmarine;
+						client.fleet[1].vert = !client.fleet[1].vert;
+					}
+					client.fleet[1].mainPoint = new orderedPair(column, row);
+					client.fleet[1].mainX = column;
+					client.fleet[1].mainY = row;
+					client.fleet[1].shotCounter = 0;
+					console.log(client.fleet[1].posArray);
+					for (var i = 0; i < client.fleet[1].posArray.length; i++) {
+						var x = client.fleet[1].posArray[i].posX;
+						var y = client.fleet[1].posArray[i].posY;
+						client.homeGrid.field[x][y].hasShip = false;
+						client.homeGrid.field[x][y].shipIndex = -1;
+					}
+					client.fleet[1].posArray = client.fleet[1].currentPosArray();
+					for (var i = 0; i < client.fleet[1].posArray.length; i++) {
+						var x = client.fleet[1].posArray[i].posX;
+						var y = client.fleet[1].posArray[i].posY;
+						client.homeGrid.field[x][y].hasShip = true;
+						client.homeGrid.field[x][y].shipIndex = 1;
+					}
+				}
+				relocated = true;
+			}
+			else if(validVertical) {
+				//choose vertical
+				if (!client.fleet[1].vert) {
+					playWindow.images[1] = playWindow.alternateSubmarine;
+					client.fleet[1].vert = !client.fleet[1].vert;
+				}
+				client.fleet[1].mainPoint = new orderedPair(column, row);
+				client.fleet[1].mainX = column;
+				client.fleet[1].mainY = row;
+				client.fleet[1].shotCounter = 0;
+				console.log(client.fleet[1].posArray);
+				for (var i = 0; i < client.fleet[1].posArray.length; i++) {
+					var x = client.fleet[1].posArray[i].posX;
+					var y = client.fleet[1].posArray[i].posY;
+					client.homeGrid.field[x][y].hasShip = false;
+					client.homeGrid.field[x][y].shipIndex = -1;
+				}
+				client.fleet[1].posArray = client.fleet[1].currentPosArray();
+				for (var i = 0; i < client.fleet[1].posArray.length; i++) {
+					var x = client.fleet[1].posArray[i].posX;
+					var y = client.fleet[1].posArray[i].posY;
+					client.homeGrid.field[x][y].hasShip = true;
+					client.homeGrid.field[x][y].shipIndex = 1;
+				}
+				relocated = true;
+				
+			}
+			else if(validHorizontal) {
+				//choose horizontal
+				if (client.fleet[1].vert) {
+					playWindow.images[1] = playWindow.alternateSubmarine;
+					client.fleet[1].vert = !client.fleet[1].vert;
+				}
+				client.fleet[1].mainPoint = new orderedPair(column, row);
+				client.fleet[1].mainX = column;
+				client.fleet[1].mainY = row;
+				client.fleet[1].shotCounter = 0;
+				console.log(client.fleet[1].posArray);
+				for (var i = 0; i < client.fleet[1].posArray.length; i++) {
+					var x = client.fleet[1].posArray[i].posX;
+					var y = client.fleet[1].posArray[i].posY;
+					client.homeGrid.field[x][y].hasShip = false;
+					client.homeGrid.field[x][y].shipIndex = -1;
+				}
+				client.fleet[1].posArray = client.fleet[1].currentPosArray();
+				for (var i = 0; i < client.fleet[1].posArray.length; i++) {
+					var x = client.fleet[1].posArray[i].posX;
+					var y = client.fleet[1].posArray[i].posY;
+					client.homeGrid.field[x][y].hasShip = true;
+					client.homeGrid.field[x][y].shipIndex = 1;
+				}
+				relocated = true;
+			}
+		}
+	}
+	
 }
