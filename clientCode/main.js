@@ -15,6 +15,8 @@ var socket = io.connect();
 var scaling = .8;
 var backgrounds;
 var tempImages;
+var shipImages = new Map();
+var shipDesDims;
 var finishFleetDims;
 var finishShipSelectDims;
 var normalAttackDims;
@@ -48,6 +50,42 @@ function initialize() {
 	tempImages[2].src = 'images/Ships/ship4temp.png';
 	tempImages[3].src = 'images/Ships/ship5temp.png';
 	
+	//load in verical Ship Images
+	shipImages.set('Scrambler', new Image());
+	shipImages.get('Scrambler').src = 'images/Ships/ship2Scrambler.png';
+	shipImages.set('Scanner', new Image());
+	shipImages.get('Scanner').src = 'images/Ships/ship2Scanner.png';
+	shipImages.set('Submarine', new Image());
+	shipImages.get('Submarine').src = 'images/Ships/ship3Submarine.png';
+	shipImages.set('Defender', new Image());
+	shipImages.get('Defender').src = 'images/Ships/ship3Defender.png';
+	shipImages.set('Cruiser', new Image());
+	shipImages.get('Cruiser').src = 'images/Ships/ship4Cruiser.png';
+	shipImages.set('Carrier', new Image());
+	shipImages.get('Carrier').src = 'images/Ships/ship4Carrier.png';
+	shipImages.set('Executioner', new Image());
+	shipImages.get('Executioner').src = 'images/Ships/ship5Executioner.png';
+	shipImages.set('Artillery', new Image());
+	shipImages.get('Artillery').src = 'images/Ships/ship5Artillery.png';
+	
+	//load in horizontal Ship Images
+	shipImages.set('ScramblerHor', new Image());
+	shipImages.get('ScramblerHor').src = 'images/Ships/ship2ScramblerHor.png';
+	shipImages.set('ScannerHor', new Image());
+	shipImages.get('ScannerHor').src = 'images/Ships/ship2ScannerHor.png';
+	shipImages.set('SubmarineHor', new Image());
+	shipImages.get('SubmarineHor').src = 'images/Ships/ship3SubmarineHor.png';
+	shipImages.set('DefenderHor', new Image());
+	shipImages.get('DefenderHor').src = 'images/Ships/ship3DefenderHor.png';
+	shipImages.set('CruiserHor', new Image());
+	shipImages.get('CruiserHor').src = 'images/Ships/ship4CruiserHor.png';
+	shipImages.set('CarrierHor', new Image());
+	shipImages.get('CarrierHor').src = 'images/Ships/ship4CarrierHor.png';
+	shipImages.set('ExecutionerHor', new Image());
+	shipImages.get('ExecutionerHor').src = 'images/Ships/ship5ExecutionerHor.png';
+	shipImages.set('ArtilleryHor', new Image());
+	shipImages.get('ArtilleryHor').src = 'images/Ships/ship5ArtilleryHor.png';
+	
 	//get initial placement of buttons and save positions, so they can be scaled later
 	finishFleetDims = [document.getElementById('finishFleet').offsetLeft, document.getElementById('finishFleet').offsetTop];
 	finishShipSelectDims = [document.getElementById('finishShipSelect').offsetLeft, document.getElementById('finishShipSelect').offsetTop];
@@ -74,6 +112,13 @@ function initialize() {
 		moveButtonDims[i][0] = tempMoveBut[i].offsetLeft;
 		moveButtonDims[i][1] = tempMoveBut[i].offsetTop;
 	}
+	
+	//get initial placement of ship descriptions, so they can be moved later
+	shipDesDims = new Array(2);
+	document.getElementsByClassName('shipDes')[0].style.display = 'block';
+	shipDesDims[0] = document.getElementsByClassName('shipDes')[0].offsetLeft
+	shipDesDims[1] = document.getElementsByClassName('shipDes')[0].offsetTop
+	document.getElementsByClassName('shipDes')[0].style.display = 'none';
 	
 	//Hide all screens except main menu screen
 	var divs = document.getElementsByTagName('div');
@@ -113,7 +158,7 @@ function newGame() {
 	socket.on(client.id + ' join success' , function(data) {
 		document.getElementById('hostGame').style.display = 'none';
 		document.getElementById('buildAFleet').style.display = 'block';
-		document.getElementById('buildAFleet').addEventListener('load', loadGame(), false);
+		loadGame();
 	});
 }
 
@@ -133,7 +178,6 @@ function removeGame() {
 function loadGame() {
 	console.log("Your game ID is " + gameID);
 	prepWindow = new buildAFleetWindow(document.getElementById('buildCanvas'), scaling); //todo: fix scaling of buttons
-	positionWindow = new fleetPositionWindow(document.getElementById('positionCanvas'), scaling)
 	socket.on(gameID + ' player disconnect', function(data){
 		//todo:  add formal message telling client other player disconnected
 		var divs = document.getElementsByTagName('div');
@@ -152,114 +196,32 @@ function loadGame() {
 
 //gets the data associated with a ship
 //data includes a description of ship's ability, as well as images
-function shipDetails(shipname) {
+function shipDetails(shipName, shipIndex) {
 	var index = -1;
 	var descriptions = document.getElementsByClassName('shipDes');
+	var ships = ['Scrambler', 'Scanner', 'Submarine', 'Defender', 'Cruiser', 'Carrier', 'Executioner', 'Artillery'];
 	
-	switch(shipname){
-		case "Scrambler":
-			index = 0;
-			if (prepWindow.class2.src != 'images/Ships/ship2Scrambler.png') {
-				prepWindow.class2.src = 'images/Ships/ship2Scrambler.png';
-				positionWindow.class2.src = 'images/Ships/ship2Scrambler.png';
-				positionWindow.class2Hor.src = 'images/Ships/ship2ScramblerHor.png';
-				prepWindow.class2.addEventListener('load', prepWindow.draw.bind(prepWindow));
-				client.fleet[0] = "Scrambler";
-				document.getElementById('scannerDes').disabled = false;
-			}
-			break;
-		case "Scanner":
-			index = 1;
-			if (prepWindow.class2.src != 'images/Ships/ship2Scanner.png') {
-				prepWindow.class2.src = 'images/Ships/ship2Scanner.png';
-				positionWindow.class2.src = 'images/Ships/ship2Scanner.png';
-				positionWindow.class2Hor.src = 'images/Ships/ship2ScannerHor.png';
-				prepWindow.class2.addEventListener('load', prepWindow.draw.bind(prepWindow));
-				client.fleet[0] = "Scanner";
-				client.fleet[0].specialAttacksLeft = 2;
-				document.getElementById('scramblerDes').disabled = false;
-			}
-			break;	
-		case "Submarine":
-			index = 2;
-			if (prepWindow.class3.src != 'images/Ships/ship3Submarine.png') {
-				prepWindow.class3.src = 'images/Ships/ship3Submarine.png';
-				positionWindow.class3.src = 'images/Ships/ship3Submarine.png';	
-				positionWindow.class3Hor.src = 'images/Ships/ship3SubmarineHor.png';				
-				prepWindow.class3.addEventListener('load', prepWindow.draw.bind(prepWindow));
-				client.fleet[1] = "Submarine";
-				document.getElementById('defenderDes').disabled = false;
-			}
-			break;
-		case "Defender":
-			index = 3;
-			if (prepWindow.class3.src != 'images/Ships/ship3Defender.png') {
-				prepWindow.class3.src = 'images/Ships/ship3Defender.png';
-				positionWindow.class3.src = 'images/Ships/ship3Defender.png';
-				positionWindow.class3Hor.src = 'images/Ships/ship3DefenderHor.png';
-				prepWindow.class3.addEventListener('load', prepWindow.draw.bind(prepWindow));
-				client.fleet[1] = "Defender";
-				client.fleet[0].specialAttacksLeft = 3;
-				document.getElementById('submarineDes').disabled = false;
-			}
-			break;
-		case "Cruiser":
-			index = 4;
-			if (prepWindow.class4.src != 'images/Ships/ship4Cruiser.png') {
-				prepWindow.class4.src = 'images/Ships/ship4Cruiser.png';
-				positionWindow.class4.src = 'images/Ships/ship4Cruiser.png';
-				positionWindow.class4Hor.src = 'images/Ships/ship4CruiserHor.png';
-				prepWindow.class4.addEventListener('load', prepWindow.draw.bind(prepWindow));
-				client.fleet[2] = "Cruiser";
-				document.getElementById('carrierDes').disabled = false;
-			}
-			break;
-		case "Carrier":
-			index = 5;
-			if (prepWindow.class4.src != 'images/Ships/ship4Carrier.png') {
-				prepWindow.class4.src = 'images/Ships/ship4Carrier.png';
-				positionWindow.class4.src = 'images/Ships/ship4Carrier.png';
-				positionWindow.class4Hor.src = 'images/Ships/ship4CarrierHor.png';
-				prepWindow.class4.addEventListener('load', prepWindow.draw.bind(prepWindow));
-				client.fleet[2] = "Carrier";
-				document.getElementById('cruiserDes').disabled = false;
-			}
-			break;
-		case "Executioner":
-			index = 6;
-			if (prepWindow.class5.src != 'images/Ships/ship5Executioner.png') {
-				prepWindow.class5.src = 'images/Ships/ship5Executioner.png';
-				positionWindow.class5.src = 'images/Ships/ship5Executioner.png';
-				positionWindow.class5Hor.src = 'images/Ships/ship5ExecutionerHor.png';
-				prepWindow.class5.addEventListener('load', prepWindow.draw.bind(prepWindow));
-				client.fleet[3] = "Executioner";
-				document.getElementById('artilleryDes').disabled = false;
-			}
-			break;
-		case "Artillery":
-			index = 7;
-			if (prepWindow.class5.src != 'images/Ships/ship5Artillery.png') {
-				prepWindow.class5.src = 'images/Ships/ship5Artillery.png';
-				positionWindow.class5.src = 'images/Ships/ship5Artillery.png';
-				positionWindow.class5Hor.src = 'images/Ships/ship5ArtilleryHor.png';
-				prepWindow.class5.addEventListener('load', prepWindow.draw.bind(prepWindow));
-				client.fleet[3] = "Artillery";
-				document.getElementById('executionerDes').disabled = false;
-			}
-			break;
-	}
-	document.getElementById(shipname.toLowerCase() + 'Des').disabled = true;
-	[].forEach.call(descriptions, function(element){
-			element.style.display = 'none';
-	});
-	descriptions[index].style.display = 'block';
-	if (prepWindow.divX == -1) {
-		prepWindow.divX = prepWindow.adjust(document.getElementsByClassName('shipDes')[index].offsetLeft) + 'px';
-		prepWindow.divY = prepWindow.adjust(document.getElementsByClassName('shipDes')[index].offsetTop) + 'px';
-		[].forEach.call(descriptions, function(element){
-			element.style.left = prepWindow.divX;
-			element.style.top = prepWindow.divY;
-		});
+	if (client.fleet[shipIndex] != shipName || prepWindow.firstSelect[shipIndex]) {
+		prepWindow.images[shipIndex] = shipImages.get(shipName);
+		prepWindow.draw();
+		index = ships.indexOf(shipName);
+		client.fleet[shipIndex] = shipName
+		var altShipName;
+		if (index % 2 == 0)
+			altShipName = ships[index+1].toLowerCase() + 'Des';
+		else
+			altShipName = ships[index-1].toLowerCase() + 'Des';
+		
+		document.getElementById(shipName.toLowerCase() + 'Des').disabled = true;
+		document.getElementById(altShipName).disabled = false;
+		
+		if (prepWindow.currentShipDes != -1)
+			descriptions[prepWindow.currentShipDes].style.display = 'none';
+		prepWindow.currentShipDes = index;
+		descriptions[index].style.display = 'block';
+		descriptions[index].style.left = prepWindow.divX + 'px';
+		descriptions[index].style.top = prepWindow.divY + 'px';
+		prepWindow.firstSelect[shipIndex] = false;
 	}
 }
 
@@ -272,6 +234,7 @@ function loadPositionSelect() {
 function toPositionSelect() {
 	document.getElementById('buildAFleet').style.display = 'none';
 	document.getElementById('positionFleet').style.display = 'block';
+	positionWindow = new fleetPositionWindow(document.getElementById('positionCanvas'), scaling)
 	document.removeEventListener('keydown', prepWindow.selectShips);
 	//monitors keyboard input
 	document.addEventListener('keydown', positionWindow.moveShips, false);
@@ -290,7 +253,6 @@ function startGameScreen() {
 			client.hasTurn = true;
 		}
 		playWindow = new gameWindow(document.getElementById('gameCanvas'), scaling, client);
-		initializeGame();
 	});
 }
 
@@ -312,7 +274,7 @@ function getRandomInt(min, max) {
 function repositionAttack(){
 	var defX = getRandomInt(0,8);
 	var defY = getRandomInt(0,8);
-	while(client.homeGrid.field[defX][defY].shipPresent()){
+	while(client.homeGrid[defX][defY].shipPresent()){
 		var defX = getRandomInt(0,8);
 		var defY = getRandomInt(0,8);
 	}
@@ -323,7 +285,7 @@ function findRandomEnemy(){
 	var shipPositions = new Array();
 	for (var i = 0; i < 9; i++) {
 		for (var j = 0; j < 9; j++){
-			if(client.homeGrid.field[i][j].hasShip == true && client.homeGrid.field[i][j].shipHit == undefined){
+			if(client.homeGrid[i][j].hasShip == true && client.homeGrid[i][j].shipHit == undefined){
 				shipPositions.push(new orderedPair(i,j));
 			}
 		}
@@ -335,15 +297,13 @@ function findRandomEnemy(){
 
 //loads graphics for playing the game, and listens for game updates (such as a tile being attacked or the game ending)
 function initializeGame() {
-	client.homeGrid.loadGrid(playWindow.homeGridStart(), playWindow.adjust(70));
-	client.targetGrid.loadGrid(playWindow.targetGridStart(), playWindow.adjust(70));
 	for (var i = 0; i < client.fleet.length; i++) {
 		var posArray = client.fleet[i].currentPosArray();
 		for (var j = 0; j < posArray.length; j++) {
 			var xCor = posArray[j].posX;
 			var yCor = posArray[j].posY;
-			client.homeGrid.field[xCor][yCor].hasShip = true;
-			client.homeGrid.field[xCor][yCor].shipIndex = i;
+			client.homeGrid[xCor][yCor].hasShip = true;
+			client.homeGrid[xCor][yCor].shipIndex = i;
 		}
 	}
 	deflect = false;
@@ -393,10 +353,10 @@ function initializeGame() {
 			for (var i = 0; i < scanArray.length; i++) {
 				var x = scanArray[i].posX;
 				var y = scanArray[i].posY;
-				if (client.homeGrid.field[x][y].shipPresent()) {
+				if (client.homeGrid[x][y].shipPresent()) {
 					scanCount++;
 				}
-				scanResult.push(client.homeGrid.field[x][y]);
+				scanResult.push(client.homeGrid[x][y]);
 			}
 			attackData.coordinates = [attackCoordinate];
 			if (scanCount == 0)
@@ -416,8 +376,8 @@ function initializeGame() {
 		
 		//Cruiser Special 
 		else if (attackData.coordinates[0] == 5) { 
-			client.targetGrid.field[attackCoordinate.posX][attackCoordinate.posY].hasShip = true;
-			client.targetGrid.field[attackCoordinate.posX][attackCoordinate.posY].shipHit = true;
+			client.targetGrid[attackCoordinate.posX][attackCoordinate.posY].hasShip = true;
+			client.targetGrid[attackCoordinate.posX][attackCoordinate.posY].shipHit = true;
 			if (attackData.deadShips != undefined) {
 				enemyFleet = attackData.deadShips;
 				playWindow.turnResult = "You sunk the enemy's " + attackData.result + "!";
@@ -443,7 +403,7 @@ function initializeGame() {
 				for (var i = 0; i < partialTiles.length; i++) {
 					var x = partialTiles[i].posX;
 					var y = partialTiles[i].posY;
-					var selectedShip = client.homeGrid.field[x][y].shipIndex;
+					var selectedShip = client.homeGrid[x][y].shipIndex;
 					if (selectedShip != -1) {
 						if (client.fleet[selectedShip].length < smallestLength) {
 							smallestLength = client.fleet[selectedShip].length;
@@ -458,8 +418,8 @@ function initializeGame() {
 			if (smallestShip == -1 || !attackInPartial) {
 				var x = attackCoordinate.posX;
 				var y = attackCoordinate.posY;
-				if (client.homeGrid.field[x][y].shipIndex != -1) {	//Destroy entire ship at the single point
-					smallestShip = client.homeGrid.field[x][y].shipIndex;
+				if (client.homeGrid[x][y].shipIndex != -1) {	//Destroy entire ship at the single point
+					smallestShip = client.homeGrid[x][y].shipIndex;
 					attackData.coordinates = client.fleet[smallestShip].posArray
 				}
 				else {
@@ -482,8 +442,8 @@ function initializeGame() {
 		for (var i = 0; i < updatedTiles.length; i++) {
 			var x = attackData.coordinates[i].posX;
 			var y = attackData.coordinates[i].posY;
-			client.homeGrid.field[x][y].updateTile();
-			updatedTiles[i] = client.homeGrid.field[x][y];
+			client.homeGrid[x][y].updateTile();
+			updatedTiles[i] = client.homeGrid[x][y];
 			if (updatedTiles[i].shipHit) {
 				str = "hit";
 				if (updatedTiles[i].shipIndex == 2) {
@@ -513,9 +473,9 @@ function initializeGame() {
 		}
 		if (subSpecial && client.fleet[1].alive) {
 			specialResult = client.fleet[1].specialAttack(attackData.ship); //hits submarine
-			client.homeGrid.field[x][y].hasShip = true;
-			client.homeGrid.field[x][y].shipHit = true;
-			client.homeGrid.field[x][y].shipIndex = -1;
+			client.homeGrid[x][y].hasShip = true;
+			client.homeGrid[x][y].shipHit = true;
+			client.homeGrid[x][y].shipIndex = -1;
 			playWindow.draw();
 		}
 		returnData = {

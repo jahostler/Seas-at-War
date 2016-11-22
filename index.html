@@ -124,28 +124,28 @@
 		<div id="buildAFleet">
 			<canvas id="buildCanvas"> Canvas is not supported by your browser.  </canvas>
 		
-				<button id="scramblerDes" class="gameButton buildButton" onClick="shipDetails('Scrambler')">
+				<button id="scramblerDes" class="gameButton buildButton" onClick="shipDetails('Scrambler', 0)">
 					<span> 1 </span> 
 				</button>
-				<button id="scannerDes"  class="gameButton buildButton" onClick="shipDetails('Scanner')">
+				<button id="scannerDes"  class="gameButton buildButton" onClick="shipDetails('Scanner', 0)">
 					<span> 2 </span> 
 				</button>
-				<button id="submarineDes"  class="gameButton buildButton" onClick="shipDetails('Submarine')">
+				<button id="submarineDes"  class="gameButton buildButton" onClick="shipDetails('Submarine', 1)">
 					<span> 3 </span> 
 				</button>
-				<button id="defenderDes"  class="gameButton buildButton" onClick="shipDetails('Defender')">
+				<button id="defenderDes"  class="gameButton buildButton" onClick="shipDetails('Defender', 1)">
 					<span> 4 </span> 
 				</button>
-				<button id="cruiserDes"  class="gameButton buildButton" onClick="shipDetails('Cruiser')">
+				<button id="cruiserDes"  class="gameButton buildButton" onClick="shipDetails('Cruiser', 2)">
 					<span> 5 </span> 
 				</button>
-				<button id="carrierDes"  class="gameButton buildButton" onClick="shipDetails('Carrier')">
+				<button id="carrierDes"  class="gameButton buildButton" onClick="shipDetails('Carrier', 2)">
 					<span> 6 </span> 
 				</button>
-				<button id="executionerDes"  class="gameButton buildButton" onClick="shipDetails('Executioner')">
+				<button id="executionerDes"  class="gameButton buildButton" onClick="shipDetails('Executioner', 3)">
 					<span> 7 </span> 
 				</button>
-				<button id="artilleryDes"  class="gameButton buildButton" onClick="shipDetails('Artillery')">
+				<button id="artilleryDes"  class="gameButton buildButton" onClick="shipDetails('Artillery', 3)">
 					<span> 8 </span> 
 				</button>
 				
@@ -247,16 +247,16 @@
 				<span> Rotate </span>
 			</button>
 			
-			<button id="move2" class="gameButton shipSelectButton" onclick="positionWindow.selectShip(0)">
+			<button id="move2" class="gameButton shipSelectButton" onclick="positionWindow.drawSelectShip(0)">
 				<span> Class 2 </span>
 			</button>
-			<button id="move3" class="gameButton shipSelectButton" onclick="positionWindow.selectShip(1)">
+			<button id="move3" class="gameButton shipSelectButton" onclick="positionWindow.drawSelectShip(1)">
 				<span> Class 3 </span>
 			</button>
-			<button id="move4" class="gameButton shipSelectButton" onclick="positionWindow.selectShip(2)">
+			<button id="move4" class="gameButton shipSelectButton" onclick="positionWindow.drawSelectShip(2)">
 				<span> Class 4 </span>
 			</button>
-			<button id="move5" class="gameButton shipSelectButton" onclick="positionWindow.selectShip(3)">
+			<button id="move5" class="gameButton shipSelectButton" onclick="positionWindow.drawSelectShip(3)">
 				<span> Class 5 </span>
 			</button>
 			

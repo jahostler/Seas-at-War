@@ -19,34 +19,47 @@ Holds information on player's ships, grids, whether or not it is their turn, etc
 
 class Player {
     constructor() {
-        this.homeGrid = new Grid();
-		this.targetGrid = new Grid();
+        this.homeGrid = new Array(9);
+		for (var i = 0; i < 9; i++) {
+			this.homeGrid[i] = new Array(9);
+		}
+		this.targetGrid = new Array(9);
+		for (var i = 0; i < 9; i++) {
+			this.targetGrid[i] = new Array(9);
+		}
 		this.id = -1;
         this.fleet = ['Scrambler', 'Submarine', 'Cruiser', 'Executioner'];
 		this.hasTurn = false;
     }
-}
-
-/*
-Grid class
----------------------
-Holds the tiles in a player's grid
-
-*/
-class Grid {
-	constructor() {
-		this.field = new Array(9);
-		for (var i = 0; i < 9; i++) {
-			this.field[i] = new Array(9);
+	
+	loadGrid(grid, topLeftCorner, tileSize) {
+		var x = topLeftCorner.posX;
+		var y = topLeftCorner.posY;
+		if (grid == 'home') {
+			for (var i = 0; i < 9; i++) {
+				for (var j = 0; j < 9; j++) {
+					this.homeGrid[i][j] = new Tile(new orderedPair(i*tileSize + x, j*tileSize + y), new orderedPair(i, j));
+				}
+			}
+		}
+		else if (grid == 'target') {
+			for (var i = 0; i < 9; i++) {
+				for (var j = 0; j < 9; j++) {
+					this.targetGrid[i][j] = new Tile(new orderedPair(i*tileSize + x, j*tileSize + y), new orderedPair(i, j));
+				}
+			}
 		}
 	}
 	
-	loadGrid(topLeftCorner, tileSize) {
-		var x = topLeftCorner.posX;
-		var y = topLeftCorner.posY;
-		for (var i = 0; i < 9; i++) {
-			for (var j = 0; j < 9; j++) {
-				this.field[i][j] = new Tile(new orderedPair(i*tileSize + x, j*tileSize + y), new orderedPair(i, j));
+	clearGrid(grid) {
+		if (grid == 'home') {
+			for (var i = 0; i < 9; i++) {
+				this.homeGrid[i] = new Array(9);
+			}
+		}
+		else if (grid == 'target') {
+			for (var i = 0; i < 9; i++) {
+				this.targetGrid[i] = new Array(9);
 			}
 		}
 	}
@@ -79,12 +92,14 @@ class Tile {
 	}
 	
 	updateTile() {
-		if(this.shipPresent()) {
-			this.shipHit = true;
-			client.fleet[this.shipIndex].shotCounter++;
-		}
-		else {
-			this.shipHit = false;
+		if (!this.isShotAt()) {
+			if(this.shipPresent()) {
+				this.shipHit = true;
+				client.fleet[this.shipIndex].shotCounter++;
+			}
+			else {
+				this.shipHit = false;
+			}
 		}
 	}
 }

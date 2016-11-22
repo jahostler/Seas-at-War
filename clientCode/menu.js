@@ -50,7 +50,7 @@ function joinID() {
 		gameID = input;
 		document.getElementById('joinGame').style.display = 'none';
 		document.getElementById('buildAFleet').style.display = 'block';
-		document.getElementById('buildAFleet').addEventListener('load', loadGame(), false);
+		loadGame();
 	});
 }
 

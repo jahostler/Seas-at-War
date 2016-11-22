@@ -20,48 +20,50 @@ class buildAFleetWindow {
 		this.canvas.height = this.adjust(1080);
 		this.context = canvas.getContext('2d');
 		this.background = backgrounds[0];
-		
-		this.class2 = tempImages[0];
-		this.class3 = tempImages[1];
-		this.class4 = tempImages[2];
-		this.class5 = tempImages[3];
+		this.images = new Array();
+		this.images.push(tempImages[0]);
+		this.images.push(tempImages[1]);
+		this.images.push(tempImages[2]);
+		this.images.push(tempImages[3]);
 		this.buildButtons = document.getElementsByClassName('buildButton');
-		this.divX = -1;
-		this.divY = -1;
+		this.divX = this.adjust(shipDesDims[0]);
+		this.divY = this.adjust(shipDesDims[1]);
+		this.currentShipDes = -1;
+		this.firstSelect = [true, true, true, true];
 	}
 	selectShips(e) {
 		switch(e.keyCode) {
 			case 97:
 			case 49:
-				shipDetails('Scrambler');
+				shipDetails('Scrambler', 0);
 				break;
 			case 98:
 			case 50:
-				shipDetails('Scanner');
+				shipDetails('Scanner', 0);
 				break;
 			case 99:
 			case 51:
-				shipDetails('Submarine');
+				shipDetails('Submarine', 1);
 				break;
 			case 100:
 			case 52:
-				shipDetails('Defender');
+				shipDetails('Defender', 1);
 				break;
 			case 101:
 			case 53:
-				shipDetails('Cruiser');
+				shipDetails('Cruiser', 2);
 				break;
 			case 102:
 			case 54:
-				shipDetails('Carrier');
+				shipDetails('Carrier', 2);
 				break;
 			case 103:
 			case 55:
-				shipDetails('Executioner');
+				shipDetails('Executioner', 3);
 				break;
 			case 104:
 			case 56:
-				shipDetails('Artillery');
+				shipDetails('Artillery', 3);
 				break;
 			case 13:
 				toPositionSelect();
@@ -84,10 +86,10 @@ class buildAFleetWindow {
 		this.context.shadowColor = 'black';
 		this.context.shadowOffsetX = 3;
 		this.context.shadowOffsetY = 3;
-		this.context.drawImage(this.class2, this.adjust(180), this.adjust(240), this.adjust(this.class2.width), this.adjust(this.class2.height));
-		this.context.drawImage(this.class3, this.adjust(250), this.adjust(240), this.adjust(this.class3.width), this.adjust(this.class3.height));
-		this.context.drawImage(this.class4, this.adjust(320), this.adjust(240), this.adjust(this.class4.width), this.adjust(this.class4.height));
-		this.context.drawImage(this.class5, this.adjust(390), this.adjust(240), this.adjust(this.class5.width), this.adjust(this.class5.height));
+		this.context.drawImage(this.images[0], this.adjust(390), this.adjust(240), this.adjust(this.images[0].width), this.adjust(this.images[0].height));
+		this.context.drawImage(this.images[1], this.adjust(320), this.adjust(240), this.adjust(this.images[1].width), this.adjust(this.images[1].height));
+		this.context.drawImage(this.images[2], this.adjust(250), this.adjust(240), this.adjust(this.images[2].width), this.adjust(this.images[2].height));
+		this.context.drawImage(this.images[3], this.adjust(180), this.adjust(240), this.adjust(this.images[3].width), this.adjust(this.images[3].height));
 		this.context.fillStyle = 'white';
 		this.context.font = 'bold 32px Arial';
 		this.context.fillText('Build Fleet Menu', this.adjust(850), this.adjust(100));
@@ -126,38 +128,23 @@ class fleetPositionWindow {
 		this.canvas.height = this.adjust(1080);
 		this.context = canvas.getContext('2d');
 		this.background = backgrounds[1];
-		this.class2 = new Image();
-		this.class3 = new Image();
-		this.class4 = new Image();
-		this.class5 = new Image();
-		this.class2Hor = new Image();
-		this.class3Hor = new Image();
-		this.class4Hor = new Image();
-		this.class5Hor = new Image();
-		this.selectRectangle = new Image();
-		this.class2.src = 'images/Ships/ship2' + client.fleet[0] + '.png';
-		this.class3.src = 'images/Ships/ship3' + client.fleet[1] + '.png';
-		this.class4.src = 'images/Ships/ship4' + client.fleet[2] + '.png';
-		this.class5.src = 'images/Ships/ship5' + client.fleet[3] + '.png';
-		this.class2Hor.src = 'images/Ships/ship2' + client.fleet[0] + 'Hor.png';
-		this.class3Hor.src = 'images/Ships/ship3' + client.fleet[1] + 'Hor.png';
-		this.class4Hor.src = 'images/Ships/ship4' + client.fleet[2] + 'Hor.png';
-		this.class5Hor.src = 'images/Ships/ship5' + client.fleet[3] + 'Hor.png';
-		this.selectRectangle.src = 'images/selectRec.png';
-		this.moveableShips = new Array(4);
-		this.moveableShips[0] = new moveableShip(client.fleet[0], 2, 2, 3);
-		this.moveableShips[1] = new moveableShip(client.fleet[1], 3, 3, 3);
-		this.moveableShips[2] = new moveableShip(client.fleet[2], 4, 4, 3);
-		this.moveableShips[3] = new moveableShip(client.fleet[3], 5, 5, 3);
+		this.images = new Array();
+		this.images.push(shipImages.get(client.fleet[0]));
+		this.images.push(shipImages.get(client.fleet[1]));
+		this.images.push(shipImages.get(client.fleet[2]));
+		this.images.push(shipImages.get(client.fleet[3]));
+		this.shipNames = client.fleet.slice(0);
+
+		client.fleet[0] = new moveableShip(client.fleet[0], 2, 5, 3);
+		client.fleet[1] = new moveableShip(client.fleet[1], 3, 4, 3);
+		client.fleet[2] = new moveableShip(client.fleet[2], 4, 3, 3);
+		client.fleet[3] = new moveableShip(client.fleet[3], 5, 2, 3);
+		client.loadGrid('home', new orderedPair(this.adjust(40), this.adjust(30)), this.adjust(70));
 		this.selectButtons = document.getElementsByClassName('shipSelectButton');
 		this.moveButtons = document.getElementsByClassName('shipMoveButton');
-		this.selectedShip = -1;
-		this.xAdj = [0,0,0,0];
-		this.yAdj = [0,0,0,0];
-		this.rotAdj = [false,false,false,false];
-		
-		
+		this.selectedShip = -1;	
 	}
+	
 	waitMessage() {
 		this.context.font = '24px Arial';
 		this.context.fillStyle = 'white';
@@ -166,11 +153,9 @@ class fleetPositionWindow {
 		this.context.shadowOffsetY = 3;
 		this.draw();
 		this.context.fillText('Waiting for other player...', this.adjust(177), this.adjust(950));
-		for (var i = 0; i < this.moveableShips.length; i++) {
-			this.moveableShips[i].shipName = client.fleet[i];
-			this.moveableShips[i].updateSpecialAttacksLeft();
+		for (var i = 0; i < client.fleet.length; i++) {
+			client.fleet[i].updateSpecialAttacksLeft();
 		}
-		client.fleet = this.moveableShips;
 		var buttons = document.getElementById('positionFleet').querySelectorAll('button');
 		[].forEach.call(buttons, function(element) {
 			element.disabled = true;
@@ -201,40 +186,15 @@ class fleetPositionWindow {
 		this.context.shadowColor = 'black';
 		this.context.shadowOffsetX = 3;
 		this.context.shadowOffsetY = 3;
-		//class 2 display
-		if(this.rotAdj[0] == false){
-			this.context.drawImage(this.class2, this.adjust(180 + this.xAdj[0]), this.adjust(240 + this.yAdj[0]), this.adjust(this.class2.width), this.adjust(this.class2.height));
-		}
-		else{
-			this.context.drawImage(this.class2Hor, this.adjust(180 + this.xAdj[0]), this.adjust(240 + this.yAdj[0]), this.adjust(this.class2.height), this.adjust(this.class2.width));
-		}
-		//class 3 display
-		if(this.rotAdj[1] == false){
-			this.context.drawImage(this.class3, this.adjust(250 + this.xAdj[1]), this.adjust(240 + this.yAdj[1]), this.adjust(this.class3.width), this.adjust(this.class3.height));
-		}
-		else{
-			this.context.drawImage(this.class3Hor, this.adjust(250 + this.xAdj[1]), this.adjust(240 + this.yAdj[1]), this.adjust(this.class3.height), this.adjust(this.class3.width));
-		}
-		//class 4 display
-		if(this.rotAdj[2] == false){
-			this.context.drawImage(this.class4, this.adjust(320 + this.xAdj[2]), this.adjust(240 + this.yAdj[2]), this.adjust(this.class4.width), this.adjust(this.class4.height));
-		}
-		else{
-			this.context.drawImage(this.class4Hor, this.adjust(320 + this.xAdj[2]), this.adjust(240 + this.yAdj[2]), this.adjust(this.class4.height), this.adjust(this.class4.width));
-		}
-		//class 5 display
-		if(this.rotAdj[3] == false){
-			this.context.drawImage(this.class5, this.adjust(390 + this.xAdj[3]), this.adjust(240 + this.yAdj[3]), this.adjust(this.class5.width), this.adjust(this.class5.height));
-		}
-		else{
-			this.context.drawImage(this.class5Hor, this.adjust(390 + this.xAdj[3]), this.adjust(240 + this.yAdj[3]), this.adjust(this.class5.height), this.adjust(this.class5.width));
+		for (var i = 0; i < client.fleet.length; i++) {
+			var x = client.homeGrid[client.fleet[i].mainX][client.fleet[i].mainY].corner.posX;
+			var y = client.homeGrid[client.fleet[i].mainX][client.fleet[i].mainY].corner.posY;
+			this.context.drawImage(this.images[i], x, y, this.adjust(this.images[i].width), this.adjust(this.images[i].height));
 		}
 		this.context.fillText('Move Fleet Menu', this.adjust(850), this.adjust(100));
 		this.context.font = '28px Arial';
-		this.context.fillText(client.fleet[0], this.adjust(950), this.adjust(225));
-		this.context.fillText(client.fleet[1], this.adjust(950), this.adjust(355));
-		this.context.fillText(client.fleet[2], this.adjust(950), this.adjust(485));
-		this.context.fillText(client.fleet[3], this.adjust(950), this.adjust(615));
+		for (var i = 0; i < this.shipNames.length; i++)
+			this.context.fillText(this.shipNames[i], this.adjust(950), this.adjust(225 + (i * 130)));
 	}
 	
 	moveShips(e) {
@@ -242,22 +202,22 @@ class fleetPositionWindow {
 			case 98:
 			case 50:
 				//select class 2 ship
-				positionWindow.selectShip(0);
+				positionWindow.drawSelectShip(0);
 				break;
 			case 99:
 			case 51:
 				//select class 3 ship
-				positionWindow.selectShip(1);
+				positionWindow.drawSelectShip(1);
 				break;
 			case 100:
 			case 52:
 				//select class 4 ship
-				positionWindow.selectShip(2);
+				positionWindow.drawSelectShip(2);
 				break;
 			case 101:
 			case 53:
 				//select class 5 ship
-				positionWindow.selectShip(3);
+				positionWindow.drawSelectShip(3);
 				break;
 
 			case 37:
@@ -287,34 +247,21 @@ class fleetPositionWindow {
 		}
 	}
 	
-	selectShip(shipID) {
+	drawSelectShip(shipID) {
+		if (this.selectedShip != -1) {
+			document.getElementsByClassName('shipSelectButton')[this.selectedShip].disabled = false;
+		}
+		document.getElementsByClassName('shipSelectButton')[shipID].disabled = true;
 		this.selectedShip = shipID;
 		this.draw();
-		var xPos;
-		var yPos;
-		[].forEach.call(document.getElementsByClassName('shipSelectButton'), function(element) {
-			element.disabled = false;
-		});
-		document.getElementById('move' + (shipID+2)).disabled = true;
-		switch(shipID) {
-			case 0:
-				xPos = 945;
-				yPos = 173;
-				break;
-			case 1:
-				xPos = 945;
-				yPos = 303;
-				break;
-			case 2:
-				xPos = 945;
-				yPos = 433;
-				break;
-			case 3:
-				xPos = 945;
-				yPos = 563;
-				break;
-		}
-		this.context.drawImage(this.selectRectangle, this.adjust(xPos), this.adjust(yPos), this.adjust(this.selectRectangle.width), this.adjust(this.selectRectangle.height));
+		this.context.lineWidth='3';
+		this.context.strokeStyle='red';
+		this.context.strokeRect(this.adjust(945), this.adjust(173 + (shipID * 130)), this.adjust(287), this.adjust(76));
+		var currentShip = client.fleet[shipID];
+		var drawPoint = client.homeGrid[currentShip.mainX][currentShip.mainY].corner;
+		var selectorW = this.adjust(this.images[shipID].width);
+		var selectorH = this.adjust(this.images[shipID].height);
+		this.context.strokeRect(drawPoint.posX, drawPoint.posY, selectorW, selectorH);
 	}
 	
 	//determine if the attempted move in position for the current ship is valid (in the game window and does not overlap with other ships)
@@ -322,31 +269,23 @@ class fleetPositionWindow {
 	checkPosition(desiredMove) {
 		this.draw();
 		var shipID = this.selectedShip;
-		this.selectShip(shipID);
+		this.drawSelectShip(shipID);
 		for(var i = 0; i < desiredMove.length; i++) {
 			var current = desiredMove[i];
 			//out of bounds X check
-			if(current.getX() < 0){
-				this.context.fillText('Invalid Move!', this.adjust(240), this.adjust(760));
-				return false;
-			}
-			else if(current.getX() > 8){
+			if(current.getX() < 0 || current.getX() > 8){
 				this.context.fillText('Invalid Move!', this.adjust(240), this.adjust(760));
 				return false;
 			}
 			//out of bounds Y check
-			if(current.getY() < 0){
-				this.context.fillText('Invalid Move!', this.adjust(240), this.adjust(760));
-				return false;
-			}
-			else if(current.getY() > 8){
+			if(current.getY() < 0 || current.getY() > 8){
 				this.context.fillText('Invalid Move!', this.adjust(240), this.adjust(760));
 				return false;
 			}
 			//ship collision check
-			for(var j = 0; j < this.moveableShips.length; j++){
+			for(var j = 0; j < client.fleet.length; j++){
 				if(j != shipID){
-					var compareShip = this.moveableShips[j].currentPosArray();
+					var compareShip = client.fleet[j].posArray;
 					for(var k = 0; k < compareShip.length; k++){
 						var comparePos = compareShip[k];
 						if(current.equals(comparePos)){
@@ -355,7 +294,6 @@ class fleetPositionWindow {
 						}
 					}//end comparePos
 				}
-				
 			}//end ship loop
 		}//desiredMove loop end; 
 		return true;
@@ -366,101 +304,40 @@ class fleetPositionWindow {
 	//returns true if successful, false otherwise
 	moveAction(actionString){
 		var shipID = this.selectedShip;
-		
-		if(actionString == 'Rotate'){
-			if(this.checkPosition(this.moveableShips[shipID].checkRotate()) == true){
-				this.moveableShips[shipID].rotate();
-				if(this.moveableShips[shipID].vert){
-					switch(shipID){
-						case 0: 
-							this.rotAdj[0] = false;
-							break;
-						case 1:
-							this.rotAdj[1] = false;
-							break;
-						case 2:
-							this.rotAdj[2] = false;
-							break;
-						case 3:
-							this.rotAdj[3] = false;
-							break;
-					}
-				}
-				else{
-					switch(shipID){
-						case 0: 
-							this.rotAdj[0] = true;
-							break;
-						case 1:
-							this.rotAdj[1] = true;
-							break;
-						case 2:
-							this.rotAdj[2] = true;
-							break;
-						case 3:
-							this.rotAdj[3] = true;
-							break;
-					}
-				}
-				this.draw();
-				this.selectShip(shipID);
-				return true;
+		if (shipID > -1) { 
+			if(actionString == 'Rotate'){
+				if(!this.checkPosition(client.fleet[shipID].checkRotate()))
+					return false;
+				
+				client.fleet[shipID].rotate();
+				if(client.fleet[shipID].vert)
+					this.images[shipID] = shipImages.get(this.shipNames[shipID]);
+				else
+					this.images[shipID] = shipImages.get(this.shipNames[shipID] + 'Hor');
 			}
-			else{
-				return false;
+			else if(actionString == 'Up') {
+				if(!this.checkPosition(client.fleet[shipID].checkMove('Up')))
+					return false;
+				client.fleet[shipID].move('Up');
 			}
+			else if(actionString == 'Down') {
+				if(!this.checkPosition(client.fleet[shipID].checkMove('Down')))
+					return false;
+				client.fleet[shipID].move('Down');
+			}
+			else if(actionString == 'Right') {
+				if(!this.checkPosition(client.fleet[shipID].checkMove('Right')))
+					return false;
+				client.fleet[shipID].move('Right');
+			}
+			else if(actionString == 'Left') {
+				if(!this.checkPosition(client.fleet[shipID].checkMove('Left')))
+					return false;
+				client.fleet[shipID].move('Left');
+			}
+			this.draw();
+			this.drawSelectShip(shipID);
+			return true;
 		}
-		else if(actionString == 'Up'){
-			if(this.checkPosition(this.moveableShips[shipID].checkMove('Up')) == true){
-				this.moveableShips[shipID].move('Up');
-				this.yAdj[shipID] = this.yAdj[shipID] - 70;
-				this.draw()
-				this.selectShip(shipID);
-				return true;
-			}
-			else{
-				return false;
-			}
-		}
-		else if(actionString == 'Down'){
-			if(this.checkPosition(this.moveableShips[shipID].checkMove('Down')) == true){
-				this.moveableShips[shipID].move('Down');
-				this.yAdj[shipID] = this.yAdj[shipID] + 70;
-				this.draw()
-				this.selectShip(shipID);
-				return true;
-			}
-			else{
-				return false;
-			}
-		}
-		else if(actionString == 'Right'){
-			if(this.checkPosition(this.moveableShips[shipID].checkMove('Right')) == true){
-				this.moveableShips[shipID].move('Right');
-				this.xAdj[shipID] = this.xAdj[shipID] + 70;
-				this.draw()
-				this.selectShip(shipID);
-				return true;
-			}
-			else{
-				return false;
-			}
-		}
-		else if(actionString == 'Left'){
-			if(this.checkPosition(this.moveableShips[shipID].checkMove('Left')) == true){
-				this.moveableShips[shipID].move('Left');
-				this.xAdj[shipID] = this.xAdj[shipID] - 70;
-				this.draw()
-				this.selectShip(shipID);
-				return true;
-			}
-			else{
-				return false;
-			}
-		}
-		else{
-			return false;
-		}
-		return false;
 	}
 }

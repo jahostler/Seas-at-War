@@ -39,7 +39,6 @@ class gameWindow {
 		this.hoveredShip = -1;
 		this.selectedTile = new orderedPair(-1, -1);
 		this.hoveredTile = new orderedPair(-1, -1);
-		this.numOfImagesLoaded = 0;
 		this.targetDetectIcon = new Image();
 		this.targetDetectIcon.src = 'images/targetDetectIcon.png';
 		this.targetScrambleIcon = new Image();
@@ -63,173 +62,171 @@ class gameWindow {
 		this.selectedButton = '';
 		this.timerFunction;
 		this.timerCount = 30;
-		this.alternateSubmarine = new Image();
 		
-		this.images = [new Image(), new Image(), new Image(), new Image()];
-		for (var i = 0; i < this.images.length; i++) {
-			var imageName = (i+2) + client.fleet[i].shipName;
+		this.images = new Array();
+		for (var i = 0; i < client.fleet.length; i++) {
+			var imageName = client.fleet[i].shipName;
 			if (!client.fleet[i].vert) {
 				imageName += 'Hor';
 			}
-			this.images[i].src = 'images/Ships/ship' + imageName + '.png';
-			this.images[i].addEventListener('load', this.loadPage, false);
-			if (imageName.substring(0,4) == "3Sub") {
+			this.images.push(shipImages.get(imageName));
+			if (client.fleet[i].shipName == 'Submarine') {
 				if (client.fleet[i].vert) {
-					this.alternateSubmarine.src = 'images/Ships/ship3SubmarineHor.png';
+					this.alternateSubmarine = shipImages.get('SubmarineHor');
 				}
 				else {
-					this.alternateSubmarine.src = 'images/Ships/ship3Submarine.png';
+					this.alternateSubmarine = shipImages.get('Submarine');
 				}
 			}
 		}
+		this.loadPage();
 	}
 	
 	//loads the game window, hiding the fleet positioning window
 	loadPage() {
-		playWindow.numOfImagesLoaded++;
-		if (playWindow.numOfImagesLoaded == 4) {
-			playWindow.draw();
-			document.getElementById('positionFleet').style.display = 'none';
-			document.getElementById('gameWindow').style.display = 'block';
-			playWindow.drawButtons();
-			playWindow.timerFunction = setInterval(playWindow.drawTimer, 1000);
-			socket.on(client.id + ' make update', function(data){
-				var updatedTiles = data.tiles;
-				var currentTiles = new Array();
-				for (var i = 0; i < updatedTiles.length; i++) {
-					currentTiles.push(updatedTiles[i].coordinate);
-				}
-				enemyFleet = data.enemyShips;
-				for (var i = 0; i < updatedTiles.length; i++) {
-					var x = updatedTiles[i].corner.posX;
-					var y = updatedTiles[i].corner.posY;
-					if(scramble > 0){
-						client.targetGrid.field[currentTiles[i].posX][currentTiles[i].posY].scrambled = true;
-						client.targetGrid.field[currentTiles[i].posX][currentTiles[i].posY].shipHit = false;
-					}
-					else {
-						client.targetGrid.field[currentTiles[i].posX][currentTiles[i].posY].hasShip = updatedTiles[i].hasShip;
-						client.targetGrid.field[currentTiles[i].posX][currentTiles[i].posY].shipHit = updatedTiles[i].shipHit;
-					}
-				}
-				if(scramble > 0 && (data.result == "hit" || data.result == "miss")) {
-					scramble--;
-					if (scramble != 1)
-						playWindow.turnResult = "Radar jammed for " + scramble + " more turns.";
-					else
-						playWindow.turnResult = "Radar jammed for " + scramble + " more turn.";
-					
-				}
-				else if (data.result == "hit") {
-					playWindow.turnResult = "You damaged an enemy ship!";
-				}
-				else if (data.result == "miss") {
-					playWindow.turnResult = "Your shot landed in the ocean.";
-				}
-				else if (data.result != 'jammed' && data.result != 'detected') {
-					playWindow.turnResult = "You sunk the enemy's " + data.result + "!";
-				}
-				if (playWindow.specialMessage == 'Enemy cruisier counter attacked.' ||
-					playWindow.specialMessage == 'Enemy executioner fired killing blow.') 
-				{
-					playWindow.specialMessage = '';
-				}
-				if (playWindow.specialData.length > 0) {
-					if (playWindow.specialData[0] == 'Scan') { //Erase highlighted areas
-						playWindow.specialData.splice(0, 1);
-						for (var i = 0; i < playWindow.specialData.length; i++) {
-							var x = playWindow.specialData[i].posX;
-							var y = playWindow.specialData[i].posY;
-							client.targetGrid.field[x][y].partialVision = false;
-						}
-						playWindow.specialData = new Array();
-						playWindow.scanMessage = '';
-					}
-				}
-				if (data.scanData != undefined) {
-					playWindow.scanMessage = data.scanData;
-					playWindow.specialData = new Array();
-					playWindow.specialData.push('Scan');
-					for (var i = 0; i < data.scanArray.length; i++) {
-						var x = data.scanArray[i].coordinate.posX;
-						var y = data.scanArray[i].coordinate.posY;
-						client.targetGrid.field[x][y].partialVision = true;
-						playWindow.specialData.push(new orderedPair(x, y));
-					}
-				}
-				if (data.defelectData != undefined) {
-					playWindow.specialMessage = data.defelectData;
-				}
-					
-				if (data.specialData.length > 0) {
-					if (data.specialData[0] == "deflect") {
-						deflect = true;
-					}
-					else if (data.specialData[0] == 'scramble') {
-						playWindow.specialMessage = "You have scrambled the enemy.";
-					}
-					else if(data.specialData[0] == 'detect'){
-						playWindow.specialMessage = "You have detected an enemy ship.";
-						console.log(data.specialData[1]);
-						console.log("Detected Location: (" + data.specialData[1].posX + "," + data.specialData[1].posY + ")")
-						client.targetGrid.field[data.specialData[1].posX][data.specialData[1].posY].detected = true;
-					}
-					else if (data.specialData[0] == 5) { //Cruiser Special Attack
-						var attackingShip = data.specialData[1];
-						var max = client.fleet[attackingShip].length;
-						var rand = Math.floor(Math.random() * (max));
-						var x = client.fleet[attackingShip].posArray[rand].posX;
-						var y = client.fleet[attackingShip].posArray[rand].posY;
-						while(client.homeGrid.field[x][y].isShotAt()) {
-							rand = Math.floor(Math.random() * (max));
-							x = client.fleet[attackingShip].posArray[rand].posX;
-							y = client.fleet[attackingShip].posArray[rand].posY;
-						}
-						client.homeGrid.field[x][y].updateTile();
-						var sunkShips = new Array(4);
-						for (var i = 0; i < client.fleet.length; i++) {
-							client.fleet[i].updateAlive();
-							if (!client.fleet[i].alive) {
-								sunkShips[i] = client.fleet[i];
-							}
-						}
-						playWindow.specialMessage = "Enemy cruisier counter attacked.";
-						var attackData = {
-							playerID: client.id,
-							coordinates: [5, new orderedPair(x, y)],
-							gID: gameID
-						}
-						if (!client.fleet[attackingShip].alive) {
-							attackData.result = client.fleet[attackingShip].shipName;
-							attackData.deadShips = sunkShips;
-						}
-						if (client.fleet[attackingShip].shipName == "Submarine") {
-							if (client.fleet[attackingShip].firstHit && client.fleet[1].alive) {
-								attackData.specialResult = client.fleet[1].specialAttack(attackData.ship); //hits submarine
-								client.homeGrid.field[x][y].hasShip = true;
-								client.homeGrid.field[x][y].shipHit = true;
-								client.homeGrid.field[x][y].shipIndex = -1;
-								playWindow.draw();
-							}						
-						}
-						socket.emit('turn done', attackData);
-						if (isGameOver()) {
-							client.hasTurn = false;
-							playWindow.disableButtons();
-							socket.emit('game over', {gID: gameID, playerID: client.id});
-							document.getElementById('gameOverMessageLose').innerHTML = 'You Lose!';
-							document.getElementById('gameOverLose').style.display = 'block';
-							document.getElementById('gameWindow').style.display = 'none';
-						}
-					}
+		client.loadGrid('target', new orderedPair(this.adjust(710), this.adjust(30)), this.adjust(70));
+		initializeGame();
+		this.draw();
+		document.getElementById('positionFleet').style.display = 'none';
+		document.getElementById('gameWindow').style.display = 'block';
+		this.drawButtons();
+		this.timerFunction = setInterval(this.drawTimer, 1000);
+		socket.on(client.id + ' make update', function(data){
+			var updatedTiles = data.tiles;
+			var currentTiles = new Array();
+			for (var i = 0; i < updatedTiles.length; i++) {
+				currentTiles.push(updatedTiles[i].coordinate);
+			}
+			enemyFleet = data.enemyShips;
+			for (var i = 0; i < updatedTiles.length; i++) {
+				var x = updatedTiles[i].corner.posX;
+				var y = updatedTiles[i].corner.posY;
+				if(scramble > 0){
+					client.targetGrid[currentTiles[i].posX][currentTiles[i].posY].scrambled = true;
+					client.targetGrid[currentTiles[i].posX][currentTiles[i].posY].shipHit = false;
 				}
 				else {
-					playWindow.specialMessage = '';
+					client.targetGrid[currentTiles[i].posX][currentTiles[i].posY].hasShip = updatedTiles[i].hasShip;
+					client.targetGrid[currentTiles[i].posX][currentTiles[i].posY].shipHit = updatedTiles[i].shipHit;
 				}
-				playWindow.disableButtons();
-				playWindow.draw();
-			});
-		}
+			}
+			if(scramble > 0 && (data.result == "hit" || data.result == "miss")) {
+				scramble--;
+				if (scramble != 1)
+					playWindow.turnResult = "Radar jammed for " + scramble + " more turns.";
+				else
+					playWindow.turnResult = "Radar jammed for " + scramble + " more turn.";
+
+			}
+			else if (data.result == "hit") {
+				playWindow.turnResult = "You damaged an enemy ship!";
+			}
+			else if (data.result == "miss") {
+				playWindow.turnResult = "Your shot landed in the ocean.";
+			}
+			else if (data.result != 'jammed' && data.result != 'detected') {
+				playWindow.turnResult = "You sunk the enemy's " + data.result + "!";
+			}
+			if (playWindow.specialMessage == 'Enemy cruisier counter attacked.' ||
+				playWindow.specialMessage == 'Enemy executioner fired killing blow.') 
+			{
+				playWindow.specialMessage = '';
+			}
+			if (playWindow.specialData.length > 0) {
+				if (playWindow.specialData[0] == 'Scan') { //Erase highlighted areas
+					playWindow.specialData.splice(0, 1);
+					for (var i = 0; i < playWindow.specialData.length; i++) {
+						var x = playWindow.specialData[i].posX;
+						var y = playWindow.specialData[i].posY;
+						client.targetGrid[x][y].partialVision = false;
+					}
+					playWindow.specialData = new Array();
+					playWindow.scanMessage = '';
+				}
+			}
+			if (data.scanData != undefined) {
+				playWindow.scanMessage = data.scanData;
+				playWindow.specialData = new Array();
+				playWindow.specialData.push('Scan');
+				for (var i = 0; i < data.scanArray.length; i++) {
+					var x = data.scanArray[i].coordinate.posX;
+					var y = data.scanArray[i].coordinate.posY;
+					client.targetGrid[x][y].partialVision = true;
+					playWindow.specialData.push(new orderedPair(x, y));
+				}
+			}
+			if (data.defelectData != undefined) {
+				playWindow.specialMessage = data.defelectData;
+			}
+
+			if (data.specialData.length > 0) {
+				if (data.specialData[0] == "deflect") {
+					deflect = true;
+				}
+				else if (data.specialData[0] == 'scramble') {
+					playWindow.specialMessage = "You have scrambled the enemy.";
+				}
+				else if(data.specialData[0] == 'detect'){
+					playWindow.specialMessage = "You have detected an enemy ship.";
+					console.log(data.specialData[1]);
+					console.log("Detected Location: (" + data.specialData[1].posX + "," + data.specialData[1].posY + ")")
+					client.targetGrid[data.specialData[1].posX][data.specialData[1].posY].detected = true;
+				}
+				else if (data.specialData[0] == 5) { //Cruiser Special Attack
+					var attackingShip = data.specialData[1];
+					var max = client.fleet[attackingShip].length;
+					var rand = Math.floor(Math.random() * (max));
+					var x = client.fleet[attackingShip].posArray[rand].posX;
+					var y = client.fleet[attackingShip].posArray[rand].posY;
+					while(client.homeGrid[x][y].isShotAt()) {
+						rand = Math.floor(Math.random() * (max));
+						x = client.fleet[attackingShip].posArray[rand].posX;
+						y = client.fleet[attackingShip].posArray[rand].posY;
+					}
+					client.homeGrid[x][y].updateTile();
+					var sunkShips = new Array(4);
+					for (var i = 0; i < client.fleet.length; i++) {
+						client.fleet[i].updateAlive();
+						if (!client.fleet[i].alive) {
+							sunkShips[i] = client.fleet[i];
+						}
+					}
+					playWindow.specialMessage = "Enemy cruisier counter attacked.";
+					var attackData = {
+						playerID: client.id,
+						coordinates: [5, new orderedPair(x, y)],
+						gID: gameID
+					}
+					if (!client.fleet[attackingShip].alive) {
+						attackData.result = client.fleet[attackingShip].shipName;
+						attackData.deadShips = sunkShips;
+					}
+					if (client.fleet[attackingShip].shipName == "Submarine") {
+						if (client.fleet[attackingShip].firstHit && client.fleet[1].alive) {
+							attackData.specialResult = client.fleet[1].specialAttack(attackData.ship); //hits submarine
+							client.homeGrid[x][y].hasShip = true;
+							client.homeGrid[x][y].shipHit = true;
+							client.homeGrid[x][y].shipIndex = -1;
+							playWindow.draw();
+						}						
+					}
+					socket.emit('turn done', attackData);
+					if (isGameOver()) {
+						client.hasTurn = false;
+						playWindow.disableButtons();
+						socket.emit('game over', {gID: gameID, playerID: client.id});
+						document.getElementById('gameOverMessageLose').innerHTML = 'You Lose!';
+						document.getElementById('gameOverLose').style.display = 'block';
+						document.getElementById('gameWindow').style.display = 'none';
+					}
+				}
+			}
+			else {
+				playWindow.specialMessage = '';
+			}
+			playWindow.disableButtons();
+			playWindow.draw();
+		});
 	}
 	
 	//adjusts size of window
@@ -308,12 +305,7 @@ class gameWindow {
 		}, false);
 		this.disableButtons();
 	}
-	homeGridStart() {
-		return new orderedPair(playWindow.adjust(40), playWindow.adjust(30));
-	}
-	targetGridStart() {
-		return new orderedPair(playWindow.adjust(710), playWindow.adjust(30));
-	}
+	
 	//stores the player's attack, and sends the data to the server
 	//afterwards, waits for a server update, then updates the gameWindow with the results of the attack
 	moveMade(attackType) {
@@ -354,7 +346,7 @@ class gameWindow {
 			playWindow.hoveredShip = -1;
 			playWindow.hoveredTile = new orderedPair(-1, -1);
 			if (gridName == 'home') {
-				var i = client.homeGrid.field[x][y].shipIndex;
+				var i = client.homeGrid[x][y].shipIndex;
 				if (i == -1) {
 					playWindow.draw();
 				}
@@ -372,7 +364,7 @@ class gameWindow {
 				}
 			}
 			else if (gridName == 'target') {
-				if (!client.targetGrid.field[x][y].isShotAt()) {
+				if (!client.targetGrid[x][y].isShotAt()) {
 					playWindow.draw();
 					if (playWindow.selectedShip != -1) {
 						playWindow.drawShipSelector(playWindow.selectedShip);
@@ -628,7 +620,7 @@ class gameWindow {
 	disableButtons() {
 		document.getElementById('normalAttack').disabled = true;
 		document.getElementById('specialAttack').disabled = true;
-		playWindow.selectedButton = '';
+		this.selectedButton = '';
 	}
 	
 	//enable firing
@@ -674,10 +666,10 @@ class gameWindow {
 	
 	//update the grids with the result of the turn
 	drawGrids() {
-		for(var i = 0; i < client.homeGrid.field.length; i++) {
-			for(var j = 0; j < client.homeGrid.field[i].length; j++) {
-				var homeTile = client.homeGrid.field[i][j];
-				var targetTile = client.targetGrid.field[i][j];
+		for(var i = 0; i < client.homeGrid.length; i++) {
+			for(var j = 0; j < client.homeGrid[i].length; j++) {
+				var homeTile = client.homeGrid[i][j];
+				var targetTile = client.targetGrid[i][j];
 				if (homeTile.isShotAt()) {
 					if (homeTile.shipHit == true) {
 						this.context.drawImage(this.homeHitIcon, homeTile.corner.posX, homeTile.corner.posY, this.adjust(70), this.adjust(70));
@@ -709,7 +701,7 @@ class gameWindow {
 		for (var k = 0; k < client.fleet.length; k++) {
 			if (!client.fleet[k].alive) {
 				this.context.beginPath();
-				var point = client.homeGrid.field[client.fleet[k].mainX][client.fleet[k].mainY];
+				var point = client.homeGrid[client.fleet[k].mainX][client.fleet[k].mainY];
 				var x = point.corner.posX;
 				var y = point.corner.posY;
 				var length = client.fleet[k].length;
@@ -731,7 +723,7 @@ class gameWindow {
 		for (var c = 0; c < enemyFleet.length; c++) {
 			if (enemyFleet[c] != null) {
 				this.context.beginPath();
-				var point = client.targetGrid.field[enemyFleet[c].mainX][enemyFleet[c].mainY];
+				var point = client.targetGrid[enemyFleet[c].mainX][enemyFleet[c].mainY];
 				var x = point.corner.posX;
 				var y = point.corner.posY;
 				var length = enemyFleet[c].length;
@@ -754,7 +746,7 @@ class gameWindow {
 	//draw red rectangle around selected ship
 	drawShipSelector(shipIndex) {
 		var currentShip = client.fleet[shipIndex];
-		var drawPoint = client.homeGrid.field[currentShip.mainX][currentShip.mainY].corner;
+		var drawPoint = client.homeGrid[currentShip.mainX][currentShip.mainY].corner;
 		var selectorW = playWindow.adjust(playWindow.images[shipIndex].width);
 		var selectorH = playWindow.adjust(playWindow.images[shipIndex].height);
 		playWindow.context.lineWidth='3';
@@ -764,7 +756,7 @@ class gameWindow {
 	
 	//draw red rectangle around selected tile
 	drawTileSelector(gridCoordinate) {
-		var drawPoint = client.targetGrid.field[gridCoordinate.posX][gridCoordinate.posY].corner;
+		var drawPoint = client.targetGrid[gridCoordinate.posX][gridCoordinate.posY].corner;
 		var dimension = playWindow.adjust(70);
 		playWindow.context.lineWidth='3';
 		playWindow.context.strokeStyle='red';
@@ -779,7 +771,9 @@ class gameWindow {
 		this.context.shadowOffsetX = 3;
 		this.context.shadowOffsetY = 3;
 		for (var i = 0; i < this.images.length; i++) {
-			this.context.drawImage(this.images[i], this.adjust(client.fleet[i].mainX * 70 + 40), this.adjust(client.fleet[i].mainY * 70 + 30), this.adjust(this.images[i].width), this.adjust(this.images[i].height));				
+			var x = client.homeGrid[client.fleet[i].mainX][client.fleet[i].mainY].corner.posX;
+			var y = client.homeGrid[client.fleet[i].mainX][client.fleet[i].mainY].corner.posY;
+			this.context.drawImage(this.images[i], x, y, this.adjust(this.images[i].width), this.adjust(this.images[i].height));				
 		}
 		this.context.fillText('Recent Activity', this.adjust(557), this.adjust(740));
 		this.context.fillText('Turn', this.adjust(1575), this.adjust(75));
