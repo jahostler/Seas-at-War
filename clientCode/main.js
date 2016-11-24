@@ -318,11 +318,12 @@ function repositionAttack(){
 
 function findRandomEnemy(){
 	var shipPositions = new Array();
-	for (var i = 0; i < 9; i++) {
-		for (var j = 0; j < 9; j++){
-			if(client.homeGrid[i][j].hasShip == true && client.homeGrid[i][j].shipHit == undefined){
-				shipPositions.push(new orderedPair(i,j));
-			}
+	for (var i = 0; i < client.fleet.length; i++) {
+		for (var j = 0; j < client.fleet[i].posArray.length; j++) {
+			var x = client.fleet[i].posArray[j].posX;  
+			var y = client.fleet[i].posArray[j].posY;
+			if (!client.homeGrid[x][y].isShotAt())
+				shipPositions.push(new orderedPair(x, y));
 		}
 	}
 	return shipPositions[getRandomInt(0,shipPositions.length-1)];
@@ -354,11 +355,6 @@ function initializeGame() {
 			attackCoordinate = attackData.coordinates[1];
 		if (deflect == true && attackData.coordinates[0] != 1) {
 			var tempPlace = repositionAttack();
-			console.log("original");
-			console.log(attackCoordinate);
-			attackCoordinate = tempPlace;
-			console.log("new");
-			console.log(attackCoordinate);
 			if (typeof attackData.coordinates[0] === "number"){
 				attackData.coordinates[1] = tempPlace;
 			}
@@ -402,7 +398,6 @@ function initializeGame() {
 		else if (attackData.coordinates[0] == 4){ 
 			specialResult = ["deflect"];
 			attackData.coordinates = [attackCoordinate];
-			console.log(attackData.coordinates);
 		}
 		
 		//Cruiser Special 

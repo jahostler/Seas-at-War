@@ -111,6 +111,7 @@ class gameWindow {
 					client.targetGrid[currentTiles[i].posX][currentTiles[i].posY].shipHit = updatedTiles[i].shipHit;
 				}
 			}
+			playWindow.timerCount = 30;
 			if(scramble > 0 && (data.result == "hit" || data.result == "miss")) {
 				scramble--;
 				if (scramble != 1)
@@ -169,8 +170,6 @@ class gameWindow {
 				}
 				else if(data.specialData[0] == 'detect'){
 					playWindow.specialMessage = "You have detected an enemy ship.";
-					console.log(data.specialData[1]);
-					console.log("Detected Location: (" + data.specialData[1].posX + "," + data.specialData[1].posY + ")")
 					client.targetGrid[data.specialData[1].posX][data.specialData[1].posY].detected = true;
 				}
 				else if (data.specialData[0] == 5) { //Cruiser Special Attack
@@ -273,7 +272,12 @@ class gameWindow {
 	drawTimer() {
 		if (playWindow.timerCount <= 0) {
 			playWindow.timerCount = 30;
-			//TODO: end turn
+			if (client.hasTurn) {
+				var tempShip = playWindow.selectedShip;
+				playWindow.selectedShip = 0;
+				playWindow.moveMade('normal');
+				playWindow.selectedShip = tempShip;
+			}
 		}
  		if (client.hasTurn) {
 			document.getElementById("timer").innerHTML = playWindow.timerCount + " secs"; 
@@ -316,6 +320,9 @@ class gameWindow {
 		var currentShip = client.fleet[playWindow.selectedShip];
 		if (currentShip != undefined) {
 			var currentTiles = [playWindow.selectedTile];
+			if (playWindow.selectedTile.equals(new orderedPair (-1, -1))) {
+				currentTiles = [];
+			}
 			if (attackType == 'special') {
 				currentTiles = currentShip.specialAttack(playWindow.selectedTile);
 			}
@@ -326,8 +333,8 @@ class gameWindow {
 				gID: gameID
 			};
 			socket.emit('turn done', attackData);
-			playWindow.timerCount = 30;
 			client.hasTurn = false;
+			playWindow.selectedTile = new orderedPair(-1, -1);
 		}
 	}
 	
