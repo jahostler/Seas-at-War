@@ -8,13 +8,12 @@ Responsible for creating client's game, receiving events from the server
 var client = new Player();
 var enemyFleet = new Array(4);
 var gameID = -1;
-var prepWindow;
-var positionWindow;
-var playWindow;
+var prepWindow = -1;
+var positionWindow = -1;
+var playWindow = -1;
 var socket = io.connect();
 var scaling = .8;
 var backgrounds;
-var tempImages;
 var shipImages = new Map();
 var shipDesDims;
 var finishFleetDims;
@@ -44,11 +43,14 @@ function initialize() {
 	backgrounds[2].src = 'images/gameBoard.png';
 	
 	//load in Temporary Ship Images
-	tempImages = [new Image(), new Image(), new Image(), new Image()];
-	tempImages[0].src = 'images/Ships/ship2temp.png';
-	tempImages[1].src = 'images/Ships/ship3temp.png';
-	tempImages[2].src = 'images/Ships/ship4temp.png';
-	tempImages[3].src = 'images/Ships/ship5temp.png';
+	shipImages.set('temp2', new Image());
+	shipImages.get('temp2').src = 'images/Ships/ship2temp.png';
+	shipImages.set('temp3', new Image());
+	shipImages.get('temp3').src = 'images/Ships/ship3temp.png';
+	shipImages.set('temp4', new Image());
+	shipImages.get('temp4').src = 'images/Ships/ship4temp.png';
+	shipImages.set('temp5', new Image());
+	shipImages.get('temp5').src = 'images/Ships/ship5temp.png';
 	
 	//load in verical Ship Images
 	shipImages.set('Scrambler', new Image());
@@ -154,24 +156,28 @@ function newGame() {
 		gameID = data;
 		document.getElementById('sessionID').innerHTML = 'Your session ID: ' + gameID;
 		document.getElementById('sessionID').innerHTML += '<p font-size="16px"> Waiting for player to join... </p>';
+		socket.off(client.id + ' gameID created');
 	});
-	socket.on(client.id + ' join success' , function(data) {
+	socket.on(client.id + ' join success', function(data) {
 		document.getElementById('hostGame').style.display = 'none';
 		document.getElementById('buildAFleet').style.display = 'block';
+		socket.off(client.id + ' join success');
 		loadGame();
 	});
 }
 
-//informt the server that the game should be deleted, and disable all gameplay windows
+//inform the server that the game should be deleted, and disable all gameplay windows
 function removeGame() {
+	//todo:  add formal message telling client other player disconnected
 	socket.emit('delete game', gameID);
-	client.fleet = ["Scrambler", "Submarine", "Cruiser", "Executioner"];
-	var buttons = document.getElementById('positionFleet').querySelectorAll('button');
-	[].forEach.call(buttons, function(element) {
-		element.disabled = false;
-	});
+	client.fleet = ['temp2', 'temp3', 'temp4', 'temp5'];
+	enemyFleet = new Array(4);
+	client.clearGrids();
+	socket.off(gameID + ' player disconnect');	
 	gameID = -1;
-	socket.off(client.id + ' make update');
+	prepWindow = -1;
+	positionWindow = -1;
+	playWindow = -1;
 }
 
 //create a new gameplay window
@@ -185,11 +191,9 @@ function loadGame() {
 			divs[i].style.display = 'none';
 		}
 		document.getElementById('playerDisconnectMessage').style.display = 'block';
+		prepWindow.cleanUp();
 		removeGame();
 	});
-	
-	document.addEventListener('keydown', prepWindow.selectShips, false);
-	
 	prepWindow.draw();
 	prepWindow.drawButtons();
 }
@@ -232,12 +236,40 @@ function loadPositionSelect() {
 
 //transition from fleet selection to fleet positioning window
 function toPositionSelect() {
+	for (var i = 0; i < client.fleet.length; i++) {
+		if (client.fleet[i].substring(0, 4) == 'temp') {
+			switch(i) {
+				case 0:
+					client.fleet[i] = 'Scrambler';
+					break;
+				case 1:
+					client.fleet[i] = 'Submarine';
+					break;
+				case 2:
+					client.fleet[i] = 'Cruiser';
+					break;
+				case 3:
+					client.fleet[i] = 'Executioner';
+					break;
+			}
+		}
+	}
 	document.getElementById('buildAFleet').style.display = 'none';
 	document.getElementById('positionFleet').style.display = 'block';
+	prepWindow.cleanUp();
+	prepWindow = -1;
 	positionWindow = new fleetPositionWindow(document.getElementById('positionCanvas'), scaling)
-	document.removeEventListener('keydown', prepWindow.selectShips);
-	//monitors keyboard input
-	document.addEventListener('keydown', positionWindow.moveShips, false);
+	socket.off(gameID + ' player disconnect');
+	socket.on(gameID + ' player disconnect', function(data){
+		//todo:  add formal message telling client other player disconnected
+		var divs = document.getElementsByTagName('div');
+		for(var i = 0; i < divs.length; i++) {
+			divs[i].style.display = 'none';
+		}
+		document.getElementById('playerDisconnectMessage').style.display = 'block';
+		positionWindow.cleanUp();
+		removeGame();
+	});
 	loadPositionSelect();
 }
 
@@ -253,6 +285,9 @@ function startGameScreen() {
 			client.hasTurn = true;
 		}
 		playWindow = new gameWindow(document.getElementById('gameCanvas'), scaling, client);
+		socket.off(gameID + ' ready');
+		positionWindow.cleanUp();
+		positionWindow = -1;
 	});
 }
 
@@ -290,9 +325,7 @@ function findRandomEnemy(){
 			}
 		}
 	}
-	console.log("shipPositions.length = " + shipPositions.length);
 	return shipPositions[getRandomInt(0,shipPositions.length-1)];
-	
 }
 
 //loads graphics for playing the game, and listens for game updates (such as a tile being attacked or the game ending)
@@ -308,8 +341,6 @@ function initializeGame() {
 	}
 	deflect = false;
 	scramble = 0;
-	
-	
 	socket.on(client.id + ' attack made', function(attackData){
 		var str = '';
 		var scanStr = '';
@@ -504,6 +535,8 @@ function initializeGame() {
 			document.getElementById('gameOverMessageLose').innerHTML = 'You Lose!';
 			document.getElementById('gameOverLose').style.display = 'block';
 			document.getElementById('gameWindow').style.display = 'none';
+			playWindow.cleanUp();
+			removeGame();
 		}
 		else {
 			if (playWindow.selectedShip != -1) {
@@ -525,5 +558,18 @@ function initializeGame() {
 		document.getElementById('gameOverMessageWin').innerHTML = 'You Win!';
 		document.getElementById('gameOverWin').style.display = 'block';
 		document.getElementById('gameWindow').style.display = 'none';
+		playWindow.cleanUp();
+		removeGame();
+	});
+	socket.off(gameID + ' player disconnect');
+	socket.on(gameID + ' player disconnect', function(data){
+		//todo:  add formal message telling client other player disconnected
+		var divs = document.getElementsByTagName('div');
+		for(var i = 0; i < divs.length; i++) {
+			divs[i].style.display = 'none';
+		}
+		document.getElementById('playerDisconnectMessage').style.display = 'block';
+		playWindow.cleanUp();
+		removeGame();
 	});
 }

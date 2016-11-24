@@ -21,15 +21,15 @@ class buildAFleetWindow {
 		this.context = canvas.getContext('2d');
 		this.background = backgrounds[0];
 		this.images = new Array();
-		this.images.push(tempImages[0]);
-		this.images.push(tempImages[1]);
-		this.images.push(tempImages[2]);
-		this.images.push(tempImages[3]);
+		for (var i = 0; i < client.fleet.length; i++) {
+			this.images.push(shipImages.get(client.fleet[i]));	
+		}
 		this.buildButtons = document.getElementsByClassName('buildButton');
 		this.divX = this.adjust(shipDesDims[0]);
 		this.divY = this.adjust(shipDesDims[1]);
 		this.currentShipDes = -1;
 		this.firstSelect = [true, true, true, true];
+		document.addEventListener('keydown', this.selectShips, false);
 	}
 	selectShips(e) {
 		switch(e.keyCode) {
@@ -111,6 +111,15 @@ class buildAFleetWindow {
 		this.context.fillText('Ship Ability', this.adjust(250), this.adjust(740));
 		
 	}
+	
+	cleanUp() {
+		for (var i = 0; i < this.buildButtons.length; i++) {
+			this.buildButtons[i].disabled = false;
+		}
+		if (this.currentShipDes != -1)
+			document.getElementsByClassName('shipDes')[this.currentShipDes].style.display = 'none';
+		document.removeEventListener('keydown', this.selectShips);
+	}
 }
 
 /*
@@ -143,6 +152,8 @@ class fleetPositionWindow {
 		this.selectButtons = document.getElementsByClassName('shipSelectButton');
 		this.moveButtons = document.getElementsByClassName('shipMoveButton');
 		this.selectedShip = -1;	
+		//monitors keyboard input
+		document.addEventListener('keydown', this.moveShips, false);
 	}
 	
 	waitMessage() {
@@ -339,5 +350,13 @@ class fleetPositionWindow {
 			this.drawSelectShip(shipID);
 			return true;
 		}
+	}
+	
+	cleanUp() {
+		document.removeEventListener('keydown', positionWindow.moveShips);
+		var buttons = document.getElementById('positionFleet').querySelectorAll('button');
+		[].forEach.call(buttons, function(element) {
+			element.disabled = false;
+		});
 	}
 }

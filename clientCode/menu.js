@@ -37,11 +37,11 @@ function joinGame() {
 function joinID() {
 	var input = parseInt(document.getElementById('joinIDVar').value);
 	socket.emit('join game', {gameID : input, clientID : client.id});
-	socket.on(client.id + ' join error' , function(data) {
+	socket.on(client.id + ' join error', function(data) {
 		document.getElementById('joinGameError').innerHTML = 'Cannot find session ID';
 		return;
 	});
-	socket.on(client.id + ' join full' , function(data) {
+	socket.on(client.id + ' join full', function(data) {
 		document.getElementById('joinGameError').innerHTML = 'Game is full';
 		return;
 	});
@@ -50,6 +50,10 @@ function joinID() {
 		gameID = input;
 		document.getElementById('joinGame').style.display = 'none';
 		document.getElementById('buildAFleet').style.display = 'block';
+		document.getElementById('joinIDVar').value = '';
+		document.getElementById('joinGameError').innerHTML = '';
+		socket.off(client.id + ' join error');
+		socket.off(client.id + ' join full');
 		loadGame();
 	});
 }
@@ -111,17 +115,16 @@ function credits() {
 //display main menu
 //if current menu is main menu, exit game
 function backToMain(displayedScreen) {
-	if (displayedScreen == 'hostGame') {
-		removeGame();
+	if (displayedScreen == 'joinGame') {
+		document.getElementById('joinIDVar').value = '';
+		document.getElementById('joinGameError').innerHTML = '';
+		document.removeEventListener('keydown', joinKey, false);
 	}
 	else if (displayedScreen == 'instructions') {
 		var instructions = document.getElementsByClassName('instructImg');
 		[].forEach.call(instructions, function(element){
 			element.style.display = 'none';
 		});
-	}
-	else if (displayedScreen == 'gameOverWin') {
-		removeGame();
 	}
 	document.getElementById(displayedScreen).style.display = 'none';
 	document.getElementById('mainMenu').style.display = 'block';

@@ -62,6 +62,7 @@ class gameWindow {
 		this.selectedButton = '';
 		this.timerFunction;
 		this.timerCount = 30;
+		this.buttonFunctions = new Array(2);
 		
 		this.images = new Array();
 		for (var i = 0; i < client.fleet.length; i++) {
@@ -271,16 +272,16 @@ class gameWindow {
 	
 	drawTimer() {
 		if (playWindow.timerCount <= 0) {
-			playWindow.timerCount = 1;
+			playWindow.timerCount = 30;
 			//TODO: end turn
 		}
  		if (client.hasTurn) {
-			playWindow.timerCount--;
 			document.getElementById("timer").innerHTML = playWindow.timerCount + " secs"; 
+			playWindow.timerCount--;
 		}
 		else {
-			playWindow.timerCount--;
 			document.getElementById("timer").innerHTML = playWindow.timerCount + " secs"; 
+			playWindow.timerCount--;
 		}
 	}
 	
@@ -293,16 +294,18 @@ class gameWindow {
 		norm.style.top = this.adjust(normalAttackDims[1])+'px';
 		spec.style.left = this.adjust(specialAttackDims[0])+'px';
 		spec.style.top = this.adjust(specialAttackDims[1])+'px';
-		norm.addEventListener('click', function(data){
+		this.buttonFunctions[0] = function(data){
 			playWindow.enableButton('normal');
 			playWindow.draw();
 			playWindow.drawShipSelector(playWindow.selectedShip);
-		}, false);
-		spec.addEventListener('click', function(data){
+		};
+		this.buttonFunctions[1] = function(data){
 			playWindow.enableButton('special');
 			playWindow.draw();
 			playWindow.drawShipSelector(playWindow.selectedShip);
-		}, false);
+		};
+		norm.addEventListener('click', this.buttonFunctions[0], false);
+		spec.addEventListener('click', this.buttonFunctions[1], false);
 		this.disableButtons();
 	}
 	
@@ -782,5 +785,19 @@ class gameWindow {
 		this.drawGrids();
 		this.drawTurnMessage();
 		this.drawButtonSelector(this.selectedButton);
+	}
+	
+	cleanUp() {
+		var norm = document.getElementById('normalAttack');
+		var spec = document.getElementById('specialAttack');
+		
+		this.canvas.removeEventListener('mousemove', this.getMousePos, false);
+		this.canvas.removeEventListener('click', this.selectObject, false);
+		norm.removeEventListener('click', playWindow.buttonFunctions[0], false);
+		spec.removeEventListener('click', playWindow.buttonFunctions[1], false);
+		clearInterval(this.timerFunction);
+		socket.off(client.id + ' make update');
+		socket.off(client.id + ' attack made');
+		socket.off(client.id + 'end game');
 	}
 }

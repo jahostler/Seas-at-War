@@ -28,7 +28,7 @@ class Player {
 			this.targetGrid[i] = new Array(9);
 		}
 		this.id = -1;
-        this.fleet = ['Scrambler', 'Submarine', 'Cruiser', 'Executioner'];
+        this.fleet = ['temp2', 'temp3', 'temp4', 'temp5'];
 		this.hasTurn = false;
     }
 	
@@ -51,16 +51,10 @@ class Player {
 		}
 	}
 	
-	clearGrid(grid) {
-		if (grid == 'home') {
-			for (var i = 0; i < 9; i++) {
-				this.homeGrid[i] = new Array(9);
-			}
-		}
-		else if (grid == 'target') {
-			for (var i = 0; i < 9; i++) {
-				this.targetGrid[i] = new Array(9);
-			}
+	clearGrids() {
+		for (var i = 0; i < 9; i++) {
+			this.homeGrid[i] = new Array(9);
+			this.targetGrid[i] = new Array(9);
 		}
 	}
 }

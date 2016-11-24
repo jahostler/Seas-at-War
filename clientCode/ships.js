@@ -178,7 +178,6 @@ class moveableShip {
 				result.push(playWindow.specialData.slice(1));
 			}
 			this.specialAttacksLeft--;
-			console.log(result);
 			return result;
 		}
 		else if (this.shipName == 'Artillery') {
