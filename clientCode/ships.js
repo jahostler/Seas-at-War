@@ -416,7 +416,10 @@ function submarineSpecial() {
 				for (var i = 0; i < client.fleet[1].posArray.length; i++) {
 					var x = client.fleet[1].posArray[i].posX;
 					var y = client.fleet[1].posArray[i].posY;
-					client.homeGrid[x][y].hasShip = false;
+					if (client.homeGrid[x][y].isShotAt())
+						client.homeGrid[x][y].hasShip = true;
+					else
+						client.homeGrid[x][y].hasShip = false;
 					client.homeGrid[x][y].shipIndex = -1;
 				}
 				client.fleet[1].posArray = client.fleet[1].currentPosArray();

@@ -498,10 +498,8 @@ function initializeGame() {
 			specialResult = client.fleet[2].specialAttack(attackData.ship); //hits cruiser
 		}
 		if (subSpecial && client.fleet[1].alive) {
+			
 			specialResult = client.fleet[1].specialAttack(attackData.ship); //hits submarine
-			client.homeGrid[x][y].hasShip = true;
-			client.homeGrid[x][y].shipHit = true;
-			client.homeGrid[x][y].shipIndex = -1;
 			playWindow.draw();
 		}
 		returnData = {
