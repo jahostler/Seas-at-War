@@ -351,6 +351,11 @@ function initializeGame() {
 		var specialResult = new Array();
 		var scanResult = new Array();
 		var attackCoordinate = attackData.coordinates[0];
+		//Timer ran out
+		if (attackData.coordinates[0] == 'out') {
+			str = 'out';
+			attackData.coordinates = [];
+		}
 		if (typeof attackCoordinate === "number")
 			attackCoordinate = attackData.coordinates[1];
 		if (deflect == true && attackData.coordinates[0] != 1) {

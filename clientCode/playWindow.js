@@ -112,7 +112,10 @@ class gameWindow {
 				}
 			}
 			playWindow.timerCount = 30;
-			if(scramble > 0 && (data.result == "hit" || data.result == "miss")) {
+			if (data.result == "out") {
+				playWindow.turnResult = "You ran out of time to fire!"; 
+			}
+			else if (scramble > 0 && (data.result == "hit" || data.result == "miss")) {
 				scramble--;
 				if (scramble != 1)
 					playWindow.turnResult = "Radar jammed for " + scramble + " more turns.";
@@ -273,10 +276,10 @@ class gameWindow {
 		if (playWindow.timerCount <= 0) {
 			playWindow.timerCount = 30;
 			if (client.hasTurn) {
-				var tempShip = playWindow.selectedShip;
-				playWindow.selectedShip = 0;
-				playWindow.moveMade('normal');
-				playWindow.selectedShip = tempShip;
+//				var tempShip = playWindow.selectedShip;
+//				playWindow.selectedShip = 0;
+				playWindow.moveMade('out of time');
+//				playWindow.selectedShip = tempShip;
 			}
 		}
  		if (client.hasTurn) {
@@ -318,11 +321,19 @@ class gameWindow {
 	moveMade(attackType) {
 		//executes turn
 		var currentShip = client.fleet[playWindow.selectedShip];
-		if (currentShip != undefined) {
+		if (attackType == 'out of time') {
+			var currentTiles = ['out'];
+			var attackData = {
+				playerID: client.id,
+				ship: playWindow.selectedShip,
+				coordinates: currentTiles,
+				gID: gameID
+			};
+			socket.emit('turn done', attackData);
+			client.hasTurn = false;
+		}
+		else if (currentShip != undefined) {
 			var currentTiles = [playWindow.selectedTile];
-			if (playWindow.selectedTile.equals(new orderedPair (-1, -1))) {
-				currentTiles = [];
-			}
 			if (attackType == 'special') {
 				currentTiles = currentShip.specialAttack(playWindow.selectedTile);
 			}
@@ -334,7 +345,6 @@ class gameWindow {
 			};
 			socket.emit('turn done', attackData);
 			client.hasTurn = false;
-			playWindow.selectedTile = new orderedPair(-1, -1);
 		}
 	}
 	
