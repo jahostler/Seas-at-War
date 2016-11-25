@@ -800,10 +800,9 @@ class gameWindow {
 		
 		this.canvas.removeEventListener('mousemove', this.getMousePos, false);
 		this.canvas.removeEventListener('click', this.selectObject, false);
-		norm.removeEventListener('click', playWindow.buttonFunctions[0], false);
-		spec.removeEventListener('click', playWindow.buttonFunctions[1], false);
-		clearInterval(playWindow.timerFunction);
-		socket.off(client.id + ' make update');
+		norm.removeEventListener('click', this.buttonFunctions[0], false);
+		spec.removeEventListener('click', this.buttonFunctions[1], false);
+		clearInterval(this.timerFunction);
 		socket.off(client.id + ' attack made');
 		socket.off(client.id + 'end game');
 	}
