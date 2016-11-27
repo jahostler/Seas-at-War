@@ -48,6 +48,7 @@ div {
 	background-color: black;
 	background-repeat: no-repeat;
 	background-size: contain;
+	white-space: nowrap;
 	top: 0;
 	right: 0;
 	bottom: 0;
@@ -64,6 +65,7 @@ button {
 	text-decoration:none; 
 	display: inline-block;
 	visibility: hidden;
+	white-space: nowrap;
 	text-shadow: 2px 2px 0 rgba(0,0,0,0.3);
 	font-weight:bold;
 	color: #FFFFFF;
@@ -246,7 +248,7 @@ button span {
 	word-wrap: break-word;
 	background-color: rgba(0,0,0,0);
 	top: 760px;
-	left: 80px;
+	left: 70px;
 	font-size: 20px;
 	color: white;
 }
