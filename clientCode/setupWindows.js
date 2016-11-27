@@ -161,6 +161,8 @@ class fleetPositionWindow {
 	}
 	
 	waitMessage() {
+		this.canvas.removeEventListener('mousemove', this.getMousePos);
+		this.canvas.removeEventListener('click', this.selectShip);
 		this.context.font = '24px Arial';
 		this.context.fillStyle = 'white';
 		this.context.shadowColor = 'black';

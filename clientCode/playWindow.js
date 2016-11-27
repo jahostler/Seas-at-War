@@ -93,7 +93,7 @@ class gameWindow {
 		document.getElementById('positionFleet').style.display = 'none';
 		document.getElementById('gameWindow').style.display = 'block';
 		this.drawButtons();
-//		this.timerFunction = setInterval(this.drawTimer, 1000);
+		this.timerFunction = setInterval(this.drawTimer, 1000);
 		console.log(client.fleet);
 		if (client.fleet[0].shipName == 'Scrambler')
 			this.shipDescriptions[0] = document.getElementById('des1');
