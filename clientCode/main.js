@@ -162,7 +162,7 @@ function newGame() {
 	socket.on(client.id + ' gameID created', function(data) {
 		gameID = data;
 		document.getElementById('sessionID').innerHTML = 'Your session ID: ' + gameID;
-		document.getElementById('sessionID').innerHTML += '<p font-size='16px'> Waiting for player to join... </p>';
+		document.getElementById('sessionID').innerHTML += '<p font-size=\'16px\'> Waiting for player to join... </p>';
 		socket.off(client.id + ' gameID created');
 	});
 	socket.on(client.id + ' join success', function(data) {
