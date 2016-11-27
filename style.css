@@ -7,6 +7,7 @@
 }
 
 html{
+	background-color: black;
 	margin: 0px;
 	padding: 0px;
 	width: 100%;
@@ -61,7 +62,8 @@ button {
 	font-family:arial black, sans-serif;
 	padding: 10px 20px 10px 20px; 
 	text-decoration:none; 
-	display:inline-block;
+	display: inline-block;
+	visibility: hidden;
 	text-shadow: 2px 2px 0 rgba(0,0,0,0.3);
 	font-weight:bold;
 	color: #FFFFFF;
@@ -173,7 +175,6 @@ button span {
 
 #mainMenu {
 	position: absolute;
-	display: block;
 	background-image: url("images/mainMenu.png");
 }
 
@@ -223,17 +224,12 @@ button span {
 	top: 20%;
 	left: 20%;
 	margin: auto;
-	display: none;
 	z-index: 0;
 }
 
 #nextInstruction {
 	position: absolute;
 	left: 20%;
-}
-
-#prevInstruction {
-	display: none;
 }
 
 #credits { 
@@ -248,7 +244,6 @@ button span {
 	width: 420px;
 	height: 210px;
 	word-wrap: break-word;
-	display: none;
 	background-color: rgba(0,0,0,0);
 	top: 760px;
 	left: 80px;

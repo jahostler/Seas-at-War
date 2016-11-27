@@ -152,8 +152,12 @@ class fleetPositionWindow {
 		this.selectButtons = document.getElementsByClassName('shipSelectButton');
 		this.moveButtons = document.getElementsByClassName('shipMoveButton');
 		this.selectedShip = -1;	
+		this.hoveredShip = -1;
 		//monitors keyboard input
 		document.addEventListener('keydown', this.moveShips, false);
+		//monitors mouse input
+		this.canvas.addEventListener('mousemove', this.getMousePos, false);
+		this.canvas.addEventListener('click', this.selectShip, false);
 	}
 	
 	waitMessage() {
@@ -171,6 +175,131 @@ class fleetPositionWindow {
 		[].forEach.call(buttons, function(element) {
 			element.disabled = true;
 		});
+	}
+	
+	getMousePos(evt) {
+		//http://www.html5canvastutorials.com/advanced/html5-canvas-mouse-coordinates/
+		var rect = positionWindow.canvas.getBoundingClientRect();
+		var mousePos = new orderedPair (
+										Math.round((evt.clientX-rect.left)/(rect.right-rect.left)*positionWindow.canvas.width),
+										Math.round((evt.clientY-rect.top)/(rect.bottom-rect.top)*positionWindow.canvas.height));
+		var result = positionWindow.processMousePos(mousePos);
+		var gridName = result.grid;
+		var gridCoordinate = result.point;
+		var x = gridCoordinate.posX;
+		var y = gridCoordinate.posY;
+		positionWindow.hoveredShip = -1;
+		if (gridName == 'home') {
+			var found = false;
+			for (var i = 0; i < client.fleet.length; i++) {
+				if (client.fleet[i].containsPoint(gridCoordinate)) {
+					found = true;
+					positionWindow.draw();
+					if (i != positionWindow.selectedShip) {
+						positionWindow.hoveredShip = i;
+						if (positionWindow.hoveredShip != positionWindow.selectedShip) {
+							positionWindow.drawSelectShip(i, false);
+						}
+					}
+				}
+			}
+			if (!found) {
+				positionWindow.draw();
+			}
+			if (positionWindow.selectedShip != -1) {
+				positionWindow.drawSelectShip(positionWindow.selectedShip, false);
+			}
+		}
+		else {
+			positionWindow.draw();
+			if (positionWindow.selectedShip != -1) {
+				positionWindow.drawSelectShip(positionWindow.selectedShip, false);	
+			}
+		}
+	}
+	
+	processMousePos(posPair) {
+		var xPair = posPair.posX;
+		var yPair = posPair.posY;
+		var gridName = 'none';
+		if(xPair >= positionWindow.adjust(40) && xPair <= positionWindow.adjust(670) && yPair >= positionWindow.adjust(30) && yPair <= positionWindow.adjust(660)){
+			//Handle home grid
+			xPair = xPair - positionWindow.adjust(40);
+			switch(true){
+				case (xPair <= positionWindow.adjust(70)):
+					xPair = 0;
+					break;
+				case (xPair <= positionWindow.adjust(140)):
+					xPair = 1;
+					break;
+				case (xPair <= positionWindow.adjust(210)):
+					xPair = 2;
+					break;
+				case (xPair <= positionWindow.adjust(280)):
+					xPair = 3;
+					break;
+				case (xPair <= positionWindow.adjust(350)):
+					xPair = 4;
+					break;
+				case (xPair <= positionWindow.adjust(420)):
+					xPair = 5;
+					break;
+				case (xPair <= positionWindow.adjust(490)):
+					xPair = 6;
+					break;
+				case (xPair <= positionWindow.adjust(560)):
+					xPair = 7;
+					break;
+				case (xPair <= positionWindow.adjust(630)):
+					xPair = 8;
+					break;
+			}
+			yPair = yPair - positionWindow.adjust(30);
+			switch(true){
+				case (yPair <= positionWindow.adjust(70)):
+					yPair = 0;
+					break;
+				case (yPair <= positionWindow.adjust(140)):
+					yPair = 1;
+					break;
+				case (yPair <= positionWindow.adjust(210)):
+					yPair = 2;
+					break;
+				case (yPair <= positionWindow.adjust(280)):
+					yPair = 3;
+					break;
+				case (yPair <= positionWindow.adjust(350)):
+					yPair = 4;
+					break;
+				case (yPair <= positionWindow.adjust(420)):
+					yPair = 5;
+					break;
+				case (yPair <= positionWindow.adjust(490)):
+					yPair = 6;
+					break;
+				case (yPair <= positionWindow.adjust(560)):
+					yPair = 7;
+					break;
+				case (yPair <= positionWindow.adjust(630)):
+					yPair = 8;
+					break;
+			}
+			gridName = 'home';
+			//xPair and yPair are now values 0 through 8
+		}
+		var returnData = {
+			grid: gridName,
+			point: new orderedPair(xPair, yPair)
+		};
+		return returnData;
+	}
+	
+	selectShip(evt) {
+		var previousShip = positionWindow.selectedShip;
+		if (positionWindow.hoveredShip != -1) {	
+			if (positionWindow.selectedShip != positionWindow.hoveredShip)
+				positionWindow.drawSelectShip(positionWindow.hoveredShip, true);
+		}
 	}
 	
 	adjust(dimension) {
@@ -213,22 +342,34 @@ class fleetPositionWindow {
 			case 98:
 			case 50:
 				//select class 2 ship
-				positionWindow.drawSelectShip(0);
+				positionWindow.draw();
+				if (positionWindow.hoveredShip != -1)
+					positionWindow.drawSelectShip(positionWindow.hoveredShip, false);
+				positionWindow.drawSelectShip(0, true);
 				break;
 			case 99:
 			case 51:
 				//select class 3 ship
-				positionWindow.drawSelectShip(1);
+				positionWindow.draw();
+				if (positionWindow.hoveredShip != -1)
+					positionWindow.drawSelectShip(positionWindow.hoveredShip, false);
+				positionWindow.drawSelectShip(1, true);
 				break;
 			case 100:
 			case 52:
 				//select class 4 ship
-				positionWindow.drawSelectShip(2);
+				positionWindow.draw();
+				if (positionWindow.hoveredShip != -1)
+					positionWindow.drawSelectShip(positionWindow.hoveredShip, false);
+				positionWindow.drawSelectShip(2, true);
 				break;
 			case 101:
 			case 53:
 				//select class 5 ship
-				positionWindow.drawSelectShip(3);
+				positionWindow.draw();
+				if (positionWindow.hoveredShip != -1)
+					positionWindow.drawSelectShip(positionWindow.hoveredShip, false);
+				positionWindow.drawSelectShip(3, true);
 				break;
 
 			case 37:
@@ -258,13 +399,15 @@ class fleetPositionWindow {
 		}
 	}
 	
-	drawSelectShip(shipID) {
+	drawSelectShip(shipID, selectBool) {
 		if (this.selectedShip != -1) {
-			document.getElementsByClassName('shipSelectButton')[this.selectedShip].disabled = false;
+			if (selectBool)
+				document.getElementsByClassName('shipSelectButton')[this.selectedShip].disabled = false;
 		}
-		document.getElementsByClassName('shipSelectButton')[shipID].disabled = true;
-		this.selectedShip = shipID;
-		this.draw();
+		if (selectBool)
+			document.getElementsByClassName('shipSelectButton')[shipID].disabled = true;
+		if (selectBool)
+			this.selectedShip = shipID;
 		this.context.lineWidth='3';
 		this.context.strokeStyle='red';
 		this.context.strokeRect(this.adjust(945), this.adjust(173 + (shipID * 130)), this.adjust(287), this.adjust(76));
@@ -280,7 +423,7 @@ class fleetPositionWindow {
 	checkPosition(desiredMove) {
 		this.draw();
 		var shipID = this.selectedShip;
-		this.drawSelectShip(shipID);
+		this.drawSelectShip(shipID, true);
 		for(var i = 0; i < desiredMove.length; i++) {
 			var current = desiredMove[i];
 			//out of bounds X check
@@ -347,12 +490,14 @@ class fleetPositionWindow {
 				client.fleet[shipID].move('Left');
 			}
 			this.draw();
-			this.drawSelectShip(shipID);
+			this.drawSelectShip(shipID, true);
 			return true;
 		}
 	}
 	
 	cleanUp() {
+		this.canvas.addEventListener('mousemove', this.getMousePos);
+		this.canvas.addEventListener('click', this.selectObject);
 		document.removeEventListener('keydown', positionWindow.moveShips);
 		var buttons = document.getElementById('positionFleet').querySelectorAll('button');
 		[].forEach.call(buttons, function(element) {

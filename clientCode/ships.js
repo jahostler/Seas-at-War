@@ -19,6 +19,7 @@ class moveableShip {
 		this.shotCounter = 0;  //if counter reaches ship's length, it sank
 		this.specialAttacksLeft = 1;		
 	}
+	
 	updateAlive() {
 		if (this.alive) {
 			if (this.shotCounter == this.length) {
@@ -52,6 +53,15 @@ class moveableShip {
 		}
 		return pos;
 	}
+	
+	containsPoint(inputPair) {
+		for (var i = 0; i < this.posArray.length; i++) {
+			if (this.posArray[i].equals(inputPair))
+				return true;
+		}
+		return false;
+	}
+	
 	checkRotate(){
 		var pos = [this.mainPoint];
 		for (var i = 0; i < this.length-1; i++){
@@ -72,6 +82,7 @@ class moveableShip {
 			this.vert = true;
 		}
 	}
+	
 	checkMove(direction){
 		var xChange = 0;
 		var yChange = 0;
@@ -103,6 +114,7 @@ class moveableShip {
 		}
 		return pos;
 	}
+	
 	move(direction){
 		var xChange = 0;
 		var yChange = 0;
@@ -127,6 +139,7 @@ class moveableShip {
 		this.mainPoint.move(this.mainX,this.mainY);
 		this.posArray = this.currentPosArray();
 	}
+	
 	specialAttack(attackedCoordinate) {
 		var result = new Array();
 		if (this.shipName == 'Scrambler') {

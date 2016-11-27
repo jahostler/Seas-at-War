@@ -45,7 +45,7 @@ function joinID() {
 		document.getElementById('joinGameError').innerHTML = 'Game is full';
 		return;
 	});
-	socket.on(client.id + ' join success' , function(data) {
+	socket.on(client.id + ' join success', function(data) {
 		document.removeEventListener('keydown', joinKey, false);
 		gameID = input;
 		document.getElementById('joinGame').style.display = 'none';
@@ -115,10 +115,19 @@ function credits() {
 //display main menu
 //if current menu is main menu, exit game
 function backToMain(displayedScreen) {
-	if (displayedScreen == 'joinGame') {
+	if (displayedScreen == 'hostGame') {
+		removeGame();
+		document.getElementById('sessionID').innerHTML = '';
+		socket.off(client.id + ' gameID created');
+		socket.off(client.id + ' join success');
+	}
+	else if (displayedScreen == 'joinGame') {
 		document.getElementById('joinIDVar').value = '';
 		document.getElementById('joinGameError').innerHTML = '';
 		document.removeEventListener('keydown', joinKey, false);
+		socket.off(client.id + ' join error');
+		socket.off(client.id + ' join full');
+		socket.off(client.id + ' join success');
 	}
 	else if (displayedScreen == 'instructions') {
 		var instructions = document.getElementsByClassName('instructImg');

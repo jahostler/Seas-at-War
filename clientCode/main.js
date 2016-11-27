@@ -128,6 +128,12 @@ function initialize() {
 		divs[i].style.display = 'none';
 	}
 	document.getElementById('mainMenu').style.display = 'block';
+	
+	//show all buttons again
+	var buttons = document.getElementsByTagName('button');
+	for (var i = 0; i < buttons.length; i++) {
+		buttons[i].style.visibility = 'visible';
+	}
 }
 
 //on receiving a welcome event from server, get playerid from server
@@ -160,6 +166,7 @@ function newGame() {
 		socket.off(client.id + ' gameID created');
 	});
 	socket.on(client.id + ' join success', function(data) {
+		document.getElementById('sessionID').innerHTML = '';
 		document.getElementById('hostGame').style.display = 'none';
 		document.getElementById('buildAFleet').style.display = 'block';
 		socket.off(client.id + ' join success');
