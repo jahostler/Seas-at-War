@@ -156,7 +156,7 @@
 				<div class='shipDes'> 
 					Misleading Intelligence 
 					<ul>
-						<li>Every shot that the enemy makes for the next 3 turns shows up as a miss on their radar</li>
+						<li>For the next 3 turns, the enemy will not know whether they got a hit or miss.</li>
 						<li>Can only be used once per game</li>
 					</ul>
 				</div>
@@ -172,8 +172,8 @@
 				<div class='shipDes'>
 					Dive! Dive!
 					<ul>
-						<li>The first time this ship is hit, the player will be prompted to pick a location to move it to</li>
-						<li>This ship cannot be moved to a spot that has already been fired on</li>
+						<li>The first time the submarine is hit, it will be moved to a new location</li>
+						<li>On reposition, the submarine regains full health</li>
 						<li>PASSIVE EFFECT</li>
 					</ul>
 				</div>
@@ -181,9 +181,9 @@
 				<div class='shipDes'>
 					Sabotage!
 					<ul>
-						<li>The next shot the enemy makes will be forced to miss</li>
+						<li>The next shot the enemy makes, normal or special, will be forced to miss</li>
 						<li>Fires a normal attack to target location</li>
-						<li>Three uses per game</li>
+						<li>Two uses per game</li>
 					</ul>
 				</div>
 				
@@ -198,9 +198,8 @@
 				<div class='shipDes'>
 					UAV
 					<ul>
-						<li>Forces the enemy to reveal part of one of their ships </li>
-						<li>Reveals a 1 x 1 area</li>
-						<li>One user per game </li>
+						<li>Reveals the position of an enemy ship tile</li>
+						<li>One use per game </li>
 					</ul>
 				</div>
 				
@@ -208,8 +207,8 @@
 					Killing Blow
 					<ul>
 						<li>Can be fired to a target location and if it hits a ship, that ship is instantly killed</li>
-						<li>If fired on the highlighted area after the Scanner’s ability and it will kill the smallest ship in that area</li>
-						<li>One use per game and charges for one turn before firing </li>
+						<li>If fired on the highlighted area after the Scanner’s ability, it will kill the smallest ship in that area</li>
+						<li>One use per game </li>
 					</ul>
 				</div>
 				
@@ -217,7 +216,7 @@
 					Barrage
 					<ul>
 						<li>Fires an attack in the shape of a 3 x 3 cross </li>
-						<li>One user per game and charges for one turn before firing </li>
+						<li>One use per game </li>
 					</ul>
 				</div>
 		</div>
@@ -273,15 +272,15 @@
 			</button>
 			<span id="timer"></span>
 			
-			<div id = "des1" class='inGameShipDes'> 
+			<div id="des1" class='inGameShipDes'> 
 				Misleading Intelligence 
 				<ul>
-					<li>Every shot that the enemy makes for the next 3 turns shows up as a miss on their radar</li>
+					<li>For the next 3 turns, the enemy will not know whether they got a hit or miss.</li>
 					<li>Can only be used once per game</li>
 				</ul>
 			</div>
 
-			<div id = "des2" class='inGameShipDes'> 
+			<div id="des2" class='inGameShipDes'> 
 				Tracer Rounds
 				<ul>
 					<li>Fires a normal shot to a target location. The area around it will be highlighted and a message will tell you how many ships are in that highlighted area </li>
@@ -289,25 +288,25 @@
 				</ul>
 			</div>
 			
-			<div id = "des3" class='inGameShipDes'>
+			<div id="des3" class='inGameShipDes'>
 				Dive! Dive!
 				<ul>
-					<li>The first time this ship is hit, the player will be prompted to pick a location to move it to</li>
-					<li>This ship cannot be moved to a spot that has already been fired on</li>
+					<li>The first time the submarine is hit, it will be moved to a new location</li>
+					<li>On reposition, the submarine regains full health</li>
 					<li>PASSIVE EFFECT</li>
 				</ul>
 			</div>
 			
-			<div id = "des4" class='inGameShipDes'>
+			<div id="des4" class='inGameShipDes'>
 				Sabotage!
 				<ul>
-					<li>The next shot the enemy makes will be forced to miss</li>
+					<li>The next shot the enemy makes, normal or special, will be forced to miss</li>
 					<li>Fires a normal attack to target location</li>
-					<li>Three uses per game</li>
+					<li>Two uses per game</li>
 				</ul>
 			</div>
 			
-			<div id = "des5" class='inGameShipDes'>
+			<div id="des5" class='inGameShipDes'>
 				Counter Attack
 				<ul>
 					<li>The first time this ship is hit, the enemy ship that shot it takes a hit of damage and is revealed </li>
@@ -315,29 +314,28 @@
 				</ul>
 			</div>
 			
-			<div id = "des6" class='inGameShipDes'>
+			<div id="des6" class='inGameShipDes'>
 				UAV
 				<ul>
-					<li>Forces the enemy to reveal part of one of their ships </li>
-					<li>Reveals a 1 x 1 area</li>
-					<li>One user per game </li>
+					<li>Reveals the position of an enemy ship tile</li>
+					<li>One use per game </li>
 				</ul>
 			</div>
 			
-			<div id = "des7" class='inGameShipDes'>
+			<div id="des7" class='inGameShipDes'>
 				Killing Blow
 				<ul>
 					<li>Can be fired to a target location and if it hits a ship, that ship is instantly killed</li>
-					<li>If fired on the highlighted area after the Scanner’s ability and it will kill the smallest ship in that area</li>
-					<li>One use per game and charges for one turn before firing </li>
+					<li>If fired on the highlighted area after the Scanner’s ability, it will kill the smallest ship in that area</li>
+					<li>One use per game </li>
 				</ul>
 			</div>
 			
-			<div id = "des8" class='inGameShipDes'> 
+			<div id="des8" class='inGameShipDes'> 
 				Barrage
 				<ul>
 					<li>Fires an attack in the shape of a 3 x 3 cross </li>
-					<li>One user per game and charges for one turn before firing </li>
+					<li>One use per game </li>
 				</ul>
 			</div>
 			

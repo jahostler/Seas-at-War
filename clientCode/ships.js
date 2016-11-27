@@ -160,6 +160,8 @@ class moveableShip {
 		}
 		else if (this.shipName == 'Carrier') {
 			result.push(6); //6 attack code
+			if (scramble > 0) 
+				result.push(0);	//scrambled
 			this.specialAttacksLeft--;
 			return result;
 		}
@@ -174,8 +176,8 @@ class moveableShip {
 			else {
 				result.push(0);		//if spot has ship, kill whole ship
 			}
-			if (playWindow.specialData.length > 0) {
-				result.push(playWindow.specialData.slice(1));
+			if (playWindow.scanData.length > 0) {
+				result.push(playWindow.scanData.slice(1));
 			}
 			this.specialAttacksLeft--;
 			return result;

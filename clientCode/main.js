@@ -146,6 +146,7 @@ socket.on('disconnect', function(data) {
 		divs[i].style.display = 'none';
 	}
 	document.getElementById('serverDisconnectMessage').style.display = 'block';
+	clearInterval(playWindow.timerFunction);
 });
 
 //send a new game event to the server
@@ -343,17 +344,15 @@ function initializeGame() {
 	deflect = false;
 	scramble = 0;
 	socket.on(client.id + ' attack made', function(attackData){
+		playWindow.specialMessage = new Array();
 		var str = '';
-		var scanStr = '';
-		var deflectStr = '';
-		var counterStr = '';
 		var returnData;
-		var specialResult = new Array();
-		var scanResult = new Array();
+		var specialResult = {};
 		var attackCoordinate = attackData.coordinates[0];
 		//Timer ran out
 		if (attackData.coordinates[0] == 'out') {
 			str = 'out';
+			playWindow.turnResult = "Enemy ran out of time."
 			attackData.coordinates = [];
 		}
 		if (typeof attackCoordinate === "number")
@@ -366,21 +365,24 @@ function initializeGame() {
 			else{
 				attackData.coordinates[0] = tempPlace;
 			}
+			specialResult.deflect2 = 0;
 			deflect = false;
-			deflectStr = 'Enemy defender deflected shot.';
 		}
 		
 		//Scrambler Special 
 		if (attackData.coordinates[0] == 1){
 			scramble = 3;
 			attackData.coordinates = new Array();
-			specialResult = ["scramble"];
+			playWindow.turnResult = '';
+			specialResult.scramble = 0;
 			str = 'jammed';
 		}
 		
 		//Scanner Special
 		else if (attackData.coordinates[0] == 2) {	
 			var scanArray = processSpecialAttack('Scanner', attackCoordinate);
+			var scanResult = new Array();
+			specialResult.scan = scanResult;
 			var scanCount = 0;
 			for (var i = 0; i < scanArray.length; i++) {
 				var x = scanArray[i].posX;
@@ -392,16 +394,17 @@ function initializeGame() {
 			}
 			attackData.coordinates = [attackCoordinate];
 			if (scanCount == 0)
-				scanStr = 'There are no enemy tiles in the area.'
+				specialResult.scan.push('There are no enemy tiles in the area.');
 			else if (scanCount == 1)
-				scanStr = 'There is 1 enemy tile in the area.'
+				specialResult.scan.push('There is 1 enemy tile in the area.');
 			else
-				scanStr = 'There are ' + scanCount + ' enemy tiles in the area.'
+				specialResult.scan.push('There are ' + scanCount + ' enemy tiles in the area.');
+			playWindow.specialMessage.push('Enemy Scanner launched tracer rounds.');
 		}
 		
 		//Defender Special 
 		else if (attackData.coordinates[0] == 4){ 
-			specialResult = ["deflect"];
+			specialResult.deflect1 = 0;
 			attackData.coordinates = [attackCoordinate];
 		}
 		
@@ -409,6 +412,7 @@ function initializeGame() {
 		else if (attackData.coordinates[0] == 5) { 
 			client.targetGrid[attackCoordinate.posX][attackCoordinate.posY].hasShip = true;
 			client.targetGrid[attackCoordinate.posX][attackCoordinate.posY].shipHit = true;
+			playWindow.specialMessage.push('Your Cruiser counter attacked.');
 			if (attackData.deadShips != undefined) {
 				enemyFleet = attackData.deadShips;
 				playWindow.turnResult = "You sunk the enemy's " + attackData.result + "!";
@@ -419,9 +423,15 @@ function initializeGame() {
 		
 		//Carrier Special 
 		else if (attackData.coordinates[0] == 6){ 
+			str = 'detected';
+			if (attackData.coordinates.length == 1) {
+				specialResult.detect = findRandomEnemy();
+				playWindow.specialMessage.push('Enemy Carrier has detected a ship.')
+			}
+			else {
+				specialResult.detect = false;
+			}
 			attackData.coordinates = new Array();
-			specialResult = ["detect", findRandomEnemy()];
-			str = "detected";
 		}
 		
 		//Executioner Special
@@ -460,12 +470,15 @@ function initializeGame() {
 			else if (attackInPartial) { //Destroy smallest ship in scanned area
 				attackData.coordinates = client.fleet[smallestShip].posArray;
 			}
-			playWindow.specialMessage = 'Enemy executioner fired killing blow.';
+			specialResult.execute = 0;
+			playWindow.specialMessage.push('Enemy Executioner fired killing blow.');
 		}
 		
 		// Artillery Special 
 		else if (attackData.coordinates[0] == 8) { 
+			specialResult.barrage = 0;
 			attackData.coordinates = processSpecialAttack("Artillery", attackCoordinate);
+			playWindow.specialMessage.push('Enemy Artillery fired barrage.');
 		}
 		var updatedTiles = new Array(attackData.coordinates.length);
 		var cruiserSpecial = false;
@@ -477,6 +490,7 @@ function initializeGame() {
 			updatedTiles[i] = client.homeGrid[x][y];
 			if (updatedTiles[i].shipHit) {
 				str = "hit";
+				playWindow.turnResult = "Enemy has damaged your ship."
 				if (updatedTiles[i].shipIndex == 2) {
 					if (client.fleet[2].firstHit) {
 						 cruiserSpecial = true;
@@ -488,23 +502,27 @@ function initializeGame() {
 					}
 				}
 			}
-			else if (str != "hit")
+			else if (str != "hit") {
 				str = "miss";
+				playWindow.turnResult = "Enemy shot missed."
+			}
 		}
 		var sunkShips = new Array(4);
 		for (var i = 0; i < client.fleet.length; i++) {
-			if (client.fleet[i].updateAlive())
+			if (client.fleet[i].updateAlive()) {
 				str = client.fleet[i].shipName;
+				playWindow.turnResult = "The enemy has sunk your " + str + "!";
+			}
 			if (!client.fleet[i].alive) {
 				sunkShips[i] = client.fleet[i];
 			}
 		}
 		if (cruiserSpecial && client.fleet[2].alive) {
-			specialResult = client.fleet[2].specialAttack(attackData.ship); //hits cruiser
+			specialResult.counter = client.fleet[2].specialAttack(attackData.ship); //hits cruiser
 		}
 		if (subSpecial && client.fleet[1].alive) {
-			
-			specialResult = client.fleet[1].specialAttack(attackData.ship); //hits submarine
+			specialResult.dive = client.fleet[1].specialAttack(attackData.ship); //hits submarine
+			playWindow.specialMessage.push('Your Submarine dived to a new location.');
 			playWindow.draw();
 		}
 		returnData = {
@@ -512,16 +530,9 @@ function initializeGame() {
 			enemyShips: sunkShips,
 			gID: gameID,
 			playerID: client.id,
-			result: str
+			result: str,
+			specialData: specialResult
 		};
-		if (scanStr != '') {
-			returnData.scanData = scanStr;
-			returnData.scanArray = scanResult;
-		}
-		if (deflectStr != '') {
-			returnData.defelectData = deflectStr;
-		}
-		returnData.specialData = specialResult;
 		socket.emit('game updated', returnData);
 		client.hasTurn = true;
 		playWindow.draw();
@@ -539,6 +550,7 @@ function initializeGame() {
 		else {
 			if (playWindow.selectedShip != -1) {
 				if (client.fleet[playWindow.selectedShip].alive) {
+					playWindow.shipDescriptions[playWindow.selectedShip].style.display = 'block';
 					playWindow.enableButton('normal');
 					playWindow.drawButtonSelector(playWindow.selectedButton);
 					playWindow.drawShipSelector(playWindow.selectedShip);

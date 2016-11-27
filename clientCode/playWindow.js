@@ -55,14 +55,16 @@ class gameWindow {
 		this.partialVisionIcon.src = 'images/highlight.png';
 		this.attackType = 'normal';
 		this.promptNeeded = false;
-		this.specialMessage = '';
 		this.scanMessage = '';
-		this.specialData = new Array();
+		this.scanData = new Array();
 		this.turnResult = '';
 		this.selectedButton = '';
 		this.timerFunction;
 		this.timerCount = 30;
 		this.buttonFunctions = new Array(2);
+		this.specialMessage = new Array();
+		this.context.textAlign = 'center';
+		this.shipDescriptions = new Array(4);
 		
 		this.images = new Array();
 		for (var i = 0; i < client.fleet.length; i++) {
@@ -91,7 +93,27 @@ class gameWindow {
 		document.getElementById('positionFleet').style.display = 'none';
 		document.getElementById('gameWindow').style.display = 'block';
 		this.drawButtons();
-		this.timerFunction = setInterval(this.drawTimer, 1000);
+//		this.timerFunction = setInterval(this.drawTimer, 1000);
+		console.log(client.fleet);
+		if (client.fleet[0].shipName == 'Scrambler')
+			this.shipDescriptions[0] = document.getElementById('des1');
+		else
+			this.shipDescriptions[0] = document.getElementById('des2');
+		
+		if (client.fleet[1].shipName == 'Submarine')
+			this.shipDescriptions[1] = document.getElementById('des3');
+		else
+			this.shipDescriptions[1] = document.getElementById('des4');
+		
+		if (client.fleet[2].shipName == 'Cruiser')
+			this.shipDescriptions[2] = document.getElementById('des5');
+		else
+			this.shipDescriptions[2] = document.getElementById('des6');
+		
+		if (client.fleet[3].shipName == 'Executioner')
+			this.shipDescriptions[3] = document.getElementById('des7');
+		else
+			this.shipDescriptions[3] = document.getElementById('des8');
 		socket.on(client.id + ' make update', function(data){
 			var updatedTiles = data.tiles;
 			var currentTiles = new Array();
@@ -132,51 +154,43 @@ class gameWindow {
 			else if (data.result != 'jammed' && data.result != 'detected') {
 				playWindow.turnResult = "You sunk the enemy's " + data.result + "!";
 			}
-			if (playWindow.specialMessage == 'Enemy cruisier counter attacked.' ||
-				playWindow.specialMessage == 'Enemy executioner fired killing blow.') 
-			{
-				playWindow.specialMessage = '';
+			else {
+				playWindow.turnResult = '';
 			}
-			if (playWindow.specialData.length > 0) {
-				if (playWindow.specialData[0] == 'Scan') { //Erase highlighted areas
-					playWindow.specialData.splice(0, 1);
-					for (var i = 0; i < playWindow.specialData.length; i++) {
-						var x = playWindow.specialData[i].posX;
-						var y = playWindow.specialData[i].posY;
-						client.targetGrid[x][y].partialVision = false;
+			if (playWindow.scanData.length > 0) {
+				for (var i = 0; i < playWindow.scanData.length; i++) {
+					var x = playWindow.scanData[i].posX;
+					var y = playWindow.scanData[i].posY;
+					client.targetGrid[x][y].partialVision = false;
+				}
+				playWindow.scanData = new Array();
+			}
+			playWindow.specialMessage = new Array();
+			if (Object.keys(data.specialData).length > 0) {
+				if (data.specialData.scramble != undefined) {
+					playWindow.specialMessage.push("You have scrambled the enemy.");
+				}
+				if (data.specialData.scan != undefined) {
+					playWindow.specialMessage.push(data.specialData.scan[data.specialData.scan.length - 1]);
+					data.specialData.scan.pop();
+					playWindow.scanData = new Array();
+					var scanArray = data.specialData.scan;
+					for (var i = 0; i < scanArray.length; i++) {
+						var x = scanArray[i].coordinate.posX;
+						var y = scanArray[i].coordinate.posY;
+						client.targetGrid[x][y].partialVision = true;
+						playWindow.scanData.push(new orderedPair(x, y));
 					}
-					playWindow.specialData = new Array();
-					playWindow.scanMessage = '';
 				}
-			}
-			if (data.scanData != undefined) {
-				playWindow.scanMessage = data.scanData;
-				playWindow.specialData = new Array();
-				playWindow.specialData.push('Scan');
-				for (var i = 0; i < data.scanArray.length; i++) {
-					var x = data.scanArray[i].coordinate.posX;
-					var y = data.scanArray[i].coordinate.posY;
-					client.targetGrid[x][y].partialVision = true;
-					playWindow.specialData.push(new orderedPair(x, y));
-				}
-			}
-			if (data.defelectData != undefined) {
-				playWindow.specialMessage = data.defelectData;
-			}
-
-			if (data.specialData.length > 0) {
-				if (data.specialData[0] == "deflect") {
+				if (data.specialData.deflect1 != undefined) {
+					playWindow.specialMessage.push('The enemy\'s next shot will be deflected.');
 					deflect = true;
 				}
-				else if (data.specialData[0] == 'scramble') {
-					playWindow.specialMessage = "You have scrambled the enemy.";
+				if (data.specialData.deflect2 != undefined) {
+					playWindow.specialMessage.push('Enemy defender deflected your shot.');
 				}
-				else if(data.specialData[0] == 'detect'){
-					playWindow.specialMessage = "You have detected an enemy ship.";
-					client.targetGrid[data.specialData[1].posX][data.specialData[1].posY].detected = true;
-				}
-				else if (data.specialData[0] == 5) { //Cruiser Special Attack
-					var attackingShip = data.specialData[1];
+				if (data.specialData.counter != undefined) { //Cruiser Special Attack
+					var attackingShip = data.specialData.counter[1];
 					var max = client.fleet[attackingShip].length;
 					var rand = Math.floor(Math.random() * (max));
 					var x = client.fleet[attackingShip].posArray[rand].posX;
@@ -194,7 +208,7 @@ class gameWindow {
 							sunkShips[i] = client.fleet[i];
 						}
 					}
-					playWindow.specialMessage = "Enemy cruisier counter attacked.";
+					playWindow.specialMessage.push("Enemy cruisier counter attacked.");
 					var attackData = {
 						playerID: client.id,
 						coordinates: [5, new orderedPair(x, y)],
@@ -210,6 +224,7 @@ class gameWindow {
 							client.homeGrid[x][y].hasShip = true;
 							client.homeGrid[x][y].shipHit = true;
 							client.homeGrid[x][y].shipIndex = -1;
+							playWindow.specialMessage.push('Your submarine dived to a new location.')
 							playWindow.draw();
 						}						
 					}
@@ -223,9 +238,24 @@ class gameWindow {
 						document.getElementById('gameWindow').style.display = 'none';
 					}
 				}
+				if(data.specialData.detect != undefined) {
+					if (data.specialData.detect == false) {
+						playWindow.specialMessage.push('Radar jammed, could not detect ship.')
+					}
+					else {
+						playWindow.specialMessage.push("You have detected an enemy ship.");
+						client.targetGrid[data.specialData.detect.posX][data.specialData.detect.posY].detected = true;
+					}
+				}
+				if (data.specialData.execute != undefined) {
+					playWindow.specialMessage.push('You fired a killing blow.');
+				}
+				if (data.specialData.barrage != undefined) {
+					playWindow.specialMessage.push('You fired a barrage.');
+				}
 			}
-			else {
-				playWindow.specialMessage = '';
+			if (playWindow.selectedShip != -1) {
+				playWindow.shipDescriptions[playWindow.selectedShip].style.display = 'none';
 			}
 			playWindow.disableButtons();
 			playWindow.draw();
@@ -242,54 +272,44 @@ class gameWindow {
 		this.context.font = 'bold 45px Times New Roman';
 		this.context.shadowColor = 'transparent';
 		this.context.fillStyle = 'red';
+		this.context.textAlign = 'center';
 		if (client.hasTurn) {
-			this.context.fillText('Your Turn', this.adjust(1500), this.adjust(160));
+			this.context.fillText('Your Turn', this.adjust(1625), this.adjust(160));
 			this.context.font = '20px Times New Roman';
 			this.context.fillStyle = 'white';
-			this.context.fillText('Select Ship and Tile to attack', this.adjust(1480), this.adjust(195));
+			this.context.fillText('Select Ship and Tile to attack', this.adjust(1625), this.adjust(195));
 		}
 		else {
-			this.context.fillText('Enemy Turn', this.adjust(1470), this.adjust(160));
+			this.context.fillText('Enemy Turn', this.adjust(1625), this.adjust(160));
 			this.context.font = '22px Times New Roman';
 			this.context.fillStyle = 'white';
-			this.context.fillText('Waiting for other player...', this.adjust(1490), this.adjust(195));
+			this.context.fillText('Waiting for other player...', this.adjust(1625), this.adjust(195));
 		}
 		this.context.fillStyle = 'white';
-		this.context.font = '20px Times New Roman';
-		this.context.textAlign = 'center';
+		this.context.font = '22px Times New Roman';
+		
 		this.context.fillText(this.turnResult, this.adjust(700), this.adjust(850));
-		if (this.specialMessage != '') {
+		if (this.specialMessage.length > 0) {
 			this.context.fillStyle = 'red';
-			this.context.font = '20px bold Arial';
-			this.context.fillText(this.specialMessage, this.adjust(700), this.adjust(950));
-		}
-		if (this.scanMessage != '') {
-			this.context.fillStyle = 'red';
-			this.context.font = '20px bold Arial';
-			this.context.fillText(this.scanMessage, this.adjust(700), this.adjust(900));
+			this.context.font = '22px Times New Roman';
+			var y = 880;
+			this.specialMessage.forEach(function(value, key, map) {
+				playWindow.context.fillText(value, playWindow.adjust(700), playWindow.adjust(y));
+				y += 35;
+			});
 		}
 		this.context.shadowColor = 'black';
-		this.context.textAlign = 'start';
 	}
 	
 	drawTimer() {
 		if (playWindow.timerCount <= 0) {
 			playWindow.timerCount = 30;
 			if (client.hasTurn) {
-//				var tempShip = playWindow.selectedShip;
-//				playWindow.selectedShip = 0;
 				playWindow.moveMade('out of time');
-//				playWindow.selectedShip = tempShip;
 			}
 		}
- 		if (client.hasTurn) {
-			document.getElementById("timer").innerHTML = playWindow.timerCount + " secs"; 
-			playWindow.timerCount--;
-		}
-		else {
-			document.getElementById("timer").innerHTML = playWindow.timerCount + " secs"; 
-			playWindow.timerCount--;
-		}
+		document.getElementById("timer").innerHTML = playWindow.timerCount + " secs"; 
+		playWindow.timerCount--;
 	}
 	
 	//adds the buttons to the player window
@@ -332,7 +352,7 @@ class gameWindow {
 			socket.emit('turn done', attackData);
 			client.hasTurn = false;
 		}
-		else if (currentShip != undefined) {
+		else {
 			var currentTiles = [playWindow.selectedTile];
 			if (attackType == 'special') {
 				currentTiles = currentShip.specialAttack(playWindow.selectedTile);
@@ -547,22 +567,9 @@ class gameWindow {
 		return returnData;
 	}
 	
-	//helper function for selectObject
-	//hides all ship descriptions
-	//TODO: fix
-	clearDes() {
-		document.getElementById('des1').style.display = 'none';
-		document.getElementById('des2').style.display = 'none';
-		document.getElementById('des3').style.display = 'none';
-		document.getElementById('des4').style.display = 'none';
-		document.getElementById('des5').style.display = 'none';
-		document.getElementById('des6').style.display = 'none';
-		document.getElementById('des7').style.display = 'none';
-		document.getElementById('des8').style.display = 'none';
-	}
-	
 	selectObject(evt) {
 		if(client.hasTurn) {
+			var previousShip = playWindow.selectedShip;
 			if (playWindow.hoveredShip == -1 && playWindow.selectedShip == -1) {
 				playWindow.promptNeeded = true;
 				playWindow.drawPrompt();
@@ -580,60 +587,17 @@ class gameWindow {
 				playWindow.moveMade(playWindow.attackType);
 			}
 			//display ship ability
-			//TODO: fix
 			if(playWindow.selectedShip != -1) {
-				switch(client.fleet[playWindow.selectedShip].shipName) {
-					case 'Scrambler':
-						playWindow.clearDes();
-						document.getElementById('des1').style.display = 'block';
-						playWindow.draw();
-						break;
-					case 'Scanner':
-						playWindow.clearDes();
-						document.getElementById('des2').style.display = 'block';
-						playWindow.draw();
-						break;
-					case 'Submarine':
-						playWindow.clearDes();
-						document.getElementById('des3').style.display = 'block';
-						playWindow.draw();
-						break;
-					case 'Defender':
-						playWindow.clearDes();
-						document.getElementById('des4').style.display = 'block';
-						playWindow.draw();
-						break;
-					case 'Cruiser':
-						playWindow.clearDes();
-						document.getElementById('des5').style.display = 'block';
-						playWindow.draw();
-						break;
-					case 'Carrier':
-						playWindow.clearDes();
-						document.getElementById('des6').style.display = 'block';
-						playWindow.draw();
-						break;
-					case 'Executioner':
-						playWindow.clearDes();
-						document.getElementById('des7').style.display = 'block';
-						playWindow.draw();
-						break;
-					case 'Artillery':
-						playWindow.clearDes();
-						document.getElementById('des8').style.display = 'block';
-						playWindow.draw();
-						break;
-						
-					default:
-						break;		
-				}
+				if (previousShip != -1)
+					playWindow.shipDescriptions[previousShip].style.display = 'none';
+				playWindow.shipDescriptions[playWindow.selectedShip].style.display = 'block';
 			}
 		}
 	}
 	
 	drawPrompt() {
 		playWindow.context.font = '26px Arial';
-		playWindow.context.fillText('Must select Ship first!', playWindow.adjust(90), playWindow.adjust(740));
+		playWindow.context.fillText('Must select Ship first!', playWindow.adjust(240), playWindow.adjust(745));
 	}
 	
 	//prevents player from firing until appropriate conditions have been met
@@ -673,8 +637,8 @@ class gameWindow {
 	
 	drawButtonSelector(buttonID) {
 		if (buttonID != '') {
-			var w = playWindow.adjust(document.getElementById(buttonID).offsetWidth + 60);
-			var h = playWindow.adjust(document.getElementById(buttonID).offsetHeight + 35);
+			var w = playWindow.adjust(document.getElementById(buttonID).offsetWidth + 55);
+			var h = playWindow.adjust(document.getElementById(buttonID).offsetHeight + 30);
 			playWindow.context.lineWidth='3';
 			playWindow.context.strokeStyle='red';
 			if (buttonID == 'normalAttack')
@@ -795,10 +759,10 @@ class gameWindow {
 			var y = client.homeGrid[client.fleet[i].mainX][client.fleet[i].mainY].corner.posY;
 			this.context.drawImage(this.images[i], x, y, this.adjust(this.images[i].width), this.adjust(this.images[i].height));				
 		}
-		this.context.fillText('Recent Activity', this.adjust(557), this.adjust(740));
-		this.context.fillText('Turn', this.adjust(1575), this.adjust(75));
-		this.context.fillText('Timer', this.adjust(1560), this.adjust(435));
-		this.context.fillText('Ship Special Ability', this.adjust(1200), this.adjust(750));
+		this.context.fillText('Recent Activity', this.adjust(700), this.adjust(745));
+		this.context.fillText('Turn', this.adjust(1625), this.adjust(75));
+		this.context.fillText('Timer', this.adjust(1625), this.adjust(435));
+		this.context.fillText('Ship Special Ability', this.adjust(1390), this.adjust(750));
 		this.drawGrids();
 		this.drawTurnMessage();
 		this.drawButtonSelector(this.selectedButton);
@@ -810,6 +774,8 @@ class gameWindow {
 		
 		this.canvas.removeEventListener('mousemove', this.getMousePos, false);
 		this.canvas.removeEventListener('click', this.selectObject, false);
+		if (this.selectedShip > -1)
+			this.shipDescriptions[this.selectedShip].style.display = 'none';
 		norm.removeEventListener('click', this.buttonFunctions[0], false);
 		spec.removeEventListener('click', this.buttonFunctions[1], false);
 		clearInterval(this.timerFunction);
