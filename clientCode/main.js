@@ -351,7 +351,8 @@ function initializeGame() {
 	deflect = false;
 	scramble = 0;
 	socket.on(client.id + ' attack made', function(attackData){
-		playWindow.specialMessage = new Array();
+		if (attackData.coordinates[0] != 5)
+			playWindow.specialMessage = new Array();
 		var str = '';
 		var returnData;
 		var specialResult = {};
@@ -400,12 +401,7 @@ function initializeGame() {
 				scanResult.push(client.homeGrid[x][y]);
 			}
 			attackData.coordinates = [attackCoordinate];
-			if (scanCount == 0)
-				specialResult.scan.push('There are no enemy tiles in the area.');
-			else if (scanCount == 1)
-				specialResult.scan.push('There is 1 enemy tile in the area.');
-			else
-				specialResult.scan.push('There are ' + scanCount + ' enemy tiles in the area.');
+			specialResult.scan.push(scanCount);
 			playWindow.specialMessage.push('Enemy Scanner launched tracer rounds.');
 		}
 		

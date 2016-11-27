@@ -500,7 +500,7 @@ class fleetPositionWindow {
 	cleanUp() {
 		this.canvas.addEventListener('mousemove', this.getMousePos);
 		this.canvas.addEventListener('click', this.selectObject);
-		document.removeEventListener('keydown', positionWindow.moveShips);
+		document.removeEventListener('keydown', this.moveShips);
 		var buttons = document.getElementById('positionFleet').querySelectorAll('button');
 		[].forEach.call(buttons, function(element) {
 			element.disabled = false;

@@ -55,7 +55,6 @@ class gameWindow {
 		this.partialVisionIcon.src = 'images/highlight.png';
 		this.attackType = 'normal';
 		this.promptNeeded = false;
-		this.scanMessage = '';
 		this.scanData = new Array();
 		this.turnResult = '';
 		this.selectedButton = '';
@@ -94,7 +93,6 @@ class gameWindow {
 		document.getElementById('gameWindow').style.display = 'block';
 		this.drawButtons();
 		this.timerFunction = setInterval(this.drawTimer, 1000);
-		console.log(client.fleet);
 		if (client.fleet[0].shipName == 'Scrambler')
 			this.shipDescriptions[0] = document.getElementById('des1');
 		else
@@ -171,8 +169,15 @@ class gameWindow {
 					playWindow.specialMessage.push('You have scrambled the enemy.');
 				}
 				if (data.specialData.scan != undefined) {
-					playWindow.specialMessage.push(data.specialData.scan[data.specialData.scan.length - 1]);
+					var scanCount = data.specialData.scan[data.specialData.scan.length - 1];
 					data.specialData.scan.pop();
+					if (scanCount == 0)
+						playWindow.specialMessage.push('There are no enemy tiles in the area.');
+					else if (scanCount == 1)
+						playWindow.specialMessage.push('There is 1 enemy tile in the area.');
+					else
+						playWindow.specialMessage.push('There are ' + scanCount + ' enemy tiles in the area.');
+					client.targetGrid[updatedTiles[0].coordinate.posX][updatedTiles[0].coordinate.posY].scanCount = scanCount;
 					playWindow.scanData = new Array();
 					var scanArray = data.specialData.scan;
 					for (var i = 0; i < scanArray.length; i++) {
@@ -287,11 +292,10 @@ class gameWindow {
 		}
 		this.context.fillStyle = 'white';
 		this.context.font = '22px Times New Roman';
-		
 		this.context.fillText(this.turnResult, this.adjust(700), this.adjust(850));
 		if (this.specialMessage.length > 0) {
 			this.context.fillStyle = 'red';
-			this.context.font = '22px Times New Roman';
+			this.context.font = 'bold 22px Times New Roman';
 			var y = 880;
 			this.specialMessage.forEach(function(value, key, map) {
 				playWindow.context.fillText(value, playWindow.adjust(700), playWindow.adjust(y));
@@ -596,6 +600,7 @@ class gameWindow {
 	}
 	
 	drawPrompt() {
+		playWindow.context.strokeStyle = 'white';
 		playWindow.context.font = '26px Arial';
 		playWindow.context.fillText('Must select Ship first!', playWindow.adjust(240), playWindow.adjust(745));
 	}
@@ -650,6 +655,7 @@ class gameWindow {
 	
 	//update the grids with the result of the turn
 	drawGrids() {
+		var scannedTiles = new Array();
 		for(var i = 0; i < client.homeGrid.length; i++) {
 			for(var j = 0; j < client.homeGrid[i].length; j++) {
 				var homeTile = client.homeGrid[i][j];
@@ -672,11 +678,14 @@ class gameWindow {
 					else if (targetTile.shipHit == false) {
 						this.context.drawImage(this.targetMissIcon, targetTile.corner.posX, targetTile.corner.posY, this.adjust(70), this.adjust(70));
 					}
+					if (targetTile.scanCount >= 0) {
+						scannedTiles.push(targetTile);
+					}
 				}
 				if (targetTile.partialVision) {
 					this.context.drawImage(this.partialVisionIcon, targetTile.corner.posX, targetTile.corner.posY, this.adjust(70), this.adjust(70));
 				}
-				if (targetTile.detected && targetTile.isShotAt() == false){
+				if (targetTile.detected && targetTile.isShotAt() == false) {
 					this.context.drawImage(this.targetDetectIcon, targetTile.corner.posX, targetTile.corner.posY, this.adjust(70), this.adjust(70));
 				}
 			}
@@ -724,6 +733,18 @@ class gameWindow {
 				this.context.stroke();
 				this.context.closePath();
 			}
+		}
+		//Draw scan results on appropriate tiles
+		for (var d = 0; d < scannedTiles.length; d++) {
+			var tile = scannedTiles[d];
+			this.context.shadowColor = 'transparent';
+			this.context.fillStyle = 'white';
+			this.context.strokeStyle = 'black'
+			this.context.lineWidth = 1;
+			this.context.font = 'bold 40px Arial';
+			this.context.fillText(tile.scanCount, tile.corner.posX + this.adjust(35), tile.corner.posY + this.adjust(50));
+			this.context.strokeText(tile.scanCount, tile.corner.posX + this.adjust(35), tile.corner.posY + this.adjust(50));
+			this.context.shadowColor = 'black';
 		}
 	}
 	

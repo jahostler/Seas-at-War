@@ -75,6 +75,7 @@ class Tile {
 		this.partialVision = false; //Whether Tile is under the influence of Scanner's special attack.
 		this.scrambled = false;
 		this.detected = false;
+		this.scanCount = -1;
 	}
 	
 	shipPresent() {
