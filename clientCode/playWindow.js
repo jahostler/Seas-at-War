@@ -134,25 +134,25 @@ class gameWindow {
 				}
 			}
 			playWindow.timerCount = 30;
-			if (data.result == "out") {
-				playWindow.turnResult = "You ran out of time to fire!"; 
+			if (data.result == 'out') {
+				playWindow.turnResult = 'You ran out of time to fire!'; 
 			}
-			else if (scramble > 0 && (data.result == "hit" || data.result == "miss")) {
+			else if (scramble > 0 && (data.result == 'hit' || data.result == 'miss')) {
 				scramble--;
 				if (scramble != 1)
-					playWindow.turnResult = "Radar jammed for " + scramble + " more turns.";
+					playWindow.turnResult = 'Radar jammed for ' + scramble + ' more turns.';
 				else
-					playWindow.turnResult = "Radar jammed for " + scramble + " more turn.";
+					playWindow.turnResult = 'Radar jammed for ' + scramble + ' more turn.';
 
 			}
-			else if (data.result == "hit") {
-				playWindow.turnResult = "You damaged an enemy ship!";
+			else if (data.result == 'hit') {
+				playWindow.turnResult = 'You damaged an enemy ship!';
 			}
-			else if (data.result == "miss") {
-				playWindow.turnResult = "Your shot landed in the ocean.";
+			else if (data.result == 'miss') {
+				playWindow.turnResult = 'Your shot landed in the ocean.';
 			}
 			else if (data.result != 'jammed' && data.result != 'detected') {
-				playWindow.turnResult = "You sunk the enemy's " + data.result + "!";
+				playWindow.turnResult = 'You sunk the enemy\'s ' + data.result + '!';
 			}
 			else {
 				playWindow.turnResult = '';
@@ -168,7 +168,7 @@ class gameWindow {
 			playWindow.specialMessage = new Array();
 			if (Object.keys(data.specialData).length > 0) {
 				if (data.specialData.scramble != undefined) {
-					playWindow.specialMessage.push("You have scrambled the enemy.");
+					playWindow.specialMessage.push('You have scrambled the enemy.');
 				}
 				if (data.specialData.scan != undefined) {
 					playWindow.specialMessage.push(data.specialData.scan[data.specialData.scan.length - 1]);
@@ -208,7 +208,7 @@ class gameWindow {
 							sunkShips[i] = client.fleet[i];
 						}
 					}
-					playWindow.specialMessage.push("Enemy cruisier counter attacked.");
+					playWindow.specialMessage.push('Enemy cruisier counter attacked.');
 					var attackData = {
 						playerID: client.id,
 						coordinates: [5, new orderedPair(x, y)],
@@ -218,7 +218,7 @@ class gameWindow {
 						attackData.result = client.fleet[attackingShip].shipName;
 						attackData.deadShips = sunkShips;
 					}
-					if (client.fleet[attackingShip].shipName == "Submarine") {
+					if (client.fleet[attackingShip].shipName == 'Submarine') {
 						if (client.fleet[attackingShip].firstHit && client.fleet[1].alive) {
 							attackData.specialResult = client.fleet[1].specialAttack(attackData.ship); //hits submarine
 							client.homeGrid[x][y].hasShip = true;
@@ -243,7 +243,7 @@ class gameWindow {
 						playWindow.specialMessage.push('Radar jammed, could not detect ship.')
 					}
 					else {
-						playWindow.specialMessage.push("You have detected an enemy ship.");
+						playWindow.specialMessage.push('You have detected an enemy ship.');
 						client.targetGrid[data.specialData.detect.posX][data.specialData.detect.posY].detected = true;
 					}
 				}
@@ -267,7 +267,7 @@ class gameWindow {
 		return dimension * this.scale;
 	}
 	
-	//adds a "Waiting for other player" message to screen when it is not the player's turn
+	//adds a 'Waiting for other player' message to screen when it is not the player's turn
 	drawTurnMessage() {
 		this.context.font = 'bold 45px Times New Roman';
 		this.context.shadowColor = 'transparent';
@@ -308,7 +308,7 @@ class gameWindow {
 				playWindow.moveMade('out of time');
 			}
 		}
-		document.getElementById("timer").innerHTML = playWindow.timerCount + " secs"; 
+		document.getElementById('timer').innerHTML = playWindow.timerCount + ' secs'; 
 		playWindow.timerCount--;
 	}
 	
@@ -616,7 +616,7 @@ class gameWindow {
 				hasSpecial = true;
 			}
 		}
-		if (attack == "normal" || !hasSpecial) {
+		if (attack == 'normal' || !hasSpecial) {
 			document.getElementById('normalAttack').disabled = true;
 			if (hasSpecial) {
 				document.getElementById('specialAttack').disabled = false;

@@ -4,7 +4,7 @@
 	
 */
 
-"use strict";
+'use strict';
 var express = require('express');
 var app = express();
 var http = require('http').Server(app);
@@ -87,10 +87,10 @@ io.on('connection', function(socket){
         if (data != newID) {
 			console.log(data);
             players.delete(newID);
-            console.log("Player failed to be created for client.");
+            console.log('Player failed to be created for client.');
         }
         else {
-            console.log("Player " + newID + " creation successful!");
+            console.log('Player ' + newID + ' creation successful!');
         }
     });
 	
@@ -101,7 +101,7 @@ io.on('connection', function(socket){
 		var hostID = data;
 		games.set(gameID, hostID);
 		socket.emit(hostID + ' gameID created', gameID);
-		console.log("Game " + gameID + " was created with host " + hostID);
+		console.log('Game ' + gameID + ' was created with host ' + hostID);
 	});
 	
 	//if the client attempts to connect to a valid game id (and it is not full), add that player to the game
@@ -154,7 +154,7 @@ io.on('connection', function(socket){
 	//remove the game from Map
 	socket.on('delete game', function(data) {
 		games.delete(data);
-		console.log("Game " + data + " deleted from records");
+		console.log('Game ' + data + ' deleted from records');
 		gameID = -1;
 	});
 	
@@ -179,7 +179,7 @@ io.on('connection', function(socket){
 		if (updateData.playerID == currentGame.host) {
 			recipientID = currentGame.visitor;
 		}
-		console.log(recipientID + " update made");
+		console.log(recipientID + ' update made');
 		io.sockets.emit(recipientID + ' make update', updateData);
 	});
 	
@@ -191,7 +191,7 @@ io.on('connection', function(socket){
 		if (data.playerID == currentGame.host) {
 			recipientID = currentGame.visitor;
 		}
-		console.log("Game " + gameID + " is over");
+		console.log('Game ' + gameID + ' is over');
 		games.delete(gameID);
 		io.sockets.emit(recipientID + 'end game', {});
 	});
@@ -201,10 +201,10 @@ io.on('connection', function(socket){
         var index = players.indexOf(newID);
 		if (games.delete(gameID)) {
 			io.sockets.emit(gameID + ' player disconnect');
-			console.log("Game " + gameID + " deleted from records");
+			console.log('Game ' + gameID + ' deleted from records');
 		}
 		players.splice(index, 1);
-        console.log("Player " + newID + " deleted from records.");
+        console.log('Player ' + newID + ' deleted from records.');
 		console.log(players);
 		console.log(games);
     });

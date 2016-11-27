@@ -139,7 +139,7 @@ function initialize() {
 //on receiving a welcome event from server, get playerid from server
 //send confirmation back to server
 socket.on('welcome', function(data) {
-	console.log("Your player ID is " + data);
+	console.log('Your player ID is ' + data);
 	client.id = data;
 	socket.emit('new player created', client.id);
 });
@@ -162,7 +162,7 @@ function newGame() {
 	socket.on(client.id + ' gameID created', function(data) {
 		gameID = data;
 		document.getElementById('sessionID').innerHTML = 'Your session ID: ' + gameID;
-		document.getElementById('sessionID').innerHTML += '<p font-size="16px"> Waiting for player to join... </p>';
+		document.getElementById('sessionID').innerHTML += '<p font-size='16px'> Waiting for player to join... </p>';
 		socket.off(client.id + ' gameID created');
 	});
 	socket.on(client.id + ' join success', function(data) {
@@ -190,7 +190,7 @@ function removeGame() {
 
 //create a new gameplay window
 function loadGame() {
-	console.log("Your game ID is " + gameID);
+	console.log('Your game ID is ' + gameID);
 	prepWindow = new buildAFleetWindow(document.getElementById('buildCanvas'), scaling); //todo: fix scaling of buttons
 	socket.on(gameID + ' player disconnect', function(data){
 		//todo:  add formal message telling client other player disconnected
@@ -359,14 +359,14 @@ function initializeGame() {
 		//Timer ran out
 		if (attackData.coordinates[0] == 'out') {
 			str = 'out';
-			playWindow.turnResult = "Enemy ran out of time."
+			playWindow.turnResult = '';
 			attackData.coordinates = [];
 		}
-		if (typeof attackCoordinate === "number")
+		if (typeof attackCoordinate === 'number')
 			attackCoordinate = attackData.coordinates[1];
 		if (deflect == true && attackData.coordinates[0] != 1) {
 			var tempPlace = repositionAttack();
-			if (typeof attackData.coordinates[0] === "number"){
+			if (typeof attackData.coordinates[0] === 'number'){
 				attackData.coordinates[1] = tempPlace;
 			}
 			else{
@@ -422,7 +422,7 @@ function initializeGame() {
 			playWindow.specialMessage.push('Your Cruiser counter attacked.');
 			if (attackData.deadShips != undefined) {
 				enemyFleet = attackData.deadShips;
-				playWindow.turnResult = "You sunk the enemy's " + attackData.result + "!";
+				playWindow.turnResult = 'You sunk the enemy\'s ' + attackData.result + '!';
 			}
 			playWindow.draw();
 			return;
@@ -484,7 +484,7 @@ function initializeGame() {
 		// Artillery Special 
 		else if (attackData.coordinates[0] == 8) { 
 			specialResult.barrage = 0;
-			attackData.coordinates = processSpecialAttack("Artillery", attackCoordinate);
+			attackData.coordinates = processSpecialAttack('Artillery', attackCoordinate);
 			playWindow.specialMessage.push('Enemy Artillery fired barrage.');
 		}
 		var updatedTiles = new Array(attackData.coordinates.length);
@@ -496,8 +496,8 @@ function initializeGame() {
 			client.homeGrid[x][y].updateTile();
 			updatedTiles[i] = client.homeGrid[x][y];
 			if (updatedTiles[i].shipHit) {
-				str = "hit";
-				playWindow.turnResult = "Enemy has damaged your ship."
+				str = 'hit';
+				playWindow.turnResult = 'Enemy has damaged your ship.'
 				if (updatedTiles[i].shipIndex == 2) {
 					if (client.fleet[2].firstHit) {
 						 cruiserSpecial = true;
@@ -509,16 +509,16 @@ function initializeGame() {
 					}
 				}
 			}
-			else if (str != "hit") {
-				str = "miss";
-				playWindow.turnResult = "Enemy shot missed."
+			else if (str != 'hit') {
+				str = 'miss';
+				playWindow.turnResult = 'Enemy shot missed.'
 			}
 		}
 		var sunkShips = new Array(4);
 		for (var i = 0; i < client.fleet.length; i++) {
 			if (client.fleet[i].updateAlive()) {
 				str = client.fleet[i].shipName;
-				playWindow.turnResult = "The enemy has sunk your " + str + "!";
+				playWindow.turnResult = 'The enemy has sunk your ' + str + '!';
 			}
 			if (!client.fleet[i].alive) {
 				sunkShips[i] = client.fleet[i];
