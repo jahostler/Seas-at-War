@@ -144,16 +144,16 @@ class gameWindow {
 
 			}
 			else if (data.result == 'hit') {
-				sounds.get('hit').play();
+				playAudio('hit');
 				playWindow.turnResult = 'You damaged an enemy ship!';
 			}
 			else if (data.result == 'miss') {
-				sounds.get('miss').play();
+				playAudio('miss');
 				playWindow.turnResult = 'Your shot landed in the ocean.';
 			}
 			else if (data.result != 'jammed' && data.result != 'detected') {
-				sounds.get('hit').play();
-				sounds.get('sink').play();
+				playAudio('hit');
+				playAudio('sink');
 				playWindow.turnResult = 'You sunk the enemy\'s ' + data.result + '!';
 			}
 			else {
@@ -173,22 +173,27 @@ class gameWindow {
 					playWindow.specialMessage.push('You have scrambled the enemy.');
 				}
 				if (data.specialData.scan != undefined) {
-					var scanCount = data.specialData.scan[data.specialData.scan.length - 1];
-					data.specialData.scan.pop();
-					if (scanCount == 0)
-						playWindow.specialMessage.push('There are no enemy tiles in the area.');
-					else if (scanCount == 1)
-						playWindow.specialMessage.push('There is 1 enemy tile in the area.');
-					else
-						playWindow.specialMessage.push('There are ' + scanCount + ' enemy tiles in the area.');
-					client.targetGrid[updatedTiles[0].coordinate.posX][updatedTiles[0].coordinate.posY].scanCount = scanCount;
-					playWindow.scanData = new Array();
-					var scanArray = data.specialData.scan;
-					for (var i = 0; i < scanArray.length; i++) {
-						var x = scanArray[i].coordinate.posX;
-						var y = scanArray[i].coordinate.posY;
-						client.targetGrid[x][y].partialVision = true;
-						playWindow.scanData.push(new orderedPair(x, y));
+					if (data.specialData.scan == false) {
+						playWindow.specialMessage.push('Radar jammed, could not find enemies.')
+					}
+					else {
+						var scanCount = data.specialData.scan[data.specialData.scan.length - 1];
+						data.specialData.scan.pop();
+						if (scanCount == 0)
+							playWindow.specialMessage.push('There are no enemy tiles in the area.');
+						else if (scanCount == 1)
+							playWindow.specialMessage.push('There is 1 enemy tile in the area.');
+						else
+							playWindow.specialMessage.push('There are ' + scanCount + ' enemy tiles in the area.');
+						client.targetGrid[updatedTiles[0].coordinate.posX][updatedTiles[0].coordinate.posY].scanCount = scanCount;
+						playWindow.scanData = new Array();
+						var scanArray = data.specialData.scan;
+						for (var i = 0; i < scanArray.length; i++) {
+							var x = scanArray[i].coordinate.posX;
+							var y = scanArray[i].coordinate.posY;
+							client.targetGrid[x][y].partialVision = true;
+							playWindow.scanData.push(new orderedPair(x, y));
+						}
 					}
 				}
 				if (data.specialData.deflect1 != undefined) {
@@ -245,7 +250,7 @@ class gameWindow {
 						document.getElementById('gameOverMessageLose').innerHTML = 'You Lose!';
 						document.getElementById('gameOverLose').style.display = 'block';
 						document.getElementById('gameWindow').style.display = 'none';
-						sounds.get('lose').play();
+						playAudio('lose');
 					}
 				}
 				if(data.specialData.detect != undefined) {
@@ -367,7 +372,7 @@ class gameWindow {
 				currentTiles = currentShip.specialAttack(playWindow.selectedTile);
 			}
 			else {
-				sounds.get('fire').play();
+				playAudio('fire');
 			}
 			var attackData = {
 				playerID: client.id,

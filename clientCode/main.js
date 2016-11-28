@@ -169,6 +169,11 @@ function initialize() {
 	sounds.get('aww').src = 'sounds/aww.wav';
 }
 
+function playAudio(name) {
+	sounds.get(name).currentTime = 0;
+	sounds.get(name).play();
+}
+
 //on receiving a welcome event from server, get playerid from server
 //send confirmation back to server
 socket.on('welcome', function(data) {
@@ -185,7 +190,7 @@ socket.on('disconnect', function(data) {
 		divs[i].style.display = 'none';
 	}
 	document.getElementById('serverDisconnectMessage').style.display = 'block';
-	sounds.get('aww').play();
+	playAudio('aww');
 	clearInterval(playWindow.timerFunction);
 });
 
@@ -233,7 +238,7 @@ function loadGame() {
 			divs[i].style.display = 'none';
 		}
 		document.getElementById('playerDisconnectMessage').style.display = 'block';
-		sounds.get('aww').play();
+		playAudio('aww');
 		prepWindow.cleanUp();
 		removeGame();
 	});
@@ -310,7 +315,7 @@ function toPositionSelect() {
 			divs[i].style.display = 'none';
 		}
 		document.getElementById('playerDisconnectMessage').style.display = 'block';
-		sounds.get('aww').play();
+		playAudio('aww');
 		positionWindow.cleanUp();
 		removeGame();
 	});
@@ -408,7 +413,7 @@ function initializeGame() {
 				attackData.coordinates[0] = tempPlace;
 			}
 			playWindow.specialMessage.push('Enemy shot deflected.');
-			sounds.get('defend').play();
+			playAudio('defend');
 			specialResult.deflect2 = 0;
 			deflect = false;
 		}
@@ -426,22 +431,27 @@ function initializeGame() {
 		}
 		
 		//Scanner Special
-		else if (attackData.coordinates[0] == 2) {	
-			var scanArray = processSpecialAttack('Scanner', attackCoordinate);
-			var scanResult = new Array();
-			specialResult.scan = scanResult;
-			var scanCount = 0;
-			for (var i = 0; i < scanArray.length; i++) {
-				var x = scanArray[i].posX;
-				var y = scanArray[i].posY;
-				if (client.homeGrid[x][y].shipPresent()) {
-					scanCount++;
+		else if (attackData.coordinates[0] == 2) {
+			if (attackData.coordinates.length == 3) {
+				specialResult.scan = false;
+			}
+			else {
+				var scanArray = processSpecialAttack('Scanner', attackCoordinate);
+				var scanResult = new Array();
+				specialResult.scan = scanResult;
+				var scanCount = 0;
+				for (var i = 0; i < scanArray.length; i++) {
+					var x = scanArray[i].posX;
+					var y = scanArray[i].posY;
+					if (client.homeGrid[x][y].shipPresent()) {
+						scanCount++;
+					}
+					scanResult.push(client.homeGrid[x][y]);
 				}
-				scanResult.push(client.homeGrid[x][y]);
+				playWindow.specialMessage.push('Enemy Scanner launched tracer rounds.');
+				specialResult.scan.push(scanCount);
 			}
 			attackData.coordinates = [attackCoordinate];
-			specialResult.scan.push(scanCount);
-			playWindow.specialMessage.push('Enemy Scanner launched tracer rounds.');
 		}
 		
 		//Defender Special 
@@ -560,14 +570,14 @@ function initializeGame() {
 			}
 		}
 		if (str == 'hit') {
-			sounds.get('hit').play();
+			playAudio('hit');
 		}
 		else if (str == 'miss') {
-			sounds.get('miss').play();
+			playAudio('miss');
 		}
 		else if (str.substring(0,9) == 'The enemy') {
-			sounds.get('hit').play();
-			sounds.get('sink').play();
+			playAudio('hit');
+			playAudio('sink');
 		}
 		if (cruiserSpecial && client.fleet[2].alive) {
 			specialResult.counter = client.fleet[2].specialAttack(attackData.ship); //hits cruiser
@@ -596,7 +606,7 @@ function initializeGame() {
 			document.getElementById('gameOverMessageLose').innerHTML = 'You Lose!';
 			document.getElementById('gameOverLose').style.display = 'block';
 			document.getElementById('gameWindow').style.display = 'none';
-			sounds.get('lose').play();
+			playAudio('lose');
 			playWindow.cleanUp();
 			removeGame();
 		}
@@ -621,7 +631,7 @@ function initializeGame() {
 		document.getElementById('gameOverMessageWin').innerHTML = 'You Win!';
 		document.getElementById('gameOverWin').style.display = 'block';
 		document.getElementById('gameWindow').style.display = 'none';
-		sounds.get('win').play();
+		playAudio('win');
 		playWindow.cleanUp();
 		removeGame();
 	});
@@ -633,7 +643,7 @@ function initializeGame() {
 			divs[i].style.display = 'none';
 		}
 		document.getElementById('playerDisconnectMessage').style.display = 'block';
-		sounds.get('aww').play();
+		playAudio('aww');
 		playWindow.cleanUp();
 		removeGame();
 	});
