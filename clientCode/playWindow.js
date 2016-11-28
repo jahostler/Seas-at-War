@@ -317,10 +317,20 @@ class gameWindow {
 	
 	drawTimer() {
 		if (playWindow.timerCount <= 0) {
+			if (client.hasTurn)
+				playAudio('turnEnd');
 			playWindow.timerCount = 30;
 			if (client.hasTurn) {
 				playWindow.moveMade('out of time');
 			}
+		}
+		if (playWindow.timerCount <= 10 && client.hasTurn) {
+			if (playWindow.timerCount <= 5)
+				playAudio('countdown');
+			document.getElementById('timer').style.color = 'red';
+		}
+		else {
+			document.getElementById('timer').style.color = 'white';
 		}
 		document.getElementById('timer').innerHTML = playWindow.timerCount + ' secs'; 
 		playWindow.timerCount--;

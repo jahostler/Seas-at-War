@@ -174,10 +174,15 @@ class moveableShip {
 			return result;
 		}
 		else if (this.shipName == 'Cruiser') {
-			result.push(5); //5 attack code
-			result.push(attackedCoordinate); //ship index of attacking ship
 			this.firstHit = false;
-			return result;
+			if (scramble > 0) {
+				return undefined;
+			}
+			else {
+				result.push(5); //5 attack code
+				result.push(attackedCoordinate); //ship index of attacking ship
+				return result;
+			}
 		}
 		else if (this.shipName == 'Carrier') {
 			result.push(6); //6 attack code

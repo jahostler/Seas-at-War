@@ -167,6 +167,10 @@ function initialize() {
 	sounds.get('lose').src = 'sounds/lose.wav';
 	sounds.set('aww', document.createElement('audio'));
 	sounds.get('aww').src = 'sounds/aww.wav';
+	sounds.set('countdown', document.createElement('audio'));
+	sounds.get('countdown').src = 'sounds/countdown.wav';
+	sounds.set('turnEnd', document.createElement('audio'));
+	sounds.get('turnEnd').src = 'sounds/turnEnd.wav';
 }
 
 function playAudio(name) {
@@ -581,6 +585,8 @@ function initializeGame() {
 		}
 		if (cruiserSpecial && client.fleet[2].alive) {
 			specialResult.counter = client.fleet[2].specialAttack(attackData.ship); //hits cruiser
+			if (specialResult.counter == undefined)
+				playWindow.specialMessage.push('Radar jammed, cruiser could not counter.');
 		}
 		if (subSpecial && client.fleet[1].alive) {
 			specialResult.dive = client.fleet[1].specialAttack(attackData.ship); //hits submarine
