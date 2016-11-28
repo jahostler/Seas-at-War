@@ -302,13 +302,13 @@ class gameWindow {
 		}
 		this.context.fillStyle = 'white';
 		this.context.font = '22px Times New Roman';
-		this.context.fillText(this.turnResult, this.adjust(700), this.adjust(850));
+		this.context.fillText(this.turnResult, this.adjust(690), this.adjust(850));
 		if (this.specialMessage.length > 0) {
 			this.context.fillStyle = 'red';
 			this.context.font = 'bold 22px Times New Roman';
 			var y = 880;
 			this.specialMessage.forEach(function(value, key, map) {
-				playWindow.context.fillText(value, playWindow.adjust(700), playWindow.adjust(y));
+				playWindow.context.fillText(value, playWindow.adjust(690), playWindow.adjust(y));
 				y += 35;
 			});
 		}
@@ -627,7 +627,7 @@ class gameWindow {
 	drawPrompt() {
 		playWindow.context.strokeStyle = 'white';
 		playWindow.context.font = '26px Arial';
-		playWindow.context.fillText('Must select Ship first!', playWindow.adjust(240), playWindow.adjust(745));
+		playWindow.context.fillText('Must select Ship first!', playWindow.adjust(235), playWindow.adjust(745));
 	}
 	
 	//prevents player from firing until appropriate conditions have been met
@@ -805,7 +805,7 @@ class gameWindow {
 			var y = client.homeGrid[client.fleet[i].mainX][client.fleet[i].mainY].corner.posY;
 			this.context.drawImage(this.images[i], x, y, this.adjust(this.images[i].width), this.adjust(this.images[i].height));				
 		}
-		this.context.fillText('Recent Activity', this.adjust(700), this.adjust(745));
+		this.context.fillText('Recent Activity', this.adjust(690), this.adjust(745));
 		this.context.fillText('Turn', this.adjust(1625), this.adjust(75));
 		this.context.fillText('Timer', this.adjust(1625), this.adjust(435));
 		this.context.fillText('Ship Special Ability', this.adjust(1390), this.adjust(750));
