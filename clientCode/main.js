@@ -356,15 +356,13 @@ function initializeGame() {
 		var str = '';
 		var returnData;
 		var specialResult = {};
-		var attackCoordinate = attackData.coordinates[0];
+		var attackCoordinate;
 		//Timer ran out
 		if (attackData.coordinates[0] == 'out') {
 			str = 'out';
 			playWindow.turnResult = '';
 			attackData.coordinates = [];
 		}
-		if (typeof attackCoordinate === 'number')
-			attackCoordinate = attackData.coordinates[1];
 		if (deflect == true && attackData.coordinates[0] != 1) {
 			var tempPlace = repositionAttack();
 			if (typeof attackData.coordinates[0] === 'number'){
@@ -376,7 +374,10 @@ function initializeGame() {
 			specialResult.deflect2 = 0;
 			deflect = false;
 		}
-		
+		if (typeof attackData.coordinates[0] === 'number')
+			attackCoordinate = attackData.coordinates[1];
+		else
+			attackCoordinate = attackData.coordinates[0];
 		//Scrambler Special 
 		if (attackData.coordinates[0] == 1){
 			scramble = 3;
