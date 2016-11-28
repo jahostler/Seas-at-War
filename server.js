@@ -72,6 +72,7 @@ app.get('/', function(request, response){
 });
 app.use('/clientCode', express.static(__dirname + '/clientCode'));
 app.use('/images', express.static(__dirname + '/images'));
+app.use('/sounds', express.static(__dirname + '/sounds'));
 app.use('/style.css', express.static(__dirname + '/style.css'));
 
 //reads a connection event from a client

@@ -145,11 +145,13 @@ class moveableShip {
 		if (this.shipName == 'Scrambler') {
 			result.push(1); //1 attack code
 			this.specialAttacksLeft--;
+			sounds.get('scramble').play();
 			return result;
 		}
 		else if (this.shipName == 'Scanner') {
 			result.push(2); //2 attack code
 			result.push(attackedCoordinate); //center (attack point)
+			sounds.get('scan').play();
 			this.specialAttacksLeft--;
 			return result;
 		}
@@ -163,6 +165,7 @@ class moveableShip {
 			result.push(4); //4 error code
 			this.specialAttacksLeft--;
 			result.push(attackedCoordinate); //attack point
+			sounds.get('fire').play();
 			return result;
 		}
 		else if (this.shipName == 'Cruiser') {
@@ -173,8 +176,12 @@ class moveableShip {
 		}
 		else if (this.shipName == 'Carrier') {
 			result.push(6); //6 attack code
-			if (scramble > 0) 
+			if (scramble > 0) {
+				sounds.get('error').play();
 				result.push(0);	//scrambled
+			}
+			else 
+				sounds.get('detect').play();
 			this.specialAttacksLeft--;
 			return result;
 		}
@@ -192,12 +199,14 @@ class moveableShip {
 			if (playWindow.scanData.length > 0) {
 				result.push(playWindow.scanData.slice(1));
 			}
+			sounds.get('execute').play();
 			this.specialAttacksLeft--;
 			return result;
 		}
 		else if (this.shipName == 'Artillery') {
 			result.push(8) //8 attack code
 			result.push(attackedCoordinate);
+			sounds.get('barrage').play();
 			this.specialAttacksLeft--;
 			return result;
 		}

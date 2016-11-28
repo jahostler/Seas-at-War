@@ -144,12 +144,16 @@ class gameWindow {
 
 			}
 			else if (data.result == 'hit') {
+				sounds.get('hit').play();
 				playWindow.turnResult = 'You damaged an enemy ship!';
 			}
 			else if (data.result == 'miss') {
+				sounds.get('miss').play();
 				playWindow.turnResult = 'Your shot landed in the ocean.';
 			}
 			else if (data.result != 'jammed' && data.result != 'detected') {
+				sounds.get('hit').play();
+				sounds.get('sink').play();
 				playWindow.turnResult = 'You sunk the enemy\'s ' + data.result + '!';
 			}
 			else {
@@ -360,6 +364,9 @@ class gameWindow {
 			var currentTiles = [playWindow.selectedTile];
 			if (attackType == 'special') {
 				currentTiles = currentShip.specialAttack(playWindow.selectedTile);
+			}
+			else {
+				sounds.get('fire').play();
 			}
 			var attackData = {
 				playerID: client.id,

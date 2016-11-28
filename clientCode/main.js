@@ -14,6 +14,7 @@ var playWindow = -1;
 var socket = io.connect();
 var scaling = .8;
 var backgrounds;
+var sounds = new Map();
 var shipImages = new Map();
 var shipDesDims;
 var finishFleetDims;
@@ -134,6 +135,32 @@ function initialize() {
 	for (var i = 0; i < buttons.length; i++) {
 		buttons[i].style.visibility = 'visible';
 	}
+	
+	//load in sounds
+	sounds.set('miss', document.createElement('audio'));
+	sounds.get('miss').src = 'sounds/miss.wav';
+	sounds.set('hit', document.createElement('audio'));
+	sounds.get('hit').src = 'sounds/hit.wav';
+	sounds.set('miss', document.createElement('audio'));
+	sounds.get('miss').src = 'sounds/miss.wav';
+	sounds.set('fire', document.createElement('audio'));
+	sounds.get('fire').src = 'sounds/fire.wav';
+	sounds.set('scramble', document.createElement('audio'));
+	sounds.get('scramble').src = 'sounds/scramble.wav';
+	sounds.set('sink', document.createElement('audio'));
+	sounds.get('sink').src = 'sounds/sink.wav';
+	sounds.set('scan', document.createElement('audio'));
+	sounds.get('scan').src = 'sounds/scan.wav';
+	sounds.set('defend', document.createElement('audio'));
+	sounds.get('defend').src = 'sounds/defend.wav';
+	sounds.set('barrage', document.createElement('audio'));
+	sounds.get('barrage').src = 'sounds/barrage.wav';
+	sounds.set('execute', document.createElement('audio'));
+	sounds.get('execute').src = 'sounds/execute.wav';
+	sounds.set('detect', document.createElement('audio'));
+	sounds.get('detect').src = 'sounds/detect.wav';
+	sounds.set('error', document.createElement('audio'));
+	sounds.get('error').src = 'sounds/error.wav';
 }
 
 //on receiving a welcome event from server, get playerid from server
@@ -371,6 +398,8 @@ function initializeGame() {
 			else{
 				attackData.coordinates[0] = tempPlace;
 			}
+			playWindow.specialMessage.push('Enemy shot deflected.');
+			sounds.get('defend').play();
 			specialResult.deflect2 = 0;
 			deflect = false;
 		}
@@ -520,6 +549,16 @@ function initializeGame() {
 			if (!client.fleet[i].alive) {
 				sunkShips[i] = client.fleet[i];
 			}
+		}
+		if (str == 'hit') {
+			sounds.get('hit').play();
+		}
+		else if (str == 'miss') {
+			sounds.get('miss').play();
+		}
+		else if (str.substring(0,9) == 'The enemy') {
+			sounds.get('hit').play();
+			sounds.get('sink').play();
 		}
 		if (cruiserSpecial && client.fleet[2].alive) {
 			specialResult.counter = client.fleet[2].specialAttack(attackData.ship); //hits cruiser
