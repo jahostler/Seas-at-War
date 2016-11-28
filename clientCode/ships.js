@@ -346,7 +346,7 @@ function submarineSpecial() {
 					validHorizontal = true;
 				}
 			}
-			else if(canRelocateVertically) {
+			if(canRelocateVertically) {
 				if (row >= 7)
 					continue;
 				var tile0v = client.homeGrid[column][row];
@@ -464,6 +464,7 @@ function submarineSpecial() {
 					client.homeGrid[x][y].shipIndex = 1;
 				}
 				relocated = true;
+				
 			}
 		}
 	}
