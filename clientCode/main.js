@@ -161,6 +161,12 @@ function initialize() {
 	sounds.get('detect').src = 'sounds/detect.wav';
 	sounds.set('error', document.createElement('audio'));
 	sounds.get('error').src = 'sounds/error.wav';
+	sounds.set('win', document.createElement('audio'));
+	sounds.get('win').src = 'sounds/win.wav';
+	sounds.set('lose', document.createElement('audio'));
+	sounds.get('lose').src = 'sounds/lose.wav';
+	sounds.set('aww', document.createElement('audio'));
+	sounds.get('aww').src = 'sounds/aww.wav';
 }
 
 //on receiving a welcome event from server, get playerid from server
@@ -179,6 +185,7 @@ socket.on('disconnect', function(data) {
 		divs[i].style.display = 'none';
 	}
 	document.getElementById('serverDisconnectMessage').style.display = 'block';
+	sounds.get('aww').play();
 	clearInterval(playWindow.timerFunction);
 });
 
@@ -226,6 +233,7 @@ function loadGame() {
 			divs[i].style.display = 'none';
 		}
 		document.getElementById('playerDisconnectMessage').style.display = 'block';
+		sounds.get('aww').play();
 		prepWindow.cleanUp();
 		removeGame();
 	});
@@ -302,6 +310,7 @@ function toPositionSelect() {
 			divs[i].style.display = 'none';
 		}
 		document.getElementById('playerDisconnectMessage').style.display = 'block';
+		sounds.get('aww').play();
 		positionWindow.cleanUp();
 		removeGame();
 	});
@@ -587,6 +596,7 @@ function initializeGame() {
 			document.getElementById('gameOverMessageLose').innerHTML = 'You Lose!';
 			document.getElementById('gameOverLose').style.display = 'block';
 			document.getElementById('gameWindow').style.display = 'none';
+			sounds.get('lose').play();
 			playWindow.cleanUp();
 			removeGame();
 		}
@@ -611,6 +621,7 @@ function initializeGame() {
 		document.getElementById('gameOverMessageWin').innerHTML = 'You Win!';
 		document.getElementById('gameOverWin').style.display = 'block';
 		document.getElementById('gameWindow').style.display = 'none';
+		sounds.get('win').play();
 		playWindow.cleanUp();
 		removeGame();
 	});
@@ -622,6 +633,7 @@ function initializeGame() {
 			divs[i].style.display = 'none';
 		}
 		document.getElementById('playerDisconnectMessage').style.display = 'block';
+		sounds.get('aww').play();
 		playWindow.cleanUp();
 		removeGame();
 	});

@@ -176,7 +176,7 @@ class moveableShip {
 		}
 		else if (this.shipName == 'Carrier') {
 			result.push(6); //6 attack code
-			if (scramble > 1) {
+			if (scramble > 0) {
 				sounds.get('error').play();
 				result.push(0);	//scrambled
 			}

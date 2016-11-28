@@ -245,6 +245,7 @@ class gameWindow {
 						document.getElementById('gameOverMessageLose').innerHTML = 'You Lose!';
 						document.getElementById('gameOverLose').style.display = 'block';
 						document.getElementById('gameWindow').style.display = 'none';
+						sounds.get('lose').play();
 					}
 				}
 				if(data.specialData.detect != undefined) {
@@ -590,8 +591,10 @@ class gameWindow {
 				if (playWindow.selectedShip != playWindow.hoveredShip) {
 					playWindow.selectedShip = playWindow.hoveredShip;
 					playWindow.selectedTile = new orderedPair(-1, -1);
-				}				
-				playWindow.enableButton(playWindow.attackType);
+					playWindow.enableButton('normal');
+				}
+				else
+					playWindow.enableButton(playWindow.attackType);
 			}
 			else if (!playWindow.hoveredTile.equals(new orderedPair(-1, -1))) {
 				playWindow.selectedTile = playWindow.hoveredTile;
